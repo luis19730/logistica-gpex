@@ -9,3 +9,23 @@ Desktop.ini
 
 # Logs
 *.log
+
+# Node
+node_modules/
+package.json
+package-lock.json
+
+# Arquivos de outros projetos / temporarios
+.env.example
+.env
+*.csv
+backups/
+backup-*.js
+firebase-backup.js
+excel-export.js
+check_encoding.js
+data.json
+datajs_body.json
+push_body.json
+temp_body.json
+*.xlsx
