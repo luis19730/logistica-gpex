@@ -1,4 +1,4 @@
-/* GPEX / Gestao de Riscos - S/4 | aplicacao (vanilla JS) */
+/* GPEX / Gestao de Riscos - E/4 | aplicacao (vanilla JS) */
 (function () {
   "use strict";
 
@@ -271,11 +271,11 @@
     var media = riscos.length ? (riscos.reduce(function (a, r) { return a + r.valor; }, 0) / riscos.length) : 0;
 
     $("cardsVisao").innerHTML = [
-      card("Processos mapeados", DB.processos.length, "Tarefas da S/4 (4a Secao)"),
+      card("Processos mapeados", DB.processos.length, "Tarefas da E/4 (4a Secao)"),
       card("Riscos identificados", riscos.length, "Com causa, consequencia e controle"),
       card("Riscos Alto/Extremo", altos.length, "Tratamento prioritário (EB10-P-01.004)", altos.length ? "var(--red)" : "var(--green)"),
       card("Classes de suprimento", DB.classes.length, "I a X"),
-      card("Obrigacoes periodicas", DB.calendario.length, "Calendario da S/4"),
+      card("Obrigacoes periodicas", DB.calendario.length, "Calendario da E/4"),
       card("Nivel medio (P x I)", media.toFixed(1), "Escala de 1 a 25", "var(--yellow)")
     ].join("");
 
@@ -424,7 +424,7 @@
     try { history.replaceState({ tab: "processos", proc: id }, "", "#processos/" + id); } catch (e) { }
 
     var gp = DB.governancaProcessos[p.id] || { tarefa: p.titulo, indicadores: [] };
-    var respPadrao = (p.responsaveis && p.responsaveis.length) ? p.responsaveis[0] : "S/4";
+    var respPadrao = (p.responsaveis && p.responsaveis.length) ? p.responsaveis[0] : "E/4";
     var riscosHtml = p.riscos.map(function (r) {
       var n = DB.nivelRisco(r.probabilidade, r.impacto);
       return '<div class="risco-card b-' + n.cor + '">' +
@@ -528,7 +528,7 @@
   }
   function textoMatriz(p) {
     var gp = DB.governancaProcessos[p.id] || { indicadores: [] };
-    var respPadrao = (p.responsaveis && p.responsaveis.length) ? p.responsaveis[0] : "S/4";
+    var respPadrao = (p.responsaveis && p.responsaveis.length) ? p.responsaveis[0] : "E/4";
     var linhas = ["MATRIZ DE RISCOS (EB10-P-01.004) - " + p.codigo + " - " + p.titulo, ""];
     p.riscos.forEach(function (r, i) {
       var n = DB.nivelRisco(r.probabilidade, r.impacto);
@@ -548,7 +548,7 @@
   }
   function textoResumo(p) {
     return "============================================\n" +
-      "MAPEAMENTO DE PROCESSO - GPEX / S4\n" +
+      "MAPEAMENTO DE PROCESSO - GPEX / E4\n" +
       "============================================\n\n" +
       textoDados(p) + "\n\n" +
       textoEtapas(p) + "\n\n" +
@@ -618,7 +618,7 @@
       $("subMatrizLista").textContent = riscos.length + " risco(s) - nivel " + DB.nivelRisco(MATRIZ_FILTRO.p, MATRIZ_FILTRO.i).nome;
     } else {
       $("tituloMatrizLista").textContent = "Riscos mapeados";
-      $("subMatrizLista").textContent = riscos.length + " riscos nos " + DB.processos.length + " processos da S/4";
+      $("subMatrizLista").textContent = riscos.length + " riscos nos " + DB.processos.length + " processos da E/4";
       document.querySelectorAll("#tabelaMatriz td").forEach(function (td) { td.style.outline = "none"; });
     }
     riscos.sort(function (a, b) { return b.valor - a.valor; });
@@ -729,7 +729,7 @@
       linhas += '<div style="display:flex;justify-content:space-between;font-size:13px;"><span>Consumido: <strong>' +
         totalLitros.toFixed(2) + " L</strong></span><span>Cota: <strong>" + cota.toFixed(0) + " L</strong> - " + pct + "%</span></div>" +
         '<div class="barra"><span class="' + cls + '" style="width:' + pct + '%;"></span></div>';
-      if (totalLitros > cota) linhas += '<p class="sub" style="color:var(--red);margin-top:8px;">Consumo acima da cota. Registrar justificativa e reportar ao Cmt (risco do processo S4-06).</p>';
+      if (totalLitros > cota) linhas += '<p class="sub" style="color:var(--red);margin-top:8px;">Consumo acima da cota. Registrar justificativa e reportar ao Cmt (risco do processo E4-06).</p>';
     } else {
       linhas += '<p class="sub">Informe a cota mensal para comparar o consumo.</p>';
     }
@@ -903,8 +903,8 @@
 
     var byId = {}; nodes.forEach(function (n) { byId[n.id] = n; });
     var x = '<?xml version="1.0" encoding="UTF-8"?>\n';
-    x += '<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_E4" targetNamespace="http://bda-inf-amv.eb.mil.br/gpex/e4" exporter="GPEX S4 - Bda Inf Amv" exporterVersion="1.0">\n';
-    x += '  <bpmn:collaboration id="Collaboration_1">\n    <bpmn:participant id="Participant_S4" name="S/4 - ' + escXml(DB.governanca.macroprocesso) + '" processRef="Process_' + p.id + '"/>\n  </bpmn:collaboration>\n';
+    x += '<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_E4" targetNamespace="http://bda-inf-amv.eb.mil.br/gpex/e4" exporter="GPEX E4 - Bda Inf Amv" exporterVersion="1.0">\n';
+    x += '  <bpmn:collaboration id="Collaboration_1">\n    <bpmn:participant id="Participant_E4" name="E/4 - ' + escXml(DB.governanca.macroprocesso) + '" processRef="Process_' + p.id + '"/>\n  </bpmn:collaboration>\n';
     x += '  <bpmn:process id="Process_' + p.id + '" name="' + escXml(p.codigo + " - " + p.titulo) + '" isExecutable="false">\n';
     x += '    <bpmn:documentation>' + escXml(p.objetivo + " || Normas: " + DB.riscoEB10.base) + '</bpmn:documentation>\n';
     nodes.forEach(function (n) {
@@ -920,7 +920,7 @@
     var last = nodes[nodes.length - 1];
     var minX = 160, minY = 120, maxX = last.x + last.w + 60, maxY = 430;
     x += '  <bpmndi:BPMNDiagram id="BPMNDiagram_1">\n    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">\n';
-    x += '      <bpmndi:BPMNShape id="Participant_S4_di" bpmnElement="Participant_S4" isHorizontal="true"><dc:Bounds x="' + minX + '" y="' + minY + '" width="' + (maxX - minX) + '" height="' + (maxY - minY) + '"/></bpmndi:BPMNShape>\n';
+    x += '      <bpmndi:BPMNShape id="Participant_E4_di" bpmnElement="Participant_E4" isHorizontal="true"><dc:Bounds x="' + minX + '" y="' + minY + '" width="' + (maxX - minX) + '" height="' + (maxY - minY) + '"/></bpmndi:BPMNShape>\n';
     nodes.forEach(function (n) {
       x += '      <bpmndi:BPMNShape id="' + n.id + '_di" bpmnElement="' + n.id + '"><dc:Bounds x="' + n.x + '" y="' + n.y + '" width="' + n.w + '" height="' + n.h + '"/></bpmndi:BPMNShape>\n';
     });
@@ -937,7 +937,7 @@
     var objs = [], conns = [], k = 1;
     function obj(id, type, name) { objs.push({ id: id, type: type, name: name }); }
     function con(type, from, to) { conns.push({ id: "Conn_" + (k++), type: type, from: from, to: to }); }
-    obj("Obj_ORG_S4", "OT_ORG_UNIT", "S/4 - 4a Secao (Logistica)");
+    obj("Obj_ORG_E4", "OT_ORG_UNIT", "E/4 - 4a Secao (Logistica)");
     obj("Obj_EVT_Start", "OT_EVT", "Processo " + p.codigo + " iniciado");
     var prev = "Obj_EVT_Start";
     p.etapas.forEach(function (et, i) {
@@ -946,7 +946,7 @@
       obj(eid, "OT_EVT", "Etapa " + (i + 1) + " concluida");
       con("CT_ACTIV_1", prev, fid);
       con("CT_ACTIV_2", fid, eid);
-      con("CT_EXEC_1", fid, "Obj_ORG_S4");
+      con("CT_EXEC_1", fid, "Obj_ORG_E4");
       prev = eid;
     });
     obj("Obj_RULE_1", "OT_RULE", "Risco identificado? (XOR)");
@@ -954,7 +954,7 @@
     obj("Obj_EVT_Fim", "OT_EVT", "Processo encerrado");
     con("CT_ACTIV_1", prev, "Obj_RULE_1");
     con("CT_ACTIV_1", "Obj_RULE_1", "Obj_FUNC_RISCO");
-    con("CT_EXEC_1", "Obj_FUNC_RISCO", "Obj_ORG_S4");
+    con("CT_EXEC_1", "Obj_FUNC_RISCO", "Obj_ORG_E4");
     con("CT_ACTIV_2", "Obj_FUNC_RISCO", "Obj_EVT_Fim");
     con("CT_ACTIV_2", "Obj_RULE_1", "Obj_EVT_Fim");
 
@@ -965,7 +965,7 @@
 
     var x = '<?xml version="1.0" encoding="UTF-8"?>\n';
     x += '<AML xmlns="http://www.aris.com/AML" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n';
-    x += '  <Header>\n    <Created>' + new Date().toISOString() + '</Created>\n    <Creator>GPEX S4 - Bda Inf Amv</Creator>\n    <AmlVersion>1.0</AmlVersion>\n  </Header>\n';
+    x += '  <Header>\n    <Created>' + new Date().toISOString() + '</Created>\n    <Creator>GPEX E4 - Bda Inf Amv</Creator>\n    <AmlVersion>1.0</AmlVersion>\n  </Header>\n';
     x += '  <Models>\n    <Model id="Model_' + p.id + '" name="' + escXml(p.codigo + " - " + p.titulo) + '" modeltype="EPC">\n';
     x += '      <Attributes>\n' + riscos + '\n      </Attributes>\n';
     x += '      <Objects>\n';
@@ -983,7 +983,7 @@
     var linhas = [cols];
     DB.processos.forEach(function (p) {
       if (procNome && p.titulo !== procNome) return;
-      var resp = (p.responsaveis && p.responsaveis.length) ? p.responsaveis[0] : "S/4";
+      var resp = (p.responsaveis && p.responsaveis.length) ? p.responsaveis[0] : "E/4";
       var evIn = "Processo " + p.codigo + " iniciado";
       p.etapas.forEach(function (et, i) {
         var r = p.riscos[Math.min(i, p.riscos.length - 1)] || { descricao: "", controle: "" };
@@ -1007,7 +1007,7 @@
 
   function guiaARIS() {
     return [
-      "GUIA DE EXPORTACAO PARA O ARIS - SECAO DE LOGISTICA (S/4)",
+      "GUIA DE EXPORTACAO PARA O ARIS - SECAO DE LOGISTICA (E/4)",
       "Cmdo Bda Inf Amv",
       "",
       "1) ESCOLHA O PROCESSO",
@@ -1046,7 +1046,7 @@
   function planoRiscosTexto() {
     var riscos = DB.todosRiscos().slice().sort(function (a, b) { return b.valor - a.valor; });
     var l = [
-      "PLANO DE GESTAO DE RISCOS - SECAO DE LOGISTICA (S/4 - 4a Secao)",
+      "PLANO DE GESTAO DE RISCOS - SECAO DE LOGISTICA (E/4 - 4a Secao)",
       "Cmdo Bda Inf Amv",
       "Orgao: " + DB.governanca.orgao + " - subordinada ao " + DB.governanca.subordinacao,
       "Regimento Interno: finalidade (Art. 1o), missao (Art. 2o), competencias (Art. 3o) e atribuicoes (Arts. 4o a 6o)",
@@ -1129,8 +1129,8 @@
     if ($("btnGuiaAris")) $("btnGuiaAris").addEventListener("click", function () { copiarTexto(guiaARIS(), $("btnGuiaAris")); });
     if ($("btnGuiaArisTxt")) $("btnGuiaArisTxt").addEventListener("click", function () { baixarArquivo("guia-exportacao-aris.txt", guiaARIS()); });
     if ($("btnPlanoRiscos")) $("btnPlanoRiscos").addEventListener("click", function () { copiarTexto(planoRiscosTexto(), $("btnPlanoRiscos")); });
-    if ($("btnBaixarPlano")) $("btnBaixarPlano").addEventListener("click", function () { baixarArquivo("plano-gestao-riscos-s4.txt", planoRiscosTexto()); });
-    if ($("btnCsvRiscos")) $("btnCsvRiscos").addEventListener("click", function () { baixarArquivo("matriz-riscos-s4.csv", riscosCSV(), "text/csv;charset=utf-8"); });
+    if ($("btnBaixarPlano")) $("btnBaixarPlano").addEventListener("click", function () { baixarArquivo("plano-gestao-riscos-e4.txt", planoRiscosTexto()); });
+    if ($("btnCsvRiscos")) $("btnCsvRiscos").addEventListener("click", function () { baixarArquivo("matriz-riscos-e4.csv", riscosCSV(), "text/csv;charset=utf-8"); });
 
     if ($("valTarefaBtn")) {
       $("valTarefaBtn").addEventListener("click", function () {
@@ -1156,7 +1156,7 @@
       if ($("arisBpmn")) $("arisBpmn").addEventListener("click", function () { exportarARIS(arisSel(), "bpmn"); });
       if ($("arisAml")) $("arisAml").addEventListener("click", function () { exportarARIS(arisSel(), "aml"); });
       if ($("arisSmart")) $("arisSmart").addEventListener("click", function () { exportarARIS(arisSel(), "smart"); });
-      if ($("arisSmartTodos")) $("arisSmartTodos").addEventListener("click", function () { baixarArquivo("aris-smart-design-s4-todos.csv", arisSmartLinhas(null), "text/csv;charset=utf-8"); });
+      if ($("arisSmartTodos")) $("arisSmartTodos").addEventListener("click", function () { baixarArquivo("aris-smart-design-e4-todos.csv", arisSmartLinhas(null), "text/csv;charset=utf-8"); });
     }
   }
 
@@ -1254,7 +1254,7 @@
       });
     }
     if ($("btnRegimento")) $("btnRegimento").addEventListener("click", function () { copiarTexto(regimentoTexto(), $("btnRegimento")); });
-    if ($("btnRegimentoTxt")) $("btnRegimentoTxt").addEventListener("click", function () { baixarArquivo("regimento-interno-s4.txt", regimentoTexto()); });
+    if ($("btnRegimentoTxt")) $("btnRegimentoTxt").addEventListener("click", function () { baixarArquivo("regimento-interno-e4.txt", regimentoTexto()); });
   }
 
   /* ---------------- boot ---------------- */
