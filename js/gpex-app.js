@@ -54,7 +54,24 @@
   var mermaidPronto = false;
   function initMermaid() {
     if (mermaidPronto || typeof window.mermaid === "undefined") return;
-    window.mermaid.initialize({ startOnLoad: false, theme: "dark", securityLevel: "loose", flowchart: { useMaxWidth: true } });
+    window.mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "loose",
+      theme: "base",
+      fontFamily: "'Segoe UI', Tahoma, Arial, sans-serif",
+      themeVariables: {
+        primaryColor: "#eef3df",
+        primaryTextColor: "#2f3a1e",
+        primaryBorderColor: "#6b8e23",
+        lineColor: "#6b8e23",
+        secondaryColor: "#f5f7ee",
+        tertiaryColor: "#fbfcf6",
+        mainBkg: "#eef3df",
+        nodeBorder: "#6b8e23",
+        clusterBkg: "#f7faf0"
+      },
+      flowchart: { useMaxWidth: true, htmlLabels: true }
+    });
     mermaidPronto = true;
   }
   function renderMermaid(pre, code) {

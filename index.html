@@ -7,271 +7,244 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>Sistema de Gerenciamento de Vtr - Bda Inf Amv</title>
-  <link rel="stylesheet" href="css/style.css?v=11">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>E4/Bda Inf Amv - Mapeamento de Processos e Gestao de Riscos (GPEX)</title>
+  <link rel="stylesheet" href="css/gpex.css?v=2">
 </head>
 <body>
-  <header class="header">
-    <div class="header-left">
-      <div class="header-logo"><img src="img/logo.png" alt="Bda Inf Amv"></div>
-      <div class="header-title">
-        <h1>Sistema de Disponibilidade de Viaturas</h1>
-        <p>Brigada de Infantaria Aeromóvel</p>
+  <header class="topo">
+    <div class="topo-inner">
+      <img class="topo-logo" src="img/logo.png" alt="Logo Bda Inf Amv">
+      <div class="topo-titulo">
+        <h1>E4 / Bda Inf Amv</h1>
+        <p>Mapeamento de Processos e Gestao de Riscos - GPEX / Projeto Piloto 2.0 (CMSE)</p>
       </div>
-    </div>
-    <div class="header-nav">
-      <a href="index.html" class="nav-btn active">Painel de Indicadores</a>
-      <a href="gerenciar.html" class="nav-btn">Gerenciar Vtr</a>
-      <a href="logistica.html" class="nav-btn">Logistica / GPEX</a>
-    </div>
-    <div class="header-time">
-      <div id="dataAtual"></div>
-      <div class="hora" id="horaAtual"></div>
+      <div class="topo-relogio">
+        <div id="dataAtual"></div>
+        <div class="hora" id="horaAtual"></div>
+      </div>
     </div>
   </header>
 
   <main class="container">
-    <!-- Indicador Geral -->
-    <div class="indicador-geral">
-      <div class="velocimetro">
-        <canvas id="velocimetroCanvas" width="320" height="180"></canvas>
-        <div class="velocimetro-valor" id="indiceGeralValor">0%</div>
+    <div class="aviso">
+      Metodologia GPEX / Projeto Piloto 2.0 de Mapeamento de Processos (CMSE).
+      Os modelos abaixo sao de referencia e devem ser ajustados ao processo real da OM.
+      A publicacao no ASE e manual, por usuario autorizado, apos revisao humana.
+    </div>
+
+    <div class="gpex-abas" id="abas">
+      <button class="gpex-aba active" data-painel="visao">Visao Geral</button>
+      <button class="gpex-aba" data-painel="processos">Processos e Riscos</button>
+      <button class="gpex-aba" data-painel="matriz">Matriz de Riscos</button>
+      <button class="gpex-aba" data-painel="combustivel">Combustivel (Classe III)</button>
+      <button class="gpex-aba" data-painel="calendario">Calendario de Obrigacoes</button>
+      <button class="gpex-aba" data-painel="fontes">Fontes e Doutrina</button>
+    </div>
+
+    <!-- VISao GERAL -->
+    <section class="painel active" id="painel-visao">
+      <div class="grid-cards" id="cardsVisao"></div>
+
+      <div class="card">
+        <h2>Distribuicao dos riscos por nivel</h2>
+        <p class="sub">Nivel = Probabilidade (1-5) x Impacto (1-5)</p>
+        <div id="distRiscos"></div>
       </div>
-      <div class="indicador-geral-info">
-        <h2>Índice Geral de Disponibilidade da Brigada</h2>
-        <p>Percentual de viaturas não blindadas Disponíveis</p>
-        <div class="status-badges">
-          <div class="status-badge pronta"><span class="dot"></span><span id="badgeProntas">0</span> Disponíveis</div>
+
+      <div class="card">
+        <h2>Riscos prioritarios (Alto e Critico)</h2>
+        <p class="sub">Ordenados pelo valor P x I. Tratar com responsavel e prazo definidos.</p>
+        <div class="tabela-gpex">
+          <table>
+            <thead>
+              <tr><th>Processo</th><th>Risco</th><th>P</th><th>I</th><th>Nivel</th><th>Controle</th></tr>
+            </thead>
+            <tbody id="tbodyPrioritarios"></tbody>
+          </table>
         </div>
       </div>
-    </div>
 
-    <!-- Cards de Indicadores -->
-    <div class="indicadores-grid">
-      <div class="indicador-card blue">
-        <div class="label">Total Frota (Não Blindada)</div>
-        <div class="valor" id="totalFrota">0</div>
-        <div class="sub">12 OMs</div>
+      <div class="card">
+        <h2>Tratamento de risco - fluxo padrao (Politica de Gestao de Riscos do EME)</h2>
+        <div class="mermaid-box"><pre class="mermaid" id="mermaidTratamento"></pre></div>
       </div>
-      <div class="indicador-card green">
-        <div class="label">Vtr Disponíveis</div>
-        <div class="valor" id="vtrProntas">0</div>
-        <div class="sub">Disponíveis para emprego imediato</div>
+    </section>
+
+    <!-- PROCESSOS -->
+    <section class="painel" id="painel-processos">
+      <div class="card">
+        <h2>Tarefas da Secao de Logistica (E/4)</h2>
+        <p class="sub">19 processos: suprimento por classe, manutencao, transporte, engenharia, saude, salvamento, patrimonio, combustivel, calendario e desfazimento.</p>
+        <div class="gpex-filtros">
+          <input class="filtro-input" id="buscaProc" placeholder="Buscar processo, risco, etapa...">
+          <select class="filtro-input" id="filtroArea"></select>
+          <select class="filtro-input" id="filtroClasse"></select>
+          <select class="filtro-input" id="filtroNivel">
+            <option value="">Todos os niveis de risco</option>
+            <option value="Baixo">Baixo</option>
+            <option value="Moderado">Moderado</option>
+            <option value="Alto">Alto</option>
+            <option value="Critico">Critico</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start;">
+        <div class="lista-processos" id="listaProcessos"></div>
+        <div id="detalheProcesso"><div class="card"><div class="vazio">Selecione um processo na lista.</div></div></div>
+      </div>
+    </section>
+
+    <!-- MATRIZ -->
+    <section class="painel" id="painel-matriz">
+      <div class="card">
+        <h2>Matriz de risco Probabilidade x Impacto</h2>
+        <p class="sub">A celula mostra o nivel e a quantidade de riscos mapeados. Clique para filtrar na tabela abaixo.</p>
+        <div style="overflow:auto;">
+          <table class="matriz" id="tabelaMatriz"></table>
+        </div>
+        <div class="matriz-legenda">
+          <span><i style="background:var(--green)"></i> Baixo (1-4)</span>
+          <span><i style="background:var(--yellow)"></i> Moderado (5-9)</span>
+          <span><i style="background:var(--orange)"></i> Alto (10-14)</span>
+          <span><i style="background:var(--red)"></i> Critico (15-25)</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="detalhe-topo">
+          <div><h2 id="tituloMatrizLista">Riscos mapeados</h2><p class="sub" id="subMatrizLista"></p></div>
+          <button class="btn btn-sm" id="limparFiltroMatriz">Limpar filtro</button>
+        </div>
+        <div class="tabela-gpex">
+          <table>
+            <thead>
+              <tr><th>Processo</th><th>Risco</th><th>Causa</th><th>Consequencia</th><th>P</th><th>I</th><th>Nivel</th><th>Controle</th></tr>
+            </thead>
+            <tbody id="tbodyMatriz"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMBUSTIVEL -->
+    <section class="painel" id="painel-combustivel">
+      <div class="card">
+        <h2>Controle de combustivel e lubrificantes (Classe III)</h2>
+        <p class="sub" id="descCombustivel"></p>
+        <div class="form-grid">
+          <div class="campo"><label>Data</label><input type="date" id="cboData"></div>
+          <div class="campo"><label>Viatura / equipamento</label><input id="cboViatura" placeholder="Ex.: EB-123 / Gerador 1"></div>
+          <div class="campo"><label>Tipo</label><select id="cboTipo"></select></div>
+          <div class="campo"><label>Litros</label><input type="number" min="0" step="0.01" id="cboLitros" placeholder="0,00"></div>
+          <div class="campo"><label>Hodometro / horas (km/h)</label><input type="number" min="0" step="1" id="cboKm" placeholder="0"></div>
+          <div class="campo"><label>Responsavel</label><input id="cboResp" placeholder="Posto de abastecimento"></div>
+          <div class="campo"><label>&nbsp;</label><button class="btn btn-primary" id="cboAdd">Registrar abastecimento</button></div>
+        </div>
       </div>
 
-
-    </div>
-
-    <!-- Cadastramento de Viaturas -->
-    <div class="secao" id="cadastro">
-      <div class="secao-header">
-        <h2>Cadastramento de Viaturas por OM</h2>
-      </div>
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;">
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:6px;" id="botoesOMs"></div>
-        <div id="composicaoContainer" style="display:none;margin-top:16px;">
-          <h3 style="margin:0 0 12px 0;font-size:15px;" id="omTitulo"></h3>
-          <div style="overflow-x:auto;">
-            <table class="tabela-composicao">
-              <thead>
-                <tr>
-                  <th style="text-align:left;min-width:220px;">Tipo de Vtr</th>
-                  <th style="text-align:center;min-width:100px;">Total de Vtr OM</th>
-                  <th style="text-align:center;min-width:120px;">Qnt Vtr Indisponíveis</th>
-                  <th style="text-align:center;min-width:120px;">% Disponibilidade</th>
-                  <th style="text-align:center;min-width:120px;">Ações</th>
-                </tr>
-              </thead>
-              <tbody id="composicaoTbody"></tbody>
-            </table>
+      <div class="card">
+        <div class="detalhe-topo">
+          <div><h2>Resumo do periodo</h2><p class="sub" id="cboResumoObs"></p></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end;">
+            <div class="campo"><label>Mes de referencia</label><input type="month" id="cboMes"></div>
+            <div class="campo"><label>Cota mensal (L)</label><input type="number" min="0" step="1" id="cboCota" placeholder="0"></div>
+            <button class="btn btn-sm" id="cboLimpar">Limpar todos</button>
           </div>
         </div>
+        <div id="cboPainelResumo"></div>
       </div>
-      <div id="mensagem" style="display:none;margin-top:16px;padding:16px;border-radius:8px;font-weight:600;"></div>
-    </div>
 
-    <!-- Índice por OM -->
-    <div class="secao">
-      <div class="secao-header">
-        <h2>Índice de Disponibilidade por Organização Militar</h2>
-      </div>
-      <div class="tabela-om" id="tabelaOmContainer">
-        <table>
-          <thead>
-            <tr>
-              <th>Organização Militar (OM)</th>
-              <th>Total Frota</th>
-              <th>Vtr Disponíveis</th>
-              <th>Índice de Disponibilidade</th>
-              <th>Visual</th>
-            </tr>
-          </thead>
-          <tbody id="tabelaOmBody">
-            <tr><td colspan="5" class="loading">Carregando dados...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Gráfico de Barras Comparativo -->
-    <div class="secao">
-      <div class="secao-header">
-        <h2>Comparativo de Disponibilidade entre OMs</h2>
-      </div>
-      <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
-        <div class="grafico-barras" id="graficoBarras"></div>
-        <div style="display:flex; gap:16px; justify-content:center; margin-top:12px;">
-          <span style="font-size:11px; color:var(--text-muted); display:flex; align-items:center; gap:4px;"><span style="width:10px;height:10px;background:var(--green);border-radius:2px;display:inline-block;"></span> Disponíveis</span>
+      <div class="card">
+        <h2>Abastecimentos registrados</h2>
+        <div class="tabela-gpex">
+          <table>
+            <thead>
+              <tr><th>Data</th><th>Viatura</th><th>Tipo</th><th>Litros</th><th>Hodometro</th><th>Km/L</th><th>Responsavel</th><th></th></tr>
+            </thead>
+            <tbody id="tbodyCombustivel"></tbody>
+          </table>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="pareto-card" style="margin-bottom:24px;">
-      <h3>📊 Disponibilidade por OM</h3>
-      <div id="pizzaContainer" class="pizza-grid">
-        <div class="loading">Carregando...</div>
+    <!-- CALENDARIO -->
+    <section class="painel" id="painel-calendario">
+      <div class="card">
+        <h2>Calendario de obrigacoes da 4a Secao (E/4)</h2>
+        <p class="sub">Selecione o mes de referencia para gerar a agenda de vencimentos. Marque os itens cumpridos.</p>
+        <div class="form-grid">
+          <div class="campo"><label>Mes de referencia</label><input type="month" id="calMes"></div>
+          <div class="campo"><label>Filtrar por periodicidade</label><select id="calPeriodicidade"><option value="">Todas</option></select></div>
+          <div class="campo"><label>Filtrar por responsavel</label><select id="calResp"><option value="">Todos</option></select></div>
+        </div>
       </div>
-    </div>
+      <div class="card">
+        <div class="detalhe-topo">
+          <div><h2 id="calTitulo">Agenda do mes</h2><p class="sub" id="calProgresso"></p></div>
+          <div class="barra" style="width:220px;"><span id="calBarra" style="width:0%"></span></div>
+        </div>
+        <div class="tabela-gpex" style="margin-top:14px;">
+          <table>
+            <thead>
+              <tr><th>Feito</th><th>Data prevista</th><th>Obrigacao</th><th>Periodicidade</th><th>Responsavel</th><th>Processo</th></tr>
+            </thead>
+            <tbody id="tbodyCalendario"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Cadastro completo de obrigacoes</h2>
+        <p class="sub">Base consolidada - revisar trimestralmente (processo E4-14).</p>
+        <div class="tabela-gpex">
+          <table>
+            <thead><tr><th>Obrigacao</th><th>Periodicidade</th><th>Responsavel</th><th>Antecedencia (dias)</th><th>Processo</th></tr></thead>
+            <tbody id="tbodyCalCadastro"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
-    <!-- Detalhamento por OM -->
-    <div class="secao">
-      <div class="secao-header">
-        <h2>Detalhamento por Organização Militar</h2>
+    <!-- FONTES -->
+    <section class="painel" id="painel-fontes">
+      <div class="card">
+        <h2>Portais da Gestao - itens de referencia</h2>
+        <p class="sub">Intranet Bda Inf Amv, pagina 17 - "Portais da Gestao". Confirmar o item usado como fonte de cada mapeamento.</p>
+        <div class="fontes-grid" id="gridFontes"></div>
       </div>
-      <div id="detalhamentoOmContainer"></div>
-    </div>
+      <div class="card">
+        <h2>Referencia doutrinaria</h2>
+        <div class="fontes-grid" id="gridDoutrina"></div>
+      </div>
+      <div class="card">
+        <div class="aviso forte">
+          <strong>Seguranca da informacao e uso do ASE.</strong> O dominio ase.cmse.eb.mil.br possui robots.txt
+          que bloqueia acesso automatizado (bots/scripts). Nenhuma automacao deve interagir com esse dominio sem
+          autorizacao formal da STI/CTIC do CMSE. Este sistema nao realiza login nem envio automatico: apenas
+          prepara os blocos de texto para que o usuario autorizado cole manualmente, apos revisao humana.
+          Dados administrativos devem permanecer em ambiente interno, conforme as normas de seguranca do Exercito.
+        </div>
+      </div>
+    </section>
+
+    <footer class="gpex-rodape">
+      Sistema de apoio ao mapeamento de processos e gestao de riscos - Secao de Logistica (E/4) - Cmdo Bda Inf Amv<br>
+      Metodologia GPEX / Projeto Piloto 2.0 (CMSE) - Saida compativel com ARIS Express (EPC) e Mermaid/BPMN<br>
+      Toda saida gerada passa por revisao humana antes de se tornar documento oficial.
+    </footer>
   </main>
 
-  <script src="js/modo-estatico.js?v=11"></script>
-  <script src="js/dashboard.js?v=11"></script>
   <script>
-    const TIPOS = [
-      'VTP 5 Psg', 'VTP Picape 5 Psg', 'VTP Ônibus', 'VTP Micro-ônibus', 'VTP Van 14 a 16 Psg',
-      'VTNE ¾ Ton', 'VTNE 5 Ton', 'VTNE 2 ½ Ton',
-      'VTE Ambulância', 'VTE Cisterna Água', 'VTE Cisterna Combustível', 'VTE Baú',
-      'VTP Motocicleta', 'VSRNE Reboque'
-    ];
-
-    let omIdAtual = null;
-
-    function indicadorCor(pct) {
-      return pct >= 85 ? '#22c55e' : pct >= 70 ? '#eab308' : '#ef4444';
+    window.API = window.API || '';
+    const DATA_ATUAL = document.getElementById('dataAtual');
+    const HORA_ATUAL = document.getElementById('horaAtual');
+    function tick() {
+      const d = new Date();
+      DATA_ATUAL.textContent = d.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+      HORA_ATUAL.textContent = d.toLocaleTimeString('pt-BR');
     }
-
-    async function carregarBotoesOMs() {
-      const [omsRes, statusRes] = await Promise.all([
-        fetch(API+'/oms'),
-        fetch(API+'/oms/status')
-      ]);
-      const oms = await omsRes.json();
-      const status = await statusRes.json();
-      const mapa = {};
-      status.forEach(function(s) { mapa[s.id] = s.indice_disponibilidade; });
-      const container = document.getElementById('botoesOMs');
-      container.innerHTML = oms.map(function(o) {
-        var pct = mapa[o.id] || 0;
-        var cor = indicadorCor(pct);
-        return '<button class="btn btn-secondary" data-id="' + o.id + '" onclick="selecionarOM(' + o.id + ')" style="font-size:10px;padding:4px 4px;white-space:nowrap;display:flex;align-items:center;gap:3px;justify-content:center;">' +
-          '<span style="width:8px;height:8px;border-radius:50%;background:' + cor + ';display:inline-block;"></span>' +
-          o.sigla + ' <span style="font-size:10px;opacity:0.7;">' + pct + '%</span></button>';
-      }).join('');
-    }
-    carregarBotoesOMs();
-
-    async function selecionarOM(id) {
-      omIdAtual = id;
-      document.getElementById('botoesOMs').querySelectorAll('button').forEach(function(b) { b.classList.remove('btn-primary'); b.classList.add('btn-secondary'); });
-      var btn = document.getElementById('botoesOMs').querySelector('button[data-id="' + id + '"]');
-      if (btn) { btn.classList.remove('btn-secondary'); btn.classList.add('btn-primary'); }
-      var res = await fetch(API+'/composicao?om_id=' + id);
-      var dados = await res.json();
-      var titulo = (btn ? btn.textContent.replace(/[0-9]+%/g,'').trim() : 'OM ' + id);
-      document.getElementById('omTitulo').textContent = titulo;
-      renderizarTabela(dados || {});
-      document.getElementById('composicaoContainer').style.display = 'block';
-    }
-
-    function renderizarTabela(dados) {
-      const tbody = document.getElementById('composicaoTbody');
-      tbody.innerHTML = TIPOS.map(function(tipo) {
-        const info = dados[tipo] || { total: 0, indisponiveis: 0 };
-        const total = info.total || 0;
-        const indisp = info.indisponiveis || 0;
-        const prontas = total - indisp;
-        const pct = total > 0 ? ((prontas / total) * 100).toFixed(1) : 0;
-        const cor = pct >= 85 ? 'var(--green)' : pct >= 70 ? 'var(--yellow)' : 'var(--red)';
-        var temDados = total > 0;
-        var readonlyAttr = temDados ? 'readonly' : '';
-        var bgStyle = temDados ? 'background:#000;cursor:not-allowed;' : '';
-        var btnText = temDados ? 'Alterar' : 'Salvar';
-        var btnClass = temDados ? 'btn btn-secondary btn-row' : 'btn btn-primary btn-row';
-        var btnClick = temDados ? "alterarLinha('" + tipo + "')" : "salvarLinha('" + tipo + "')";
-        return '<tr>' +
-          '<td style="font-weight:600;">' + tipo + '</td>' +
-          '<td style="text-align:center;padding:4px;"><input type="number" min="0" class="input-comp total-input" data-tipo="' + tipo + '" value="' + total + '" ' + readonlyAttr + ' style="width:70px;text-align:center;padding:6px;font-size:13px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text-primary);' + bgStyle + '"></td>' +
-          '<td style="text-align:center;padding:4px;"><input type="number" min="0" class="input-comp indisp-input" data-tipo="' + tipo + '" value="' + indisp + '" ' + readonlyAttr + ' style="width:70px;text-align:center;padding:6px;font-size:13px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text-primary);' + bgStyle + '"></td>' +
-          '<td style="text-align:center;font-weight:700;color:' + cor + ';" class="pct-cell" data-tipo="' + tipo + '">' + pct + '%</td>' +
-          '<td style="text-align:center;padding:4px;"><button class="' + btnClass + '" data-tipo="' + tipo + '" onclick="' + btnClick + '" style="font-size:11px;padding:4px 10px;">' + btnText + '</button></td>' +
-        '</tr>';
-      }).join('');
-      document.querySelectorAll('.input-comp:not([readonly])').forEach(function(el) {
-        el.addEventListener('input', atualizarPct);
-      });
-    }
-
-    function atualizarPct() {
-      document.querySelectorAll('.pct-cell').forEach(function(td) {
-        const tipo = td.getAttribute('data-tipo');
-        const total = parseInt(document.querySelector('.total-input[data-tipo="' + tipo + '"]').value) || 0;
-        const indisp = parseInt(document.querySelector('.indisp-input[data-tipo="' + tipo + '"]').value) || 0;
-        const prontas = total - indisp;
-        const pct = total > 0 ? ((prontas / total) * 100).toFixed(1) : 0;
-        const cor = pct >= 85 ? 'var(--green)' : pct >= 70 ? 'var(--yellow)' : 'var(--red)';
-        td.textContent = pct + '%';
-        td.style.color = cor;
-      });
-    }
-
-    function alterarLinha(tipo) {
-      var inputs = document.querySelectorAll('.total-input[data-tipo="' + tipo + '"], .indisp-input[data-tipo="' + tipo + '"]');
-      inputs.forEach(function(el) { el.removeAttribute('readonly'); el.style.background = 'var(--bg-secondary)'; el.style.cursor = 'text'; el.addEventListener('input', atualizarPct); });
-      var btn = document.querySelector('.btn-row[data-tipo="' + tipo + '"]');
-      btn.textContent = 'Salvar';
-      btn.className = 'btn btn-primary btn-row';
-      btn.onclick = function() { salvarLinha(tipo); };
-    }
-
-    async function salvarLinha(tipo) {
-      if (!omIdAtual) { alert('Selecione uma OM.'); return; }
-      var total = parseInt(document.querySelector('.total-input[data-tipo="' + tipo + '"]').value) || 0;
-      var indisp = parseInt(document.querySelector('.indisp-input[data-tipo="' + tipo + '"]').value) || 0;
-      var dados = {};
-      dados[tipo] = { total: total, indisponiveis: indisp };
-      try {
-        const res = await fetch(API+'/composicao', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ om_id: omIdAtual, dados: dados })
-        });
-        const r = await res.json();
-        const msg = document.getElementById('mensagem');
-        msg.style.display = 'block';
-        if (res.ok) {
-          msg.style.background = 'var(--green-bg, #e6ffe6)';
-          msg.style.color = 'var(--green, #2e7d32)';
-          msg.style.border = '1px solid var(--green, #2e7d32)';
-          msg.textContent = tipo + ' salvo com sucesso!';
-          setTimeout(function() { location.reload(); }, 500);
-        } else {
-          msg.style.background = 'var(--red-bg, #ffe6e6)';
-          msg.style.color = 'var(--red, #c62828)';
-          msg.style.border = '1px solid var(--red, #c62828)';
-          msg.textContent = r.erro || 'Erro ao salvar';
-        }
-        setTimeout(function() { msg.style.display = 'none'; }, 3000);
-      } catch(e) { alert('Erro de conexao.'); }
-    }
+    tick(); setInterval(tick, 1000);
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="js/gpex-dados.js"></script>
+  <script src="js/gpex-app.js"></script>
 </body>
 </html>
