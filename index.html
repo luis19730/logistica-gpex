@@ -205,6 +205,20 @@
           </div>
         </div>
       </div>
+      <div class="card">
+        <h2>Integracao ARIS Express / ARIS Platform</h2>
+        <p class="sub">O ARIS Express nao importa BPMN/EPC por XML; a importacao nativa e via Visio, ARISalign ou arquivos ADF. Esta exportacao gera BPMN 2.0 e AML (para ARIS Cloud/Plataforma) e uma planilha para colar no Smart Design do ARIS Express.</p>
+        <div class="form-grid">
+          <div class="campo"><label>Processo</label><select id="arisProcesso"></select></div>
+          <div class="campo"><label>&nbsp;</label><button class="btn btn-sm" id="arisBpmn">Baixar BPMN (.bpmn)</button></div>
+          <div class="campo"><label>&nbsp;</label><button class="btn btn-sm" id="arisAml">Baixar AML (.aml)</button></div>
+          <div class="campo"><label>&nbsp;</label><button class="btn btn-sm" id="arisSmart">Baixar Smart Design (.csv)</button></div>
+          <div class="campo"><label>&nbsp;</label><button class="btn btn-sm btn-primary" id="arisSmartTodos">Smart Design de todos os processos</button></div>
+        </div>
+        <div class="aviso" style="margin-top:14px;">
+          Formato EPC/EPK e o padrao do ARIS Express; o BPMN 2.0 e o formato aberto recomendado para interoperabilidade (ARIS Cloud, bpmn.io, Camunda). O AML e gerado em melhor esforco e pode exigir ajuste de versao no ARIS.
+        </div>
+      </div>
     </section>
 
     <!-- COMBUSTIVEL -->

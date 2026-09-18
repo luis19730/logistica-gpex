@@ -259,6 +259,9 @@
       '<button class="btn btn-sm" data-exp="fluxo">Copiar fluxo (Mermaid)</button>' +
       '<button class="btn btn-sm" data-exp="matriz">Copiar matriz de riscos</button>' +
       '<button class="btn btn-sm btn-primary" data-exp="resumo">Copiar resumo completo (ASE)</button>' +
+      '<button class="btn btn-sm" data-aris="bpmn">ARIS: BPMN (.bpmn)</button>' +
+      '<button class="btn btn-sm" data-aris="aml">ARIS: AML (.aml)</button>' +
+      '<button class="btn btn-sm" data-aris="smart">ARIS: Smart Design (.csv)</button>' +
       "</div>" +
       "<h3>Objetivo</h3><p style=\"font-size:13px;color:var(--text-secondary);\">" + esc(p.objetivo) + "</p>" +
       '<h3>Hierarquia GPEX / Governança (EB20-D-11.001)</h3><dl class="hierarquia">' + hierarquiaHtml + "</dl>" +
@@ -279,6 +282,9 @@
 
     $("detalheProcesso").querySelectorAll("[data-exp]").forEach(function (b) {
       b.addEventListener("click", function () { copiarTexto(exportar(b.getAttribute("data-exp"), p), b); });
+    });
+    $("detalheProcesso").querySelectorAll("[data-aris]").forEach(function (b) {
+      b.addEventListener("click", function () { exportarARIS(p, b.getAttribute("data-aris")); });
     });
   }
 
@@ -654,6 +660,134 @@
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
   }
 
+  /* ---------------- integracao ARIS (BPMN 2.0 / AML / Smart Design) ---------------- */
+  function slug(s) {
+    return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 60);
+  }
+  function escXml(s) {
+    return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+  }
+
+  /* BPMN 2.0 - importavel no ARIS Cloud/Plataforma ARIS e ferramentas BPMN. */
+  function arisBPMN(p) {
+    var nodes = [], flows = [], cur = 220, cy = 260, gap = 50, fid = 1;
+    function node(id, type, name, w, h) { nodes.push({ id: id, type: type, name: name, w: w, h: h, x: cur, y: cy - h / 2 }); cur += w + gap; }
+    node("StartEvent_1", "startEvent", "Processo " + p.codigo + " iniciado", 36, 36);
+    p.etapas.forEach(function (et, i) { node("Task_" + (i + 1), "task", (i + 1) + ". " + et, 160, 88); });
+    node("Gateway_1", "exclusiveGateway", "Risco identificado?", 50, 50);
+    node("Task_Risco", "task", "Tratar risco (EB10-P-01.004)", 170, 88);
+    node("EndEvent_1", "endEvent", "Processo encerrado", 36, 36);
+
+    function flow(from, to, name) { flows.push({ id: "Flow_" + (fid++), from: from, to: to, name: name || "" }); }
+    for (var i = 0; i < nodes.length - 1; i++) flow(nodes[i].id, nodes[i + 1].id, nodes[i].id === "Gateway_1" ? "Sim" : "");
+    flow("Gateway_1", "EndEvent_1", "Nao");
+
+    var byId = {}; nodes.forEach(function (n) { byId[n.id] = n; });
+    var x = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    x += '<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_E4" targetNamespace="http://bda-inf-amv.eb.mil.br/gpex/e4" exporter="GPEX E4 - Bda Inf Amv" exporterVersion="1.0">\n';
+    x += '  <bpmn:collaboration id="Collaboration_1">\n    <bpmn:participant id="Participant_E4" name="E/4 - ' + escXml(DB.governanca.macroprocesso) + '" processRef="Process_' + p.id + '"/>\n  </bpmn:collaboration>\n';
+    x += '  <bpmn:process id="Process_' + p.id + '" name="' + escXml(p.codigo + " - " + p.titulo) + '" isExecutable="false">\n';
+    x += '    <bpmn:documentation>' + escXml(p.objetivo + " || Normas: " + DB.riscoEB10.base) + '</bpmn:documentation>\n';
+    nodes.forEach(function (n) {
+      if (n.type === "startEvent") x += '    <bpmn:startEvent id="' + n.id + '" name="' + escXml(n.name) + '"/>\n';
+      else if (n.type === "endEvent") x += '    <bpmn:endEvent id="' + n.id + '" name="' + escXml(n.name) + '"/>\n';
+      else if (n.type === "exclusiveGateway") x += '    <bpmn:exclusiveGateway id="' + n.id + '" name="' + escXml(n.name) + '"/>\n';
+      else x += '    <bpmn:task id="' + n.id + '" name="' + escXml(n.name) + '"/>\n';
+    });
+    flows.forEach(function (f) {
+      x += '    <bpmn:sequenceFlow id="' + f.id + '"' + (f.name ? ' name="' + escXml(f.name) + '"' : "") + ' sourceRef="' + f.from + '" targetRef="' + f.to + '"/>\n';
+    });
+    x += '  </bpmn:process>\n';
+    var last = nodes[nodes.length - 1];
+    var minX = 160, minY = 120, maxX = last.x + last.w + 60, maxY = 430;
+    x += '  <bpmndi:BPMNDiagram id="BPMNDiagram_1">\n    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">\n';
+    x += '      <bpmndi:BPMNShape id="Participant_E4_di" bpmnElement="Participant_E4" isHorizontal="true"><dc:Bounds x="' + minX + '" y="' + minY + '" width="' + (maxX - minX) + '" height="' + (maxY - minY) + '"/></bpmndi:BPMNShape>\n';
+    nodes.forEach(function (n) {
+      x += '      <bpmndi:BPMNShape id="' + n.id + '_di" bpmnElement="' + n.id + '"><dc:Bounds x="' + n.x + '" y="' + n.y + '" width="' + n.w + '" height="' + n.h + '"/></bpmndi:BPMNShape>\n';
+    });
+    flows.forEach(function (f) {
+      var a = byId[f.from], b = byId[f.to];
+      x += '      <bpmndi:BPMNEdge id="' + f.id + '_di" bpmnElement="' + f.id + '"><di:waypoint x="' + (a.x + a.w) + '" y="' + (a.y + a.h / 2) + '"/><di:waypoint x="' + b.x + '" y="' + (b.y + b.h / 2) + '"/></bpmndi:BPMNEdge>\n';
+    });
+    x += '    </bpmndi:BPMNPlane>\n  </bpmndi:BPMNDiagram>\n</bpmn:definitions>\n';
+    return x;
+  }
+
+  /* AML (ARIS Markup Language) - melhor esforco; importacao recomendada no ARIS Cloud/Plataforma. */
+  function arisAML(p) {
+    var objs = [], conns = [], k = 1;
+    function obj(id, type, name) { objs.push({ id: id, type: type, name: name }); }
+    function con(type, from, to) { conns.push({ id: "Conn_" + (k++), type: type, from: from, to: to }); }
+    obj("Obj_ORG_E4", "OT_ORG_UNIT", "E/4 - Secao de Logistica");
+    obj("Obj_EVT_Start", "OT_EVT", "Processo " + p.codigo + " iniciado");
+    var prev = "Obj_EVT_Start";
+    p.etapas.forEach(function (et, i) {
+      var fid = "Obj_FUNC_" + (i + 1), eid = "Obj_EVT_" + (i + 1);
+      obj(fid, "OT_FUNC", et);
+      obj(eid, "OT_EVT", "Etapa " + (i + 1) + " concluida");
+      con("CT_ACTIV_1", prev, fid);
+      con("CT_ACTIV_2", fid, eid);
+      con("CT_EXEC_1", fid, "Obj_ORG_E4");
+      prev = eid;
+    });
+    obj("Obj_RULE_1", "OT_RULE", "Risco identificado? (XOR)");
+    obj("Obj_FUNC_RISCO", "OT_FUNC", "Tratar risco conforme EB10-P-01.004");
+    obj("Obj_EVT_Fim", "OT_EVT", "Processo encerrado");
+    con("CT_ACTIV_1", prev, "Obj_RULE_1");
+    con("CT_ACTIV_1", "Obj_RULE_1", "Obj_FUNC_RISCO");
+    con("CT_EXEC_1", "Obj_FUNC_RISCO", "Obj_ORG_E4");
+    con("CT_ACTIV_2", "Obj_FUNC_RISCO", "Obj_EVT_Fim");
+    con("CT_ACTIV_2", "Obj_RULE_1", "Obj_EVT_Fim");
+
+    var riscos = p.riscos.map(function (r) {
+      var n = DB.nivelRisco(r.probabilidade, r.impacto);
+      return "        <AttrDef id=\"Attr_Risco_\" name=\"Risco\"><Value>" + escXml(r.descricao + " (Nivel " + n.nome + ")") + "</Value></AttrDef>";
+    }).join("\n");
+
+    var x = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    x += '<AML xmlns="http://www.aris.com/AML" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n';
+    x += '  <Header>\n    <Created>' + new Date().toISOString() + '</Created>\n    <Creator>GPEX E4 - Bda Inf Amv</Creator>\n    <AmlVersion>1.0</AmlVersion>\n  </Header>\n';
+    x += '  <Models>\n    <Model id="Model_' + p.id + '" name="' + escXml(p.codigo + " - " + p.titulo) + '" modeltype="EPC">\n';
+    x += '      <Attributes>\n' + riscos + '\n      </Attributes>\n';
+    x += '      <Objects>\n';
+    objs.forEach(function (o) { x += '        <Object id="' + o.id + '" type="' + o.type + '" name="' + escXml(o.name) + '"/>\n'; });
+    x += '      </Objects>\n      <Connections>\n';
+    conns.forEach(function (c) { x += '        <Connection id="' + c.id + '" type="' + c.type + '" from="' + c.from + '" to="' + c.to + '"/>\n'; });
+    x += '      </Connections>\n    </Model>\n  </Models>\n</AML>\n';
+    return x;
+  }
+
+  /* Planilha para o "Smart Design" do ARIS Express (colar). */
+  function arisSmartLinhas(procNome) {
+    var cols = ["Passo", "Evento de entrada", "Funcao", "Evento de saida", "Responsavel", "Risco relacionado", "Controle"];
+    if (procNome) cols.unshift("Processo");
+    var linhas = [cols];
+    DB.processos.forEach(function (p) {
+      if (procNome && p.titulo !== procNome) return;
+      var resp = (p.responsaveis && p.responsaveis.length) ? p.responsaveis[0] : "E/4";
+      var evIn = "Processo " + p.codigo + " iniciado";
+      p.etapas.forEach(function (et, i) {
+        var r = p.riscos[Math.min(i, p.riscos.length - 1)] || { descricao: "", controle: "" };
+        var linha = [(i + 1), evIn, et, "Etapa " + (i + 1) + " concluida", resp, r.descricao, r.controle];
+        if (procNome) linha.unshift(p.codigo + " - " + p.titulo);
+        linhas.push(linha);
+        evIn = "Etapa " + (i + 1) + " concluida";
+      });
+    });
+    function c(v) { return '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"'; }
+    return "\ufeff" + linhas.map(function (l) { return l.map(c).join(";"); }).join("\r\n");
+  }
+
+  function baixar(conteudo, nome, tipo) { baixarArquivo(nome, conteudo, tipo); }
+  function exportarARIS(p, formato) {
+    var base = p.codigo.toLowerCase() + "-" + slug(p.titulo);
+    if (formato === "bpmn") baixar(arisBPMN(p), base + ".bpmn", "application/xml");
+    else if (formato === "aml") baixar(arisAML(p), base + ".aml", "application/xml");
+    else baixar(arisSmartLinhas(p.titulo), base + "-smart-design.csv", "text/csv;charset=utf-8");
+  }
+
   function planoRiscosTexto() {
     var riscos = DB.todosRiscos().slice().sort(function (a, b) { return b.valor - a.valor; });
     var l = [
@@ -753,6 +887,15 @@
         var cls = r.ok ? "aviso" : "aviso forte";
         $("valCronOut").innerHTML = '<div class="' + cls + '" style="margin:10px 0 0;">' + r.avisos.map(esc).join("<br>") + "</div>";
       });
+    }
+
+    if ($("arisProcesso")) {
+      $("arisProcesso").innerHTML = DB.processos.map(function (p) { return '<option value="' + p.id + '">' + esc(p.codigo + " - " + p.titulo) + "</option>"; }).join("");
+      function arisSel() { return DB.processos.filter(function (x) { return x.id === $("arisProcesso").value; })[0] || DB.processos[0]; }
+      if ($("arisBpmn")) $("arisBpmn").addEventListener("click", function () { exportarARIS(arisSel(), "bpmn"); });
+      if ($("arisAml")) $("arisAml").addEventListener("click", function () { exportarARIS(arisSel(), "aml"); });
+      if ($("arisSmart")) $("arisSmart").addEventListener("click", function () { exportarARIS(arisSel(), "smart"); });
+      if ($("arisSmartTodos")) $("arisSmartTodos").addEventListener("click", function () { baixarArquivo("aris-smart-design-e4-todos.csv", arisSmartLinhas(null), "text/csv;charset=utf-8"); });
     }
   }
 
