@@ -22,7 +22,7 @@
   }
 
   function nivelTag(n) {
-    var cor = { Baixo: "verde", Moderado: "amarelo", Alto: "laranja", Critico: "vermelho" }[n] || "cinza";
+    var cor = { "Baixo": "verde", "Médio": "amarelo", "Alto": "laranja", "Extremo": "vermelho" }[n] || "cinza";
     return '<span class="tag ' + cor + '">' + esc(n) + "</span>";
   }
 
@@ -116,19 +116,19 @@
   /* ---------------- VISaO GERAL ---------------- */
   function initVisao() {
     var riscos = DB.todosRiscos();
-    var altos = riscos.filter(function (r) { return r.nivel === "Alto" || r.nivel === "Critico"; });
+    var altos = riscos.filter(function (r) { return r.nivel === "Alto" || r.nivel === "Extremo"; });
     var media = riscos.length ? (riscos.reduce(function (a, r) { return a + r.valor; }, 0) / riscos.length) : 0;
 
     $("cardsVisao").innerHTML = [
       card("Processos mapeados", DB.processos.length, "Tarefas da Secao de Logistica"),
       card("Riscos identificados", riscos.length, "Com causa, consequencia e controle"),
-      card("Riscos Alto/Critico", altos.length, "Tratamento prioritario", altos.length ? "var(--red)" : "var(--green)"),
+      card("Riscos Alto/Extremo", altos.length, "Tratamento prioritário (EB10-P-01.004)", altos.length ? "var(--red)" : "var(--green)"),
       card("Classes de suprimento", DB.classes.length, "I a X"),
       card("Obrigacoes periodicas", DB.calendario.length, "Calendario do E/4"),
       card("Nivel medio (P x I)", media.toFixed(1), "Escala de 1 a 25", "var(--yellow)")
     ].join("");
 
-    var cont = { Baixo: 0, Moderado: 0, Alto: 0, Critico: 0 };
+    var cont = { "Baixo": 0, "Médio": 0, "Alto": 0, "Extremo": 0 };
     riscos.forEach(function (r) { cont[r.nivel]++; });
     $("distRiscos").innerHTML = DB.escala.map(function (e) {
       var q = cont[e.nome] || 0;
@@ -145,7 +145,7 @@
     $("tbodyPrioritarios").innerHTML = pri.length ? pri.map(function (r) {
       return "<tr><td>" + esc(r.processo) + "</td><td>" + esc(r.descricao) + "</td><td>" + r.probabilidade +
         "</td><td>" + r.impacto + "</td><td>" + nivelTag(r.nivel) + "</td><td>" + esc(r.controle) + "</td></tr>";
-    }).join("") : '<tr><td colspan="6" class="vazio">Nenhum risco Alto/Critico.</td></tr>';
+    }).join("") : '<tr><td colspan="6" class="vazio">Nenhum risco Alto/Extremo.</td></tr>';
 
     renderMermaid($("mermaidTratamento"), mmFluxoTratamento());
 
@@ -195,7 +195,7 @@
 
     $("listaProcessos").innerHTML = lista.length ? lista.map(function (p) {
       var niveis = procNiveis(p);
-      var pior = ["Critico", "Alto", "Moderado", "Baixo"].filter(function (n) { return niveis.indexOf(n) !== -1; })[0] || "Baixo";
+      var pior = ["Extremo", "Alto", "Médio", "Baixo"].filter(function (n) { return niveis.indexOf(n) !== -1; })[0] || "Baixo";
       var tags = p.classes.length ? p.classes.map(function (c) { return '<span class="tag cinza">Classe ' + esc(c) + "</span>"; }).join(" ") : '<span class="tag cinza">Sem classe</span>';
       return '<div class="proc-item' + (PROC_ATUAL === p.id ? " active" : "") + '" data-id="' + p.id + '">' +
         '<div class="cod">' + esc(p.codigo) + " - " + esc(p.area) + "</div>" +
@@ -222,15 +222,33 @@
     var p = DB.processos.filter(function (x) { return x.id === id; })[0];
     if (!p) return;
 
+    var gp = DB.governancaProcessos[p.id] || { tarefa: p.titulo, indicadores: [] };
+    var respPadrao = (p.responsaveis && p.responsaveis.length) ? p.responsaveis[0] : "E/4";
     var riscosHtml = p.riscos.map(function (r) {
       var n = DB.nivelRisco(r.probabilidade, r.impacto);
       return '<div class="risco-card b-' + n.cor + '">' +
         '<div class="rc-top"><span class="rc-tit">' + esc(r.descricao) + "</span><span>" + nivelTag(n.nome) +
         ' <span class="tag cinza">P ' + r.probabilidade + " x I " + r.impacto + " = " + (r.probabilidade * r.impacto) + "</span></span></div>" +
         "<dl><dt>Causa</dt><dd>" + esc(r.causa) + "</dd>" +
-        "<dt>Consequencia</dt><dd>" + esc(r.consequencia) + "</dd>" +
-        "<dt>Controle / Mitigacao</dt><dd>" + esc(r.controle) + "</dd></dl></div>";
+        "<dt>Consequência</dt><dd>" + esc(r.consequencia) + "</dd>" +
+        "<dt>Probabilidade</dt><dd>" + r.probabilidade + " - " + esc(DB.probabilidadeRotulo(r.probabilidade)) + " (" + esc(DB.riscoEB10.probabilidade[r.probabilidade - 1].descricao) + ")</dd>" +
+        "<dt>Impacto</dt><dd>" + r.impacto + " - " + esc(DB.impactoRotulo(r.impacto)) + " (" + esc(DB.riscoEB10.impacto[r.impacto - 1].descricao) + ")</dd>" +
+        "<dt>Controle / Mitigação</dt><dd>" + esc(r.controle) + "</dd>" +
+        "<dt>Resposta (EB10)</dt><dd><strong>" + esc(DB.respostaPara(n.nome)) + "</strong> - " + esc(DB.prazoPara(n.nome)) + " | Responsável: " + esc(respPadrao) + "</dd>" +
+        "<dt>Categoria</dt><dd>" + esc(DB.categoriaDe(p.area)) + "</dd>" +
+        "<dt>Indicador</dt><dd>" + esc((gp.indicadores && gp.indicadores.length) ? gp.indicadores[0] : "Monitorar indicadores do processo") + "</dd></dl></div>";
     }).join("");
+
+    var hierarquiaHtml = [
+      ["Portfólio", DB.governanca.portfolio],
+      ["Programa", DB.governanca.programa],
+      ["Macroprocesso", DB.governanca.macroprocesso],
+      ["Processo", p.codigo + " - " + p.titulo],
+      ["Tarefa (nomenclatura)", gp.tarefa || p.titulo]
+    ].map(function (x) { return "<dt>" + esc(x[0]) + "</dt><dd>" + esc(x[1]) + "</dd>"; }).join("");
+    var indicadoresHtml = (gp.indicadores && gp.indicadores.length)
+      ? gp.indicadores.map(function (i) { return "<li>" + esc(i) + "</li>"; }).join("")
+      : "<li>Definir indicador de desempenho do processo.</li>";
 
     var html = '<div class="card">' +
       '<div class="detalhe-topo"><div><div class="cod">' + esc(p.codigo) + " - " + esc(p.area) + '</div><h2>' + esc(p.titulo) + "</h2></div>" +
@@ -243,7 +261,9 @@
       '<button class="btn btn-sm btn-primary" data-exp="resumo">Copiar resumo completo (ASE)</button>' +
       "</div>" +
       "<h3>Objetivo</h3><p style=\"font-size:13px;color:var(--text-secondary);\">" + esc(p.objetivo) + "</p>" +
-      "<h3>Responsaveis</h3><p style=\"font-size:13px;color:var(--text-secondary);\">" + esc(p.responsaveis.join("; ")) + "</p>" +
+      '<h3>Hierarquia GPEX / Governança (EB20-D-11.001)</h3><dl class="hierarquia">' + hierarquiaHtml + "</dl>" +
+      '<h3>Indicadores de desempenho</h3><ul class="lista-simples">' + indicadoresHtml + "</ul>" +
+      "<h3>Responsáveis</h3><p style=\"font-size:13px;color:var(--text-secondary);\">" + esc(p.responsaveis.join("; ")) + "</p>" +
       "<h3>Etapas do processo</h3><ol class=\"etapas\">" + p.etapas.map(function (e) { return "<li>" + esc(e) + "</li>"; }).join("") + "</ol>" +
       "<h3>Fluxograma do processo (Mermaid / base BPMN)</h3>" +
       '<div class="mermaid-box"><pre class="mermaid" id="mmProc"></pre></div>' +
@@ -264,13 +284,19 @@
 
   /* ---------------- exportacao de texto (para o ASE) ---------------- */
   function textoDados(p) {
+    var gp = DB.governancaProcessos[p.id] || { tarefa: p.titulo, indicadores: [] };
     return "DADOS DO PROCESSO\n" +
       "Codigo: " + p.codigo + "\n" +
       "Titulo: " + p.titulo + "\n" +
+      "Tarefa (Verbo + Objeto + Complemento): " + (gp.tarefa || p.titulo) + "\n" +
       "Area: " + p.area + "\n" +
+      "Portfolio: " + DB.governanca.portfolio + "\n" +
+      "Programa: " + DB.governanca.programa + "\n" +
+      "Macroprocesso: " + DB.governanca.macroprocesso + "\n" +
       "Classes de suprimento: " + (p.classes.length ? p.classes.join(", ") : "Nao aplicavel") + "\n" +
       "Objetivo: " + p.objetivo + "\n" +
       "Responsaveis: " + p.responsaveis.join("; ") + "\n" +
+      "Indicadores: " + ((gp.indicadores && gp.indicadores.length) ? gp.indicadores.join("; ") : "Definir") + "\n" +
       "Fonte: " + p.fontes.join("; ");
   }
   function textoEtapas(p) {
@@ -281,14 +307,21 @@
     return "FLUXO DO PROCESSO - " + p.codigo + " (Mermaid)\n\n" + mmFluxoProcesso(p);
   }
   function textoMatriz(p) {
-    var linhas = ["MATRIZ DE RISCOS - " + p.codigo + " - " + p.titulo, ""];
+    var gp = DB.governancaProcessos[p.id] || { indicadores: [] };
+    var respPadrao = (p.responsaveis && p.responsaveis.length) ? p.responsaveis[0] : "E/4";
+    var linhas = ["MATRIZ DE RISCOS (EB10-P-01.004) - " + p.codigo + " - " + p.titulo, ""];
     p.riscos.forEach(function (r, i) {
       var n = DB.nivelRisco(r.probabilidade, r.impacto);
       linhas.push("Risco " + (i + 1) + ": " + r.descricao);
+      linhas.push("  Categoria: " + DB.categoriaDe(p.area));
       linhas.push("  Causa: " + r.causa);
-      linhas.push("  Consequencia: " + r.consequencia);
-      linhas.push("  Probabilidade: " + r.probabilidade + " | Impacto: " + r.impacto + " | Nivel: " + n.nome + " (" + (r.probabilidade * r.impacto) + ")");
-      linhas.push("  Controle/Mitigacao: " + r.controle);
+      linhas.push("  Consequência: " + r.consequencia);
+      linhas.push("  Probabilidade: " + r.probabilidade + " - " + DB.probabilidadeRotulo(r.probabilidade));
+      linhas.push("  Impacto: " + r.impacto + " - " + DB.impactoRotulo(r.impacto));
+      linhas.push("  Nível de risco (P x I): " + n.nome + " (" + (r.probabilidade * r.impacto) + ")");
+      linhas.push("  Controle/Mitigação: " + r.controle);
+      linhas.push("  Resposta: " + DB.respostaPara(n.nome) + " | Prazo: " + DB.prazoPara(n.nome) + " | Responsável: " + respPadrao);
+      linhas.push("  Indicador: " + ((gp.indicadores && gp.indicadores.length) ? gp.indicadores[0] : "Monitorar indicadores do processo"));
       linhas.push("");
     });
     return linhas.join("\n");
@@ -304,7 +337,9 @@
       DB.tratamentoRisco.map(function (t) { return "  " + t.etapa + " - " + t.descricao; }).join("\n") + "\n\n" +
       "FLUXO (Mermaid - colar no ASE/ARIS como referencia)\n\n" + mmFluxoProcesso(p) + "\n\n" +
       "--------------------------------------------\n" +
-      "Escala de risco: 1-4 Baixo | 5-9 Moderado | 10-14 Alto | 15-25 Critico\n" +
+      "Escala de risco (EB10-P-01.004): 1-4 Baixo | 5-9 Médio | 10-14 Alto | 15-25 Extremo\n" +
+      "Respostas: Evitar | Reduzir | Compartilhar | Aceitar\n" +
+      "Normas: " + DB.riscoEB10.base + "\n" +
       "Fonte: " + DB.meta.metodologia + "\n" +
       "Gerado em: " + new Date().toLocaleString("pt-BR") + "\n" +
       "VALIDACAO HUMANA OBRIGATORIA ANTES DE PUBLICAR NO ASE.\n" +
@@ -593,11 +628,157 @@
           : '<div style="font-size:11.5px;color:var(--text-muted);margin-top:6px;">' + esc(f.acesso || "") + "</div>") +
         "</div>";
     }).join("");
+    if ($("gridNormas")) {
+      $("gridNormas").innerHTML = DB.normas.map(function (n) {
+        return '<div class="fonte"><div class="n">' + esc(n.codigo) + (n.edicao ? " - " + esc(n.edicao) : "") + '</div>' +
+          '<div class="nome">' + esc(n.titulo) + "</div>" +
+          '<div class="desc">' + esc(n.aplicacao) + "</div>" +
+          '<div style="font-size:11.5px;color:var(--text-muted);margin-top:6px;">' + esc(n.portaria) + "</div>" +
+          (n.url ? '<a href="' + esc(n.url) + '" target="_blank" rel="noopener">Acessar norma</a>'
+            : '<span class="tag amarelo" style="margin-top:6px;">confirmar vigência</span>') + "</div>";
+      }).join("");
+    }
     $("gridDoutrina").innerHTML = DB.doutrina.map(function (d) {
       return '<div class="fonte"><div class="n">' + esc(d.sigla) + '</div><div class="nome">' + esc(d.titulo) + "</div>" +
         '<div class="desc">' + esc(d.aplicacao) + "</div>" +
         (d.url ? '<a href="' + esc(d.url) + '" target="_blank" rel="noopener">Acessar documento</a>' : "") + "</div>";
     }).join("");
+  }
+
+  /* ---------------- GOVERNANCA (EB10 / EB20) ---------------- */
+  function baixarArquivo(nome, conteudo, tipo) {
+    var blob = new Blob([conteudo], { type: tipo || "text/plain;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = nome;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+  }
+
+  function planoRiscosTexto() {
+    var riscos = DB.todosRiscos().slice().sort(function (a, b) { return b.valor - a.valor; });
+    var l = [
+      "PLANO DE GESTAO DE RISCOS - SECAO DE LOGISTICA (E/4)",
+      "Cmdo Bda Inf Amv",
+      "Base legal: " + DB.riscoEB10.base,
+      "Portfolio: " + DB.governanca.portfolio,
+      "Macroprocesso: " + DB.governanca.macroprocesso,
+      "Gerado em: " + new Date().toLocaleString("pt-BR"),
+      "Escala: 1-4 Baixo | 5-9 Medio | 10-14 Alto | 15-25 Extremo",
+      ""
+    ];
+    var porNivel = { "Baixo": 0, "Médio": 0, "Alto": 0, "Extremo": 0 };
+    riscos.forEach(function (r) { porNivel[r.nivel] = (porNivel[r.nivel] || 0) + 1; });
+    l.push("Resumo: Baixo " + porNivel["Baixo"] + " | Médio " + porNivel["Médio"] + " | Alto " + porNivel["Alto"] + " | Extremo " + porNivel["Extremo"]);
+    l.push("");
+    riscos.forEach(function (r, i) {
+      l.push((i + 1) + ". [" + r.processoId.toUpperCase() + "] " + r.descricao);
+      l.push("   Categoria: " + r.categoria + " | Nivel: " + r.nivel + " (P " + r.probabilidade + " x I " + r.impacto + " = " + r.valor + ")");
+      l.push("   P: " + r.probabilidade + " - " + r.probabilidadeRotulo + " | I: " + r.impacto + " - " + r.impactoRotulo);
+      l.push("   Causa: " + r.causa);
+      l.push("   Consequencia: " + r.consequencia);
+      l.push("   Controle/Mitigacao: " + r.controle);
+      l.push("   Resposta: " + r.resposta + " | Prazo: " + r.prazo + " | Responsavel: " + r.responsavel);
+      l.push("   Indicador: " + r.indicador);
+      l.push("");
+    });
+    l.push("VALIDACAO HUMANA OBRIGATORIA ANTES DE PUBLICAR NO ASE.");
+    return l.join("\n");
+  }
+
+  function riscosCSV() {
+    var cols = ["Processo", "Categoria", "Risco", "Causa", "Consequencia", "Probabilidade", "P_rotulo", "Impacto", "I_rotulo", "Nivel", "Valor", "Controle", "Resposta", "Prazo", "Responsavel", "Indicador"];
+    function c(v) { return '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"'; }
+    var linhas = [cols.map(c).join(";")];
+    DB.todosRiscos().slice().sort(function (a, b) { return b.valor - a.valor; }).forEach(function (r) {
+      linhas.push([
+        r.processo, r.categoria, r.descricao, r.causa, r.consequencia,
+        r.probabilidade, r.probabilidadeRotulo, r.impacto, r.impactoRotulo,
+        r.nivel, r.valor, r.controle, r.resposta, r.prazo, r.responsavel, r.indicador
+      ].map(c).join(";"));
+    });
+    return "\ufeff" + linhas.join("\r\n");
+  }
+
+  function initGovernanca() {
+    var g = DB.governanca;
+    if ($("governancaHierarquia")) {
+      $("governancaHierarquia").innerHTML = [
+        ["Portfólio", g.portfolio], ["Programa", g.programa],
+        ["Macroprocesso", g.macroprocesso], ["Cadeia de valor", g.cadeiaValor]
+      ].map(function (x) { return '<div class="hier-item"><span>' + esc(x[0]) + "</span><strong>" + esc(x[1]) + "</strong></div>"; }).join("");
+    }
+
+    if ($("tbodyGovernancaIndicadores")) {
+      $("tbodyGovernancaIndicadores").innerHTML = DB.processos.map(function (p) {
+        var gp = DB.governancaProcessos[p.id] || { tarefa: p.titulo, indicadores: [] };
+        return "<tr><td>" + esc(p.codigo) + "</td><td>" + esc(gp.tarefa || p.titulo) + "</td><td>" +
+          ((gp.indicadores && gp.indicadores.length) ? gp.indicadores.map(function (i) { return esc(i); }).join("<br>") : "-") + "</td></tr>";
+      }).join("");
+    }
+
+    if ($("tbodyMarcos")) {
+      $("tbodyMarcos").innerHTML = DB.marcosModelo.map(function (m) {
+        return "<tr><td>" + m.ordem + "</td><td>" + esc(m.marco) + "</td><td>" + esc(m.produto) + "</td><td>" + esc(m.prazo) + "</td></tr>";
+      }).join("");
+    }
+
+    if ($("governancaFiltroResposta")) {
+      var respostas = DB.riscoEB10.respostas.map(function (r) { return r.codigo; });
+      $("governancaFiltroResposta").innerHTML = '<option value="">Todas as respostas</option>' + respostas.map(function (r) { return "<option>" + esc(r) + "</option>"; }).join("");
+      $("governancaFiltroResposta").addEventListener("change", renderRegistroRiscos);
+    }
+    if ($("governancaFiltroCategoria")) {
+      $("governancaFiltroCategoria").innerHTML = '<option value="">Todas as categorias</option>' + DB.riscoEB10.categorias.map(function (r) { return "<option>" + esc(r) + "</option>"; }).join("");
+      $("governancaFiltroCategoria").addEventListener("change", renderRegistroRiscos);
+    }
+    renderRegistroRiscos();
+
+    if ($("btnPlanoRiscos")) $("btnPlanoRiscos").addEventListener("click", function () { copiarTexto(planoRiscosTexto(), $("btnPlanoRiscos")); });
+    if ($("btnBaixarPlano")) $("btnBaixarPlano").addEventListener("click", function () { baixarArquivo("plano-gestao-riscos-e4.txt", planoRiscosTexto()); });
+    if ($("btnCsvRiscos")) $("btnCsvRiscos").addEventListener("click", function () { baixarArquivo("matriz-riscos-e4.csv", riscosCSV(), "text/csv;charset=utf-8"); });
+
+    if ($("valTarefaBtn")) {
+      $("valTarefaBtn").addEventListener("click", function () {
+        var r = DB.validarTarefa($("valTarefaInput").value);
+        var cls = r.ok ? "aviso" : "aviso forte";
+        var detalhe = r.ok
+          ? "<br><strong>Verbo:</strong> " + esc(r.verbo) + " | <strong>Objeto:</strong> " + esc(r.objeto) + " | <strong>Complemento:</strong> " + esc(r.complemento)
+          : "";
+        $("valTarefaOut").innerHTML = '<div class="' + cls + '" style="margin:10px 0 0;">' + esc(r.mensagem) + detalhe + "</div>";
+      });
+    }
+    if ($("valCronBtn")) {
+      $("valCronBtn").addEventListener("click", function () {
+        var r = DB.validarCronograma($("valInicio").value, $("valFim").value, $("valMarco").value);
+        var cls = r.ok ? "aviso" : "aviso forte";
+        $("valCronOut").innerHTML = '<div class="' + cls + '" style="margin:10px 0 0;">' + r.avisos.map(esc).join("<br>") + "</div>";
+      });
+    }
+  }
+
+  function renderRegistroRiscos() {
+    if (!$("tbodyGovernancaRiscos")) return;
+    var fr = $("governancaFiltroResposta") ? $("governancaFiltroResposta").value : "";
+    var fc = $("governancaFiltroCategoria") ? $("governancaFiltroCategoria").value : "";
+    var riscos = DB.todosRiscos().filter(function (r) {
+      if (fr && r.resposta !== fr) return false;
+      if (fc && r.categoria !== fc) return false;
+      return true;
+    }).sort(function (a, b) { return b.valor - a.valor; });
+
+    $("tbodyGovernancaRiscos").innerHTML = riscos.length ? riscos.map(function (r) {
+      return "<tr><td>" + esc(r.processoId.toUpperCase()) + "</td><td>" + esc(r.descricao) + "</td><td>" + esc(r.categoria) +
+        "</td><td>" + r.probabilidade + " (" + esc(r.probabilidadeRotulo) + ")</td><td>" + r.impacto + " (" + esc(r.impactoRotulo) + ")" +
+        "</td><td>" + nivelTag(r.nivel) + "</td><td><strong>" + esc(r.resposta) + "</strong></td><td>" + esc(r.prazo) +
+        "</td><td>" + esc(r.responsavel) + "</td><td>" + esc(r.indicador) + "</td></tr>";
+    }).join("") : '<tr><td colspan="10" class="vazio">Nenhum risco nos filtros selecionados.</td></tr>';
+
+    if ($("governancaResumo")) {
+      var porResp = {};
+      riscos.forEach(function (r) { porResp[r.resposta] = (porResp[r.resposta] || 0) + 1; });
+      $("governancaResumo").textContent = riscos.length + " riscos - " +
+        DB.riscoEB10.respostas.map(function (x) { return x.codigo + ": " + (porResp[x.codigo] || 0); }).join(" | ");
+    }
   }
 
   /* ---------------- boot ---------------- */
@@ -606,5 +787,6 @@
   try { initMatriz(); } catch (e) { console.error(e); }
   try { initCombustivel(); } catch (e) { console.error(e); }
   try { initCalendario(); } catch (e) { console.error(e); }
+  try { initGovernanca(); } catch (e) { console.error(e); }
   try { initFontes(); } catch (e) { console.error(e); }
 })();

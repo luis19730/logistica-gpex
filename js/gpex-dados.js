@@ -24,11 +24,178 @@ window.GPEX_E4 = (function () {
   };
 
   var escala = [
-    { min: 1, max: 4, nome: "Baixo", cor: "verde", acao: "Aceitar / monitorar periodicamente." },
-    { min: 5, max: 9, nome: "Moderado", cor: "amarelo", acao: "Mitigar com controles e monitorar." },
-    { min: 10, max: 14, nome: "Alto", cor: "laranja", acao: "Tratamento prioritario com responsavel e prazo." },
-    { min: 15, max: 25, nome: "Critico", cor: "vermelho", acao: "Tratamento imediato e decisao do Cmt." }
+    { min: 1, max: 4, nome: "Baixo", cor: "verde", acao: "Aceitar e monitorar periodicamente." },
+    { min: 5, max: 9, nome: "Médio", cor: "amarelo", acao: "Reduzir com controles e monitorar." },
+    { min: 10, max: 14, nome: "Alto", cor: "laranja", acao: "Tratamento prioritário, com responsável e prazo." },
+    { min: 15, max: 25, nome: "Extremo", cor: "vermelho", acao: "Tratamento imediato e decisão do Cmt." }
   ];
+
+  /* Modelo de riscos conforme EB10-P-01.004 (2a ed., 2018) e EB20-D-02.010 (2019).
+     Escala 5x5: Nível = Probabilidade x Impacto. Matriz obrigatória para tarefas
+     de maior complexidade. Resposta: Evitar, Reduzir, Compartilhar ou Aceitar. */
+  var riscoEB10 = {
+    base: "EB10-P-01.004 (Política de Riscos do Exército, 2a ed., 2018) e EB20-D-02.010 (Diretriz Reguladora da Política de Gestão de Riscos, 2019)",
+    probabilidade: [
+      { n: 1, rotulo: "Raro", descricao: "Pode ocorrer somente em circunstâncias excepcionais." },
+      { n: 2, rotulo: "Improvável", descricao: "Pode ocorrer em algum momento, com baixa frequência." },
+      { n: 3, rotulo: "Possível", descricao: "Pode ocorrer em algum momento." },
+      { n: 4, rotulo: "Provável", descricao: "Provavelmente ocorrerá na maioria das circunstâncias." },
+      { n: 5, rotulo: "Quase certo", descricao: "Espera-se que ocorra na maioria das circunstâncias." }
+    ],
+    impacto: [
+      { n: 1, rotulo: "Insignificante", descricao: "Consequência irrelevante ao processo." },
+      { n: 2, rotulo: "Menor", descricao: "Consequência pequena, absorvida pela rotina." },
+      { n: 3, rotulo: "Moderado", descricao: "Compromete parcialmente o resultado do processo." },
+      { n: 4, rotulo: "Maior", descricao: "Compromete o resultado e exige decisão do escalão superior." },
+      { n: 5, rotulo: "Extremo", descricao: "Inviabiliza o processo, gera responsabilização ou risco à vida." }
+    ],
+    respostas: [
+      { codigo: "Evitar", descricao: "Eliminar a causa ou não executar a atividade de risco." },
+      { codigo: "Reduzir", descricao: "Adotar controles que diminuam probabilidade e/ou impacto." },
+      { codigo: "Compartilhar", descricao: "Transferir/partilhar o risco com outro órgão ou escalão." },
+      { codigo: "Aceitar", descricao: "Conviver com o risco, mantendo monitoramento." }
+    ],
+    categorias: [
+      "Estratégico", "Operacional", "Logístico", "Financeiro/Orçamentário",
+      "Integridade/Conformidade", "Pessoas", "Imagem/Reputação", "Segurança/Ambiental"
+    ]
+  };
+
+  /* Hierarquia de dados GPEX (EB20-D-11.001): Portfólio > Programa > Macroprocesso >
+     Processo > Tarefa. Indicadores de desempenho associados a cada processo. */
+  var governanca = {
+    portfolio: "Portfólio de Apoio Logístico - Cmdo Bda Inf Amv",
+    programa: "Programa de Apoio Logístico da Brigada",
+    cadeiaValor: "Macroprocesso de Apoio Logístico (Cadeia de Valor Agregado do EB)",
+    macroprocesso: "Gestão Logística"
+  };
+
+  var governancaProcessos = {
+    p01: { tarefa: "Garantir o suprimento das classes I, III e V às unidades", indicadores: ["Prazo médio de atendimento do pedido (dias)", "Percentual de itens entregues na data prevista"] },
+    p02: { tarefa: "Executar a manutenção de 2o escalão de viaturas e armamento", indicadores: ["Índice de disponibilidade da frota (%)", "Tempo médio de reparo (dias)"] },
+    p03: { tarefa: "Controlar o armamento e a munição sob custódia", indicadores: ["Divergências na revista diária (nº)", "Conformidade de temperatura/umidade do paiol (%)"] },
+    p04: { tarefa: "Prevenir acidentes nas atividades de risco", indicadores: ["Acidentes de trabalho registrados (nº)", "Inspeções de segurança realizadas no mês (nº)"] },
+    p05: { tarefa: "Controlar os aspectos ambientais do aquartelamento", indicadores: ["Não conformidades ambientais registradas (nº)", "Ações corretivas concluídas (%)"] },
+    p06: { tarefa: "Prestar apoio material à instrução", indicadores: ["Atividades de instrução apoiadas sem falta de meio (%)", "Antecedência média do planejamento E3-E4 (dias)"] },
+    p07: { tarefa: "Planejar e executar comboios logísticos", indicadores: ["Comboios realizados no prazo (%)", "Ocorrências de avaria/extravio de carga (nº)"] },
+    p08: { tarefa: "Assegurar o bem-estar e o apoio material ao efetivo", indicadores: ["Efetivo com fardamento completo (%)", "Não conformidades de alojamento/rancho (nº)"] },
+    p09: { tarefa: "Garantir o suprimento de saúde e a evacuação", indicadores: ["Itens de Classe VIII dentro da validade (%)", "Tempo médio de evacuação (min)"] },
+    p10: { tarefa: "Manter a infraestrutura do aquartelamento", indicadores: ["Demandas de manutenção concluídas (%)", "Intervenções em itens críticos no prazo (%)"] },
+    p11: { tarefa: "Recuperar material danificado (salvamento)", indicadores: ["Índice de recuperação de material (%)", "Processos de baixa instruídos corretamente (%)"] },
+    p12: { tarefa: "Controlar o almoxarifado (classes II e IV)", indicadores: ["Acurácia do inventário (%)", "Divergências físico x escriturado (nº)"] },
+    p13: { tarefa: "Controlar combustíveis e lubrificantes (Classe III)", indicadores: ["Consumo real x cota (%)", "Média de consumo da frota (km/L)"] },
+    p14: { tarefa: "Controlar o calendário de obrigações da seção", indicadores: ["Obrigações cumpridas no prazo (%)", "Atrasos justificados (nº)"] },
+    p15: { tarefa: "Requisitar e distribuir munição (Classe V)", indicadores: ["Divergência de munição requisitada x devolvida (nº)", "Requisições no prazo do órgão provedor (%)"] },
+    p16: { tarefa: "Prover peças de reposição de viaturas (Classe IX)", indicadores: ["Viaturas paradas por falta de peça (nº)", "Tempo médio de reposição de peça (dias)"] },
+    p17: { tarefa: "Executar o desfazimento de material", indicadores: ["Processos de desfazimento sem nulidade (%)", "Itens inservíveis identificados no semestre (nº)"] },
+    p18: { tarefa: "Suprir fardamento e equipamento individual (Classe II)", indicadores: ["Praças com Classe II completa (%)", "Divergências de registro por ficha individual (nº)"] },
+    p19: { tarefa: "Acompanhar as demais classes de suprimento", indicadores: ["Classes com responsável e rotina definidos (%)", "Rupturas pontuais por classe (nº)"] }
+  };
+
+  /* Marcos (milestones) padrao do ciclo de gestao de um processo E/4. */
+  var marcosModelo = [
+    { ordem: 1, marco: "Mapeamento do processo elaborado", produto: "Processo + matriz de riscos", prazo: "T0" },
+    { ordem: 2, marco: "Validação pelo chefe da seção", produto: "Processo validado", prazo: "T0 + 15 dias" },
+    { ordem: 3, marco: "Publicação no ASE/GPEx", produto: "Processo publicado", prazo: "T0 + 30 dias" },
+    { ordem: 4, marco: "Monitoramento e revisão", produto: "Relatório de acompanhamento", prazo: "Semestral" }
+  ];
+
+  var VERBOS_TAREFA = [
+    "garantir", "assegurar", "executar", "realizar", "elaborar", "planejar", "controlar",
+    "manter", "prestar", "prevenir", "requisitar", "distribuir", "prover", "suprir",
+    "acompanhar", "identificar", "registrar", "fiscalizar", "vistoriar", "conferir",
+    "verificar", "reportar", "atualizar", "consolidar", "encaminhar", "receber",
+    "aplicar", "baixar", "solicitar", "recuperar", "integrar", "programar"
+  ];
+
+  /* Valida a nomenclatura padrao de tarefa: Verbo de acao + Objeto + Complemento. */
+  function validarTarefa(titulo) {
+    var t = String(titulo || "").trim();
+    var r = { ok: false, verbo: "", objeto: "", complemento: "", mensagem: "" };
+    if (!t) { r.mensagem = "Informe o título da tarefa."; return r; }
+    var palavras = t.split(/\s+/);
+    var primeira = palavras[0].toLowerCase();
+    var ehVerbo = VERBOS_TAREFA.indexOf(primeira) !== -1 || /(ar|er|ir)$/.test(primeira);
+    if (!ehVerbo) {
+      r.mensagem = 'A tarefa deve iniciar com verbo de ação no infinitivo (ex.: "Controlar", "Elaborar").';
+      return r;
+    }
+    r.verbo = palavras[0];
+    if (palavras.length < 3) {
+      r.mensagem = "Estrutura mínima: Verbo de ação + Objeto + Complemento.";
+      return r;
+    }
+    r.objeto = palavras[1];
+    r.complemento = palavras.slice(2).join(" ");
+    r.ok = true;
+    r.mensagem = "Nomenclatura conforme: Verbo de ação + Objeto + Complemento.";
+    return r;
+  }
+
+  /* Valida consistencia logica de cronograma (inicio <= fim; marcos dentro do intervalo). */
+  function validarCronograma(inicio, fim, marco) {
+    var r = { ok: true, avisos: [] };
+    if (!inicio || !fim) { r.ok = false; r.avisos.push("Informe as datas de início e término."); return r; }
+    var di = new Date(inicio + "T00:00:00"), df = new Date(fim + "T00:00:00");
+    if (isNaN(di) || isNaN(df)) { r.ok = false; r.avisos.push("Data inválida."); return r; }
+    if (df < di) { r.ok = false; r.avisos.push("Término anterior ao início (inconsistência de cronograma)."); }
+    if (marco) {
+      var dm = new Date(marco + "T00:00:00");
+      if (!isNaN(dm) && (dm < di || dm > df)) { r.ok = false; r.avisos.push("Marco fora do intervalo início-término."); }
+    }
+    if (r.ok) r.avisos.push("Cronograma consistente.");
+    return r;
+  }
+
+  function probabilidadeRotulo(n) {
+    for (var i = 0; i < riscoEB10.probabilidade.length; i++) if (riscoEB10.probabilidade[i].n === Number(n)) return riscoEB10.probabilidade[i].rotulo;
+    return "";
+  }
+  function impactoRotulo(n) {
+    for (var i = 0; i < riscoEB10.impacto.length; i++) if (riscoEB10.impacto[i].n === Number(n)) return riscoEB10.impacto[i].rotulo;
+    return "";
+  }
+  function respostaPara(nivel) {
+    if (nivel === "Extremo") return "Evitar";
+    if (nivel === "Alto") return "Reduzir";
+    if (nivel === "Médio") return "Reduzir";
+    return "Aceitar";
+  }
+  function prazoPara(nivel) {
+    if (nivel === "Extremo") return "Imediato (até 30 dias)";
+    if (nivel === "Alto") return "Curto prazo (até 90 dias)";
+    if (nivel === "Médio") return "Médio prazo (até 180 dias)";
+    return "Contínuo / monitoramento";
+  }
+  var categoriaPorArea = {
+    "Suprimento": "Logístico",
+    "Suprimento / Seguranca": "Logístico",
+    "Suprimento / Segurança": "Logístico",
+    "Suprimento / Combustivel": "Logístico",
+    "Suprimento / Combustível": "Logístico",
+    "Suprimento / Manutencao": "Logístico",
+    "Suprimento / Manutenção": "Logístico",
+    "Suprimento / Patrimonio": "Financeiro/Orçamentário",
+    "Suprimento / Patrimônio": "Financeiro/Orçamentário",
+    "Manutencao": "Operacional",
+    "Manutenção": "Operacional",
+    "Seguranca": "Segurança/Ambiental",
+    "Segurança": "Segurança/Ambiental",
+    "Engenharia / Meio ambiente": "Segurança/Ambiental",
+    "Engenharia": "Operacional",
+    "Coordenacao / Suprimento": "Operacional",
+    "Coordenação / Suprimento": "Operacional",
+    "Transporte": "Operacional",
+    "Recursos Humanos": "Pessoas",
+    "Saude": "Pessoas",
+    "Saúde": "Pessoas",
+    "Salvamento": "Operacional",
+    "Patrimonio": "Financeiro/Orçamentário",
+    "Patrimônio": "Financeiro/Orçamentário",
+    "Gestao / Controle interno": "Integridade/Conformidade",
+    "Gestão / Controle interno": "Integridade/Conformidade"
+  };
+  function categoriaDe(area) { return categoriaPorArea[area] || "Operacional"; }
 
   var fontes = [
     {
@@ -822,6 +989,58 @@ window.GPEX_E4 = (function () {
     unidades: ["km/L", "L"]
   };
 
+  /* Normas de referencia para conformidade do cadastro no GPEx/ASE. */
+  var normas = [
+    {
+      codigo: "EB10-P-01.004", titulo: "Política de Riscos do Exército Brasileiro",
+      edicao: "2ª ed., 2018", portaria: "Portaria Nº 004-Cmt Ex, de 3 de janeiro de 2019",
+      aplicacao: "Modelagem de riscos: probabilidade, impacto/severidade, nível (P x I) e plano de resposta (evitar, reduzir, compartilhar, aceitar).",
+      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/RISCOS/NORMAS/Port004-CmtEx_3jan19.pdf"
+    },
+    {
+      codigo: "EB20-D-02.010", titulo: "Diretriz Reguladora da Política de Gestão de Riscos do Exército",
+      edicao: "1ª ed., 2019", portaria: "Portaria Nº 225-EME, de 26 de julho de 2019",
+      aplicacao: "Orientação metodológica para identificação, análise, avaliação, tratamento e monitoramento dos riscos.",
+      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/RISCOS/NORMAS/Port225-EME_26jul19.pdf"
+    },
+    {
+      codigo: "EB10-P-01.014", titulo: "Missão do Exército (Plano) - Planejamento Estratégico 2024-2027",
+      edicao: "1ª ed., 2023", portaria: "Portaria Nº 2.146-C Ex, de 20 de dezembro de 2023",
+      aplicacao: "Alinhamento estratégico e de portfólio institucional (base dos objetivos estratégicos).",
+      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/PROCESSOS/NORMAS/PORTARIA_C_Ex_2146_DE_20_DE_DEZEMBRO_DE_2023.pdf"
+    },
+    {
+      codigo: "Cadeia de Valor (EME)", titulo: "Cadeia de Valor Agregado do Estado-Maior do Exército",
+      edicao: "2026", portaria: "Portaria EME/C Ex nº 1.729, de 30 de abril de 2026",
+      aplicacao: "Referência de macroprocessos e processos organizacionais.",
+      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/sepbe19_port1729-cva-eme%201.pdf"
+    },
+    {
+      codigo: "EB20-D-01.016", titulo: "Diretriz de Racionalização Administrativa do Exército",
+      edicao: "1ª ed., 2014", portaria: "Portaria nº 295-EME, de 17 de dezembro de 2014",
+      aplicacao: "Mapeamento e melhoria de processos organizacionais.",
+      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/PROCESSOS/NORMAS/Portaria_295_EME.pdf"
+    },
+    {
+      codigo: "EB20-D-11.001", titulo: "Diretriz de Governança e Gestão do Exército (SG2Ex)",
+      edicao: "conforme citado no prompt", portaria: "Confirmar número/vigência no Portal da Governança",
+      aplicacao: "Alinhamento com macroprocessos, processos, indicadores de desempenho e portfólios institucionais.",
+      verificar: true
+    },
+    {
+      codigo: "EB10-P-01.027", titulo: "Programa de Integridade do Exército",
+      edicao: "1ª ed., 2025", portaria: "Portaria C Ex nº 2.430, de 24 de fevereiro de 2025",
+      aplicacao: "Riscos de integridade e controles internos.",
+      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/RISCOS/NORMAS/port_2430_c_ex_prg_integridade_2025%201.pdf"
+    },
+    {
+      codigo: "EB20-P-11.001", titulo: "Plano de Integridade do Exército",
+      edicao: "2ª ed., 2025", portaria: "Portaria EME/C Ex nº 1.493, de 25 de fevereiro de 2025",
+      aplicacao: "Medidas de integridade e conformidade aplicáveis ao E/4.",
+      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/RISCOS/NORMAS/port_1493_eme_pl_integridade_2025%201.pdf"
+    }
+  ];
+
   function nivelRisco(p, i) {
     var v = (Number(p) || 0) * (Number(i) || 0);
     for (var k = 0; k < escala.length; k++) {
@@ -833,6 +1052,7 @@ window.GPEX_E4 = (function () {
   function todosRiscos() {
     var out = [];
     processos.forEach(function (proc) {
+      var gp = governancaProcessos[proc.id] || { tarefa: proc.titulo, indicadores: [] };
       proc.riscos.forEach(function (r, idx) {
         var n = nivelRisco(r.probabilidade, r.impacto);
         out.push({
@@ -844,11 +1064,19 @@ window.GPEX_E4 = (function () {
           causa: r.causa,
           consequencia: r.consequencia,
           probabilidade: r.probabilidade,
+          probabilidadeRotulo: probabilidadeRotulo(r.probabilidade),
           impacto: r.impacto,
+          impactoRotulo: impactoRotulo(r.impacto),
           valor: r.probabilidade * r.impacto,
           nivel: n.nome,
           cor: n.cor,
-          controle: r.controle
+          controle: r.controle,
+          resposta: respostaPara(n.nome),
+          responsavel: (proc.responsaveis && proc.responsaveis.length) ? proc.responsaveis[0] : "E/4",
+          prazo: prazoPara(n.nome),
+          categoria: categoriaDe(proc.area),
+          indicador: (gp.indicadores && gp.indicadores.length) ? gp.indicadores[0] : "Monitorar indicadores do processo",
+          tarefa: gp.tarefa || proc.titulo
         });
       });
     });
@@ -860,12 +1088,24 @@ window.GPEX_E4 = (function () {
     escala: escala,
     fontes: fontes,
     doutrina: doutrina,
+    normas: normas,
+    riscoEB10: riscoEB10,
+    governanca: governanca,
+    governancaProcessos: governancaProcessos,
+    marcosModelo: marcosModelo,
     classes: classes,
     processos: processos,
     tratamentoRisco: tratamentoRisco,
     calendario: calendario,
     combustivel: combustivel,
     nivelRisco: nivelRisco,
-    todosRiscos: todosRiscos
+    todosRiscos: todosRiscos,
+    validarTarefa: validarTarefa,
+    validarCronograma: validarCronograma,
+    probabilidadeRotulo: probabilidadeRotulo,
+    impactoRotulo: impactoRotulo,
+    respostaPara: respostaPara,
+    prazoPara: prazoPara,
+    categoriaDe: categoriaDe
   };
 })();

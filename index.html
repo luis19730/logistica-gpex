@@ -36,6 +36,7 @@
       <button class="gpex-aba active" data-painel="visao">Visao Geral</button>
       <button class="gpex-aba" data-painel="processos">Processos e Riscos</button>
       <button class="gpex-aba" data-painel="matriz">Matriz de Riscos</button>
+      <button class="gpex-aba" data-painel="governanca">Governanca (EB10/EB20)</button>
       <button class="gpex-aba" data-painel="combustivel">Combustivel (Classe III)</button>
       <button class="gpex-aba" data-painel="calendario">Calendario de Obrigacoes</button>
       <button class="gpex-aba" data-painel="fontes">Fontes e Doutrina</button>
@@ -52,8 +53,8 @@
       </div>
 
       <div class="card">
-        <h2>Riscos prioritarios (Alto e Critico)</h2>
-        <p class="sub">Ordenados pelo valor P x I. Tratar com responsavel e prazo definidos.</p>
+        <h2>Riscos prioritarios (Alto e Extremo)</h2>
+        <p class="sub">Conforme EB10-P-01.004. Ordenados pelo valor P x I; tratar com resposta, responsavel e prazo definidos.</p>
         <div class="tabela-gpex">
           <table>
             <thead>
@@ -65,7 +66,7 @@
       </div>
 
       <div class="card">
-        <h2>Tratamento de risco - fluxo padrao (Politica de Gestao de Riscos do EME)</h2>
+        <h2>Tratamento de risco - fluxo padrao (EB10-P-01.004 / EB20-D-02.010)</h2>
         <div class="mermaid-box"><pre class="mermaid" id="mermaidTratamento"></pre></div>
       </div>
     </section>
@@ -82,9 +83,9 @@
           <select class="filtro-input" id="filtroNivel">
             <option value="">Todos os niveis de risco</option>
             <option value="Baixo">Baixo</option>
-            <option value="Moderado">Moderado</option>
+            <option value="Médio">Médio</option>
             <option value="Alto">Alto</option>
-            <option value="Critico">Critico</option>
+            <option value="Extremo">Extremo</option>
           </select>
         </div>
       </div>
@@ -104,9 +105,9 @@
         </div>
         <div class="matriz-legenda">
           <span><i style="background:var(--green)"></i> Baixo (1-4)</span>
-          <span><i style="background:var(--yellow)"></i> Moderado (5-9)</span>
+          <span><i style="background:var(--yellow)"></i> Médio (5-9)</span>
           <span><i style="background:var(--orange)"></i> Alto (10-14)</span>
-          <span><i style="background:var(--red)"></i> Critico (15-25)</span>
+          <span><i style="background:var(--red)"></i> Extremo (15-25)</span>
         </div>
       </div>
       <div class="card">
@@ -121,6 +122,87 @@
             </thead>
             <tbody id="tbodyMatriz"></tbody>
           </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- GOVERNANCA -->
+    <section class="painel" id="painel-governanca">
+      <div class="card">
+        <h2>Conformidade de Governanca e Gestao de Riscos</h2>
+        <p class="sub">Alinhamento a EB10-P-01.004 (riscos) e a Diretriz de Governanca e Gestao (EB20-D-11.001): hierarquia de dados, indicadores de desempenho e matriz de riscos.</p>
+        <div id="governancaHierarquia" class="hierarquia-grid"></div>
+      </div>
+
+      <div class="card">
+        <h2>Normas de referencia</h2>
+        <p class="sub">Documentos oficiais que orientam o cadastro no GPEx/ASE (links publicos do Portal da Governanca e Gestao do EME).</p>
+        <div class="fontes-grid" id="gridNormas"></div>
+      </div>
+
+      <div class="card">
+        <div class="detalhe-topo">
+          <div><h2>Registro de riscos e plano de resposta</h2><p class="sub" id="governancaResumo"></p></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end;">
+            <div class="campo"><label>Resposta</label><select id="governancaFiltroResposta"></select></div>
+            <div class="campo"><label>Categoria</label><select id="governancaFiltroCategoria"></select></div>
+          </div>
+        </div>
+        <div class="linha-acoes">
+          <button class="btn btn-sm" id="btnPlanoRiscos">Copiar plano de riscos</button>
+          <button class="btn btn-sm" id="btnBaixarPlano">Baixar plano (.txt)</button>
+          <button class="btn btn-sm btn-primary" id="btnCsvRiscos">Baixar matriz (.csv)</button>
+        </div>
+        <div class="tabela-gpex">
+          <table>
+            <thead><tr><th>Proc.</th><th>Risco</th><th>Categoria</th><th>Probabilidade</th><th>Impacto</th><th>Nivel</th><th>Resposta</th><th>Prazo</th><th>Responsavel</th><th>Indicador</th></tr></thead>
+            <tbody id="tbodyGovernancaRiscos"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Indicadores de desempenho por processo</h2>
+        <p class="sub">Cada processo deve ter indicador, meta e responsavel (EB20-D-11.001).</p>
+        <div class="tabela-gpex">
+          <table>
+            <thead><tr><th>Codigo</th><th>Tarefa (Verbo + Objeto + Complemento)</th><th>Indicadores</th></tr></thead>
+            <tbody id="tbodyGovernancaIndicadores"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Marcos (milestones) do ciclo de gestao</h2>
+        <p class="sub">Preenchimento obrigatorio de marcos e prazos ao criar a tarefa no GPEx.</p>
+        <div class="tabela-gpex">
+          <table>
+            <thead><tr><th>Ordem</th><th>Marco</th><th>Produto</th><th>Prazo</th></tr></thead>
+            <tbody id="tbodyMarcos"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Validacao de cadastro (GPEx)</h2>
+        <p class="sub">Verifica padroes de nomenclatura e consistencia de cronograma antes de submeter o formulario.</p>
+        <div class="grid-validadores">
+          <div class="validador">
+            <h3>Nomenclatura da tarefa</h3>
+            <div class="campo"><label>Titulo da tarefa</label><input id="valTarefaInput" placeholder="Ex.: Controlar o consumo de combustivel da Brigada"></div>
+            <button class="btn btn-sm btn-primary" id="valTarefaBtn" style="margin-top:10px;">Validar nomenclatura</button>
+            <div id="valTarefaOut"></div>
+          </div>
+          <div class="validador">
+            <h3>Cronograma (inicio / termino / marco)</h3>
+            <div class="form-grid">
+              <div class="campo"><label>Inicio</label><input type="date" id="valInicio"></div>
+              <div class="campo"><label>Termino</label><input type="date" id="valFim"></div>
+              <div class="campo"><label>Marco</label><input type="date" id="valMarco"></div>
+            </div>
+            <button class="btn btn-sm btn-primary" id="valCronBtn" style="margin-top:10px;">Validar cronograma</button>
+            <div id="valCronOut"></div>
+          </div>
         </div>
       </div>
     </section>
