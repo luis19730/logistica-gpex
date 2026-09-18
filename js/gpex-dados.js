@@ -1,9 +1,10 @@
 /*
- * Base de dados GPEX / Gestao de Risco - Secao de Logistica (E/4)
+ * Base de dados GPEX / Gestao de Risco - 4a Secao / S/4 (Secao de Logistica)
  * Cmdo Bda Inf Amv - Metodologia GPEX / Projeto Piloto 2.0 (CMSE / ASE)
  *
- * Fontes: Portais da Gestao (EME / CMSE / Bda Inf Amv), GPEX,
- * R-1 (RISG) art. 34-35, MC 4.0 Log Mil Ter, EB70-MC-10.317.
+ * Fontes: Regimento Interno da S/4 (Arts. 1o a 6o), Portais da Gestao
+ * (EME / CMSE / Bda Inf Amv), GPEX, R-1 (RISG) art. 34-35,
+ * MC 4.0 Log Mil Ter, EB70-MC-10.317.
  *
  * IMPORTANTE: modelos de referencia. Ajustar ao processo real da OM e
  * submeter a revisao humana antes de publicar no ASE.
@@ -11,17 +12,110 @@
 window.GPEX_E4 = (function () {
   "use strict";
 
+  var ORG = "S/4 (4a Secao)";
+  var ORG_CURTO = "S/4";
+
   var meta = {
     titulo: "Mapeamento de Processos e Gestao de Riscos",
-    subtitulo: "Secao de Logistica (E/4) - Cmdo Bda Inf Amv",
+    subtitulo: "4a Secao / S/4 (Secao de Logistica) - Cmdo Bda Inf Amv",
     metodologia: "GPEX / Projeto Piloto 2.0 de Mapeamento de Processos (CMSE)",
-    versao: "1.0.0",
+    versao: "1.1.0",
     atualizado: "2026-09-18",
+    org: ORG,
+    orgCurto: ORG_CURTO,
+    subordinacao: "Chefe do Estado-Maior da Brigada (Ch EM Bda)",
     aviso:
       "Aviso: o dominio ase.cmse.eb.mil.br e as intranets citadas sao de acesso restrito. " +
       "O preenchimento no ASE e manual, por usuario autorizado. Este sistema apenas prepara o " +
       "conteudo (dados do processo, etapas, fluxo, matriz de riscos e resumo) para colagem."
   };
+
+  /* Regimento Interno da 4a Secao / S/4 - Arts. 1o a 6o. */
+  var regimento = {
+    titulo: "Regimento Interno - 4a Secao / S/4 (Secao de Logistica)",
+    unidade: "Comando da Brigada de Infantaria Aeromovel",
+    subordinacao: "Chefe do Estado-Maior da Brigada (Ch EM Bda)",
+    finalidade:
+      "A 4a Secao / S/4 e o orgao de apoio de Estado-Maior encarregado do planejamento, da coordenacao, " +
+      "da direcao e do controle das atividades logisticas da Brigada, subordinando-se diretamente ao " +
+      "Chefe do Estado-Maior da Brigada (Ch EM Bda).",
+    missao:
+      "Assegurar o planejamento e a execucao do apoio logistico as Organizacoes Militares (OM) subordinadas " +
+      "e diretamente apoiadas, garantindo os suprimentos, os servicos e as manutencoes necessarios as " +
+      "operacoes e a rotina administrativa.",
+    competencias: [
+      { inciso: "I", texto: "Planejar e coordenar as funcoes logisticas de suprimento, transporte, manutencao, saude, engenharia e servicos gerais." },
+      { inciso: "II", texto: "Acompanhar e controlar a execucao orcamentaria e financeira afeta a area logistica." },
+      { inciso: "III", texto: "Orientar e supervisionar os orgaos executivos e as OM subordinadas no tocante a gestao patrimonial, carga, descarga e controle de material." },
+      { inciso: "IV", texto: "Manter atualizada a apreciacao de situacao logistica e elaborar os anexos logisticos dos planos e ordens de operacoes." },
+      { inciso: "V", texto: "Coordenar o apoio de saude, evacuacao medica e o funcionamento do sistema logistico em campanha e em tempo de paz." },
+      { inciso: "VI", texto: "Manter intercambio continuo com o Escalao Superior (Divisao de Exercito / Comando Militar de Area) e com as unidades apoiadas." }
+    ],
+    atribuicoes: [
+      {
+        cargo: "Chefe da S/4",
+        artigo: "Art. 4o",
+        itens: [
+          "Dirigir, orientar e fiscalizar os trabalhos de toda a Secao.",
+          "Assessorar o Comandante e o Chefe do Estado-Maior da Brigada em todos os assuntos atinentes a logistica.",
+          "Distribuir as tarefas entre os adjuntos e auxiliares, acompanhando o cumprimento dos prazos.",
+          "Estabelecer diretrizes para a elaboracao de planos logisticos e controle de estoques e dotacoes.",
+          "Representar a Brigada em reunioes e comissoes de carater logistico, quando determinado."
+        ]
+      },
+      {
+        cargo: "Adjunto da S/4",
+        artigo: "Art. 5o",
+        itens: [
+          "Substituir o Chefe da Secao em seus impedimentos legais e eventuais.",
+          "Coordenar a elaboracao de documentos, relatorios e expedientes diarios da Secao.",
+          "Controlar o fluxo de correspondencias, boletins e processos administrativos.",
+          "Acompanhar a execucao das diretrizes logisticas junto as OM subordinadas."
+        ]
+      },
+      {
+        cargo: "Auxiliares (Sargentos/Subtenentes)",
+        artigo: "Art. 6o",
+        itens: [
+          "Executar o expediente, o arquivamento e a guarda de documentos sigilosos e ostensivos da Secao.",
+          "Manter atualizados os quadros de controle de suprimentos, manutencoes, movimentacao de viaturas e cargas.",
+          "Confeccionar minutas de boletins, partes, oficios e notas relativas a sua area especifica de atuacao."
+        ]
+      }
+    ],
+    funcoesLogisticas: ["Suprimento", "Transporte", "Manutencao", "Saude", "Engenharia", "Servicos Gerais"]
+  };
+
+  /* Vinculo de cada processo a competencia (Art. 3o) e a funcao logistica (Art. 3o, I). */
+  var vinculoRegimento = {
+    p01: { competencia: "I", funcao: "Suprimento" },
+    p02: { competencia: "I", funcao: "Manutencao" },
+    p03: { competencia: "III", funcao: "Suprimento" },
+    p04: { competencia: "I", funcao: "Servicos Gerais" },
+    p05: { competencia: "I", funcao: "Engenharia" },
+    p06: { competencia: "IV", funcao: "Suprimento" },
+    p07: { competencia: "I", funcao: "Transporte" },
+    p08: { competencia: "I", funcao: "Servicos Gerais" },
+    p09: { competencia: "V", funcao: "Saude" },
+    p10: { competencia: "I", funcao: "Engenharia" },
+    p11: { competencia: "III", funcao: "Servicos Gerais" },
+    p12: { competencia: "III", funcao: "Suprimento" },
+    p13: { competencia: "II", funcao: "Suprimento" },
+    p14: { competencia: "IV", funcao: "Servicos Gerais" },
+    p15: { competencia: "III", funcao: "Suprimento" },
+    p16: { competencia: "III", funcao: "Manutencao" },
+    p17: { competencia: "III", funcao: "Suprimento" },
+    p18: { competencia: "III", funcao: "Suprimento" },
+    p19: { competencia: "I", funcao: "Suprimento" }
+  };
+
+  function competenciaTexto(inciso) {
+    for (var i = 0; i < regimento.competencias.length; i++) {
+      if (regimento.competencias[i].inciso === inciso) return regimento.competencias[i].texto;
+    }
+    return "";
+  }
+  function vinculoDe(id) { return vinculoRegimento[id] || { competencia: "", funcao: "" }; }
 
   var escala = [
     { min: 1, max: 4, nome: "Baixo", cor: "verde", acao: "Aceitar e monitorar periodicamente." },
@@ -67,7 +161,10 @@ window.GPEX_E4 = (function () {
     portfolio: "Portfólio de Apoio Logístico - Cmdo Bda Inf Amv",
     programa: "Programa de Apoio Logístico da Brigada",
     cadeiaValor: "Macroprocesso de Apoio Logístico (Cadeia de Valor Agregado do EB)",
-    macroprocesso: "Gestão Logística"
+    macroprocesso: "Gestão Logística",
+    orgao: ORG,
+    subordinacao: "Ch EM Bda",
+    comite: "Estado-Maior da Brigada"
   };
 
   var governancaProcessos = {
@@ -92,7 +189,7 @@ window.GPEX_E4 = (function () {
     p19: { tarefa: "Acompanhar as demais classes de suprimento", indicadores: ["Classes com responsável e rotina definidos (%)", "Rupturas pontuais por classe (nº)"] }
   };
 
-  /* Marcos (milestones) padrao do ciclo de gestao de um processo E/4. */
+  /* Marcos (milestones) padrao do ciclo de gestao de um processo S/4. */
   var marcosModelo = [
     { ordem: 1, marco: "Mapeamento do processo elaborado", produto: "Processo + matriz de riscos", prazo: "T0" },
     { ordem: 2, marco: "Validação pelo chefe da seção", produto: "Processo validado", prazo: "T0 + 15 dias" },
@@ -235,9 +332,14 @@ window.GPEX_E4 = (function () {
 
   var doutrina = [
     {
+      sigla: "Regimento Interno",
+      titulo: "Regimento Interno da 4a Secao / S/4",
+      aplicacao: "Finalidade e subordinacao (Art. 1o), missao (Art. 2o), competencias (Art. 3o, I a VI) e atribuicoes dos integrantes (Arts. 4o a 6o)."
+    },
+    {
       sigla: "R-1 (RISG)",
       titulo: "Regulamento Interno e dos Servicos Gerais",
-      aplicacao: "Atribuicoes do S4/E4 (art. 34-35): suprimento, manutencao, transporte, engenharia, salvamento e apoio as demais funcoes logisticas."
+      aplicacao: "Atribuicoes da S/4 (art. 34-35): suprimento, manutencao, transporte, engenharia, servicos gerais e apoio as demais funcoes logisticas."
     },
     {
       sigla: "MC 4.0 Log Mil Ter",
@@ -296,7 +398,7 @@ window.GPEX_E4 = (function () {
   var processos = [
     {
       id: "p01",
-      codigo: "E4-01",
+      codigo: "S4-01",
       titulo: "Suprimento (Classes I, III e V) as unidades da Bda",
       area: "Suprimento",
       classes: ["I", "III", "V"],
@@ -311,7 +413,7 @@ window.GPEX_E4 = (function () {
         "Distribuir o material as unidades solicitantes",
         "Atualizar a escrituracao e os niveis de estoque"
       ],
-      responsaveis: ["E/4 (gestao)", "Unidades da Bda (levantamento)", "B Log (provedor)"],
+      responsaveis: ["S/4 (gestao)", "Unidades da Bda (levantamento)", "B Log (provedor)"],
       riscos: [
         {
           descricao: "Ruptura de estoque de uma classe de suprimento",
@@ -334,7 +436,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p02",
-      codigo: "E4-02",
+      codigo: "S4-02",
       titulo: "Manutencao de viaturas e armamento (2o escalao)",
       area: "Manutencao",
       classes: ["IX"],
@@ -349,7 +451,7 @@ window.GPEX_E4 = (function () {
         "Registrar os trabalhos executados e atualizar a escrituracao",
         "Devolver o material a unidade de origem"
       ],
-      responsaveis: ["E/4 (gestao)", "Oficina de manutencao", "Unidades da Bda"],
+      responsaveis: ["S/4 (gestao)", "Oficina de manutencao", "Unidades da Bda"],
       riscos: [
         {
           descricao: "Viatura/armamento fora de uso por atraso na manutencao",
@@ -372,7 +474,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p03",
-      codigo: "E4-03",
+      codigo: "S4-03",
       titulo: "Controle de armamento e municao (paiois/depositos)",
       area: "Suprimento / Seguranca",
       classes: ["V"],
@@ -386,7 +488,7 @@ window.GPEX_E4 = (function () {
         "Realizar inspecao mensal do armamento e da municao",
         "Elaborar mapa termo-higrometrico e relatorio mensal"
       ],
-      responsaveis: ["E/4", "Armeiro / responsavel pelo paiol", "Fiscal administrativo"],
+      responsaveis: ["S/4", "Armeiro / responsavel pelo paiol", "Fiscal administrativo"],
       riscos: [
         {
           descricao: "Extravio ou divergencia no controle de armamento/municao",
@@ -409,7 +511,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p04",
-      codigo: "E4-04",
+      codigo: "S4-04",
       titulo: "Prevencao de acidentes em atividades de risco",
       area: "Seguranca",
       classes: [],
@@ -423,7 +525,7 @@ window.GPEX_E4 = (function () {
         "Registrar ocorrencias e propor medidas corretivas",
         "Reportar ao Cmt as nao conformidades identificadas"
       ],
-      responsaveis: ["E/4", "Chefes de oficina/deposito"],
+      responsaveis: ["S/4", "Chefes de oficina/deposito"],
       riscos: [
         {
           descricao: "Acidente de trabalho em oficina ou deposito",
@@ -438,7 +540,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p05",
-      codigo: "E4-05",
+      codigo: "S4-05",
       titulo: "Controle ambiental do aquartelamento",
       area: "Engenharia / Meio ambiente",
       classes: [],
@@ -451,7 +553,7 @@ window.GPEX_E4 = (function () {
         "Fiscalizar o cumprimento durante exercicios e manobras",
         "Registrar nao conformidades e encaminhar providencias"
       ],
-      responsaveis: ["E/4", "E/3 (coordenacao de exercicios)", "SU"],
+      responsaveis: ["S/4", "E/3 (coordenacao de exercicios)", "SU"],
       riscos: [
         {
           descricao: "Nao conformidade ambiental em exercicio ou manobra",
@@ -466,7 +568,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p06",
-      codigo: "E4-06",
+      codigo: "S4-06",
       titulo: "Apoio material a instrucao (ligacao com o E/3)",
       area: "Coordenacao / Suprimento",
       classes: ["I", "III", "V"],
@@ -480,22 +582,22 @@ window.GPEX_E4 = (function () {
         "Executar a distribuicao e o transporte necessario",
         "Recolher e conferir o material ao termino da atividade"
       ],
-      responsaveis: ["E/4", "E/3", "Unidades apoiadas"],
+      responsaveis: ["S/4", "E/3", "Unidades apoiadas"],
       riscos: [
         {
           descricao: "Falta de meio logistico no inicio da instrucao",
-          causa: "Falha na comunicacao entre E/3 e E/4 sobre o cronograma",
+          causa: "Falha na comunicacao entre E/3 e S/4 sobre o cronograma",
           consequencia: "Atraso ou cancelamento de atividade de instrucao",
           probabilidade: 3,
           impacto: 3,
-          controle: "Reuniao de coordenacao E/3-E/4 com antecedencia minima"
+          controle: "Reuniao de coordenacao E/3-S/4 com antecedencia minima"
         }
       ],
       fontes: ["R-1 (RISG) art. 34-35", "Programa de Instrucao e Adestramento"]
     },
     {
       id: "p07",
-      codigo: "E4-07",
+      codigo: "S4-07",
       titulo: "Transporte - planejamento e execucao de comboio logistico",
       area: "Transporte",
       classes: ["III"],
@@ -510,7 +612,7 @@ window.GPEX_E4 = (function () {
         "Conferir a carga na chegada ao destino",
         "Registrar consumo de combustivel e ocorrencias da viagem"
       ],
-      responsaveis: ["E/4", "Chefe do comboio", "Motoristas escalados"],
+      responsaveis: ["S/4", "Chefe do comboio", "Motoristas escalados"],
       riscos: [
         {
           descricao: "Atraso ou acidente no deslocamento do comboio",
@@ -533,7 +635,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p08",
-      codigo: "E4-08",
+      codigo: "S4-08",
       titulo: "Recursos Humanos (funcao logistica) - bem-estar e apoio material",
       area: "Recursos Humanos",
       classes: ["II"],
@@ -547,7 +649,7 @@ window.GPEX_E4 = (function () {
         "Acompanhar indicadores de bem-estar junto as unidades",
         "Reportar nao conformidades ao Cmt"
       ],
-      responsaveis: ["E/4", "SU", "Rancho / alojamento"],
+      responsaveis: ["S/4", "SU", "Rancho / alojamento"],
       riscos: [
         {
           descricao: "Falta de fardamento/material individual para tropa recem-incorporada",
@@ -562,7 +664,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p09",
-      codigo: "E4-09",
+      codigo: "S4-09",
       titulo: "Saude (funcao logistica) - suprimento e evacuacao",
       area: "Saude",
       classes: ["VIII"],
@@ -576,7 +678,7 @@ window.GPEX_E4 = (function () {
         "Planejar o fluxo de evacuacao em atividades de campo/instrucao",
         "Registrar consumo e validade dos medicamentos controlados"
       ],
-      responsaveis: ["E/4", "Farmacia / Formacao Sanitaria (FS)"],
+      responsaveis: ["S/4", "Farmacia / Formacao Sanitaria (FS)"],
       riscos: [
         {
           descricao: "Indisponibilidade de meio de evacuacao em atividade de campo",
@@ -599,7 +701,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p10",
-      codigo: "E4-10",
+      codigo: "S4-10",
       titulo: "Engenharia (funcao logistica) - infraestrutura do aquartelamento",
       area: "Engenharia",
       classes: ["IV"],
@@ -613,7 +715,7 @@ window.GPEX_E4 = (function () {
         "Executar ou contratar a obra/reparo",
         "Vistoriar e registrar a conclusao do servico"
       ],
-      responsaveis: ["E/4", "SU", "Fiscal de contrato/obra"],
+      responsaveis: ["S/4", "SU", "Fiscal de contrato/obra"],
       riscos: [
         {
           descricao: "Instalacao critica (eletrica, hidraulica) sem manutencao",
@@ -628,7 +730,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p11",
-      codigo: "E4-11",
+      codigo: "S4-11",
       titulo: "Salvamento - recuperacao de material danificado",
       area: "Salvamento",
       classes: ["IX"],
@@ -641,7 +743,7 @@ window.GPEX_E4 = (function () {
         "Providenciar a baixa/descarte do material irrecuperavel",
         "Registrar o resultado do salvamento e atualizar a escrituracao"
       ],
-      responsaveis: ["E/4", "Equipe de salvamento", "Oficina"],
+      responsaveis: ["S/4", "Equipe de salvamento", "Oficina"],
       riscos: [
         {
           descricao: "Material recuperavel descartado indevidamente",
@@ -656,7 +758,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p12",
-      codigo: "E4-12",
+      codigo: "S4-12",
       titulo: "Gestao patrimonial - almoxarifado (Classes II e IV)",
       area: "Suprimento / Patrimonio",
       classes: ["II", "IV"],
@@ -670,7 +772,7 @@ window.GPEX_E4 = (function () {
         "Realizar inventario periodico do deposito",
         "Reportar divergencias e propor reposicao"
       ],
-      responsaveis: ["E/4", "Almoxarife", "Fiscal administrativo"],
+      responsaveis: ["S/4", "Almoxarife", "Fiscal administrativo"],
       riscos: [
         {
           descricao: "Divergencia entre estoque fisico e escriturado",
@@ -685,7 +787,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p13",
-      codigo: "E4-13",
+      codigo: "S4-13",
       titulo: "Classe III - controle de combustiveis e lubrificantes",
       area: "Suprimento / Combustivel",
       classes: ["III"],
@@ -700,7 +802,7 @@ window.GPEX_E4 = (function () {
         "Conferir mensalmente o saldo de cota x consumo real",
         "Reportar desvios de consumo ao Cmt"
       ],
-      responsaveis: ["E/4", "Fiscal do posto de abastecimento", "Unidades da Bda"],
+      responsaveis: ["S/4", "Fiscal do posto de abastecimento", "Unidades da Bda"],
       riscos: [
         {
           descricao: "Consumo de combustivel acima da cota sem justificativa",
@@ -723,7 +825,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p14",
-      codigo: "E4-14",
+      codigo: "S4-14",
       titulo: "Controle do calendario de obrigacoes da Secao de Logistica",
       area: "Gestao / Controle interno",
       classes: [],
@@ -731,14 +833,14 @@ window.GPEX_E4 = (function () {
         "Assegurar o cumprimento, dentro do prazo, de todas as obrigacoes periodicas da 4a Secao " +
         "(relatorios, prestacoes de contas, inventarios, mapas, inspecoes).",
       etapas: [
-        "Levantar todas as obrigacoes periodicas do E/4 e suas periodicidades",
+        "Levantar todas as obrigacoes periodicas do S/4 e suas periodicidades",
         "Consolidar o calendario anual de obrigacoes",
         "Definir responsavel e prazo de antecedencia para cada item",
         "Acompanhar mensalmente o cumprimento do calendario",
         "Registrar e justificar eventuais atrasos",
         "Atualizar o calendario conforme novas exigencias do escalao superior"
       ],
-      responsaveis: ["E/4", "Encarregado do controle interno"],
+      responsaveis: ["S/4", "Encarregado do controle interno"],
       riscos: [
         {
           descricao: "Nao cumprimento de prazo de obrigacao periodica",
@@ -750,7 +852,7 @@ window.GPEX_E4 = (function () {
         },
         {
           descricao: "Duplicidade ou lacuna entre obrigacoes de diferentes classes",
-          causa: "Falta de consolidacao unica do calendario do E/4",
+          causa: "Falta de consolidacao unica do calendario do S/4",
           consequencia: "Retrabalho ou item esquecido",
           probabilidade: 2,
           impacto: 2,
@@ -761,7 +863,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p15",
-      codigo: "E4-15",
+      codigo: "S4-15",
       titulo: "Classe V - requisicao e distribuicao de municao",
       area: "Suprimento",
       classes: ["V"],
@@ -776,7 +878,7 @@ window.GPEX_E4 = (function () {
         "Recolher e registrar as sobras/estojos apos a atividade",
         "Atualizar o controle de consumo por lote"
       ],
-      responsaveis: ["E/4", "Orgao provedor (B Log)", "Unidades da Bda"],
+      responsaveis: ["S/4", "Orgao provedor (B Log)", "Unidades da Bda"],
       riscos: [
         {
           descricao: "Divergencia entre municao requisitada, distribuida e devolvida",
@@ -799,7 +901,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p16",
-      codigo: "E4-16",
+      codigo: "S4-16",
       titulo: "Classe IX - motomecanizacao (pecas de reposicao de viaturas)",
       area: "Suprimento / Manutencao",
       classes: ["IX"],
@@ -814,7 +916,7 @@ window.GPEX_E4 = (function () {
         "Aplicar a peca na viatura e encerrar a ordem de manutencao",
         "Atualizar o controle de estoque de pecas criticas"
       ],
-      responsaveis: ["E/4", "Oficina de manutencao", "Orgao provedor"],
+      responsaveis: ["S/4", "Oficina de manutencao", "Orgao provedor"],
       riscos: [
         {
           descricao: "Viatura parada por falta de peca de reposicao",
@@ -837,7 +939,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p17",
-      codigo: "E4-17",
+      codigo: "S4-17",
       titulo: "Desfazimento de material (baixa patrimonial)",
       area: "Patrimonio",
       classes: [],
@@ -852,7 +954,7 @@ window.GPEX_E4 = (function () {
         "Executar a destinacao definida (alienacao, doacao, destruicao)",
         "Baixar o material da escrituracao patrimonial"
       ],
-      responsaveis: ["E/4", "Comissao de desfazimento", "Autoridade competente"],
+      responsaveis: ["S/4", "Comissao de desfazimento", "Autoridade competente"],
       riscos: [
         {
           descricao: "Desfazimento sem a instrucao processual completa",
@@ -875,7 +977,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p18",
-      codigo: "E4-18",
+      codigo: "S4-18",
       titulo: "Classe II - fardamento e equipamento individual",
       area: "Suprimento",
       classes: ["II"],
@@ -890,7 +992,7 @@ window.GPEX_E4 = (function () {
         "Registrar a distribuicao na ficha individual",
         "Controlar a reposicao por desgaste/troca de tamanho"
       ],
-      responsaveis: ["E/4", "Almoxarife", "SU"],
+      responsaveis: ["S/4", "Almoxarife", "SU"],
       riscos: [
         {
           descricao: "Praca sem fardamento completo para formatura/instrucao",
@@ -913,7 +1015,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p19",
-      codigo: "E4-19",
+      codigo: "S4-19",
       titulo: "Outras classes de suprimento (IV, VI, VII, VIII e X)",
       area: "Suprimento",
       classes: ["IV", "VI", "VII", "VIII", "X"],
@@ -922,14 +1024,14 @@ window.GPEX_E4 = (function () {
         "especificos: Classe IV (material de construcao), VI (diversos - geradores, embarcacoes etc.), " +
         "VII (material principal/comunicacoes), VIII (saude, quando nao tratado pela FS) e X (outras classes).",
       etapas: [
-        "Identificar, para cada classe, o material sob responsabilidade do E/4",
+        "Identificar, para cada classe, o material sob responsabilidade do S/4",
         "Levantar as necessidades especificas de cada classe junto as unidades",
         "Consolidar e priorizar os pedidos por classe e criticidade",
         "Encaminhar as requisicoes aos orgaos provedores correspondentes",
         "Receber, conferir e distribuir o material recebido",
         "Manter escrituracao separada por classe de suprimento"
       ],
-      responsaveis: ["E/4", "SU", "Orgaos provedores"],
+      responsaveis: ["S/4", "SU", "Orgaos provedores"],
       riscos: [
         {
           descricao: "Classe de suprimento sem acompanhamento sistematico",
@@ -1036,7 +1138,7 @@ window.GPEX_E4 = (function () {
     {
       codigo: "EB20-P-11.001", titulo: "Plano de Integridade do Exército",
       edicao: "2ª ed., 2025", portaria: "Portaria EME/C Ex nº 1.493, de 25 de fevereiro de 2025",
-      aplicacao: "Medidas de integridade e conformidade aplicáveis ao E/4.",
+      aplicacao: "Medidas de integridade e conformidade aplicáveis ao S/4.",
       url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/RISCOS/NORMAS/port_1493_eme_pl_integridade_2025%201.pdf"
     }
   ];
@@ -1072,11 +1174,13 @@ window.GPEX_E4 = (function () {
           cor: n.cor,
           controle: r.controle,
           resposta: respostaPara(n.nome),
-          responsavel: (proc.responsaveis && proc.responsaveis.length) ? proc.responsaveis[0] : "E/4",
+          responsavel: (proc.responsaveis && proc.responsaveis.length) ? proc.responsaveis[0] : "S/4",
           prazo: prazoPara(n.nome),
           categoria: categoriaDe(proc.area),
           indicador: (gp.indicadores && gp.indicadores.length) ? gp.indicadores[0] : "Monitorar indicadores do processo",
-          tarefa: gp.tarefa || proc.titulo
+          tarefa: gp.tarefa || proc.titulo,
+          competencia: vinculoDe(proc.id).competencia,
+          funcaoLogistica: vinculoDe(proc.id).funcao
         });
       });
     });
@@ -1106,6 +1210,10 @@ window.GPEX_E4 = (function () {
     impactoRotulo: impactoRotulo,
     respostaPara: respostaPara,
     prazoPara: prazoPara,
-    categoriaDe: categoriaDe
+    categoriaDe: categoriaDe,
+    regimento: regimento,
+    vinculoRegimento: vinculoRegimento,
+    vinculoDe: vinculoDe,
+    competenciaTexto: competenciaTexto
   };
 })();

@@ -1,4 +1,4 @@
-/* GPEX / Gestao de Riscos - E/4 | aplicacao (vanilla JS) */
+/* GPEX / Gestao de Riscos - S/4 | aplicacao (vanilla JS) */
 (function () {
   "use strict";
 
@@ -41,7 +41,7 @@
   }
 
   /* ---------------- UI: toasts, overlays, rotas e atalhos ---------------- */
-  var TABS = ["visao", "processos", "matriz", "governanca", "combustivel", "calendario", "fontes"];
+  var TABS = ["visao", "processos", "matriz", "governanca", "regimento", "combustivel", "calendario", "fontes"];
 
   function toast(msg, tipo) {
     var box = $("toasts"); if (!box) return;
@@ -117,7 +117,7 @@
     if (e.key === "Escape") { fecharOverlay("overlayBusca"); fecharOverlay("overlayAjuda"); fecharOverlay("overlayConfirm"); return; }
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); abrirBusca(); return; }
     if (e.key === "/" && !digitando(document.activeElement)) { e.preventDefault(); abrirBusca(); return; }
-    if (!digitando(document.activeElement) && /^[1-7]$/.test(e.key)) { irPara(TABS[Number(e.key) - 1]); }
+    if (!digitando(document.activeElement) && /^[1-9]$/.test(e.key)) { var n = Number(e.key); if (n <= TABS.length) irPara(TABS[n - 1]); }
   });
 
   /* ---------------- busca global ---------------- */
@@ -271,11 +271,11 @@
     var media = riscos.length ? (riscos.reduce(function (a, r) { return a + r.valor; }, 0) / riscos.length) : 0;
 
     $("cardsVisao").innerHTML = [
-      card("Processos mapeados", DB.processos.length, "Tarefas da Secao de Logistica"),
+      card("Processos mapeados", DB.processos.length, "Tarefas da S/4 (4a Secao)"),
       card("Riscos identificados", riscos.length, "Com causa, consequencia e controle"),
       card("Riscos Alto/Extremo", altos.length, "Tratamento prioritário (EB10-P-01.004)", altos.length ? "var(--red)" : "var(--green)"),
       card("Classes de suprimento", DB.classes.length, "I a X"),
-      card("Obrigacoes periodicas", DB.calendario.length, "Calendario do E/4"),
+      card("Obrigacoes periodicas", DB.calendario.length, "Calendario da S/4"),
       card("Nivel medio (P x I)", media.toFixed(1), "Escala de 1 a 25", "var(--yellow)")
     ].join("");
 
@@ -424,7 +424,7 @@
     try { history.replaceState({ tab: "processos", proc: id }, "", "#processos/" + id); } catch (e) { }
 
     var gp = DB.governancaProcessos[p.id] || { tarefa: p.titulo, indicadores: [] };
-    var respPadrao = (p.responsaveis && p.responsaveis.length) ? p.responsaveis[0] : "E/4";
+    var respPadrao = (p.responsaveis && p.responsaveis.length) ? p.responsaveis[0] : "S/4";
     var riscosHtml = p.riscos.map(function (r) {
       var n = DB.nivelRisco(r.probabilidade, r.impacto);
       return '<div class="risco-card b-' + n.cor + '">' +
@@ -440,10 +440,15 @@
         "<dt>Indicador</dt><dd>" + esc((gp.indicadores && gp.indicadores.length) ? gp.indicadores[0] : "Monitorar indicadores do processo") + "</dd></dl></div>";
     }).join("");
 
+    var vinc = DB.vinculoDe(p.id);
     var hierarquiaHtml = [
+      ["Órgão", DB.governanca.orgao],
+      ["Subordinação", DB.governanca.subordinacao],
       ["Portfólio", DB.governanca.portfolio],
       ["Programa", DB.governanca.programa],
       ["Macroprocesso", DB.governanca.macroprocesso],
+      ["Função logística", vinc.funcao || "-"],
+      ["Competência (Art. 3º)", vinc.competencia ? vinc.competencia + " - " + DB.competenciaTexto(vinc.competencia) : "-"],
       ["Processo", p.codigo + " - " + p.titulo],
       ["Tarefa (nomenclatura)", gp.tarefa || p.titulo]
     ].map(function (x) { return "<dt>" + esc(x[0]) + "</dt><dd>" + esc(x[1]) + "</dd>"; }).join("");
@@ -494,10 +499,14 @@
   /* ---------------- exportacao de texto (para o ASE) ---------------- */
   function textoDados(p) {
     var gp = DB.governancaProcessos[p.id] || { tarefa: p.titulo, indicadores: [] };
+    var vinc = DB.vinculoDe(p.id);
     return "DADOS DO PROCESSO\n" +
       "Codigo: " + p.codigo + "\n" +
       "Titulo: " + p.titulo + "\n" +
       "Tarefa (Verbo + Objeto + Complemento): " + (gp.tarefa || p.titulo) + "\n" +
+      "Orgao: " + DB.governanca.orgao + " - subordinada ao " + DB.governanca.subordinacao + "\n" +
+      "Funcao logistica (Art. 3o, I): " + (vinc.funcao || "-") + "\n" +
+      "Competencia (Art. 3o): " + (vinc.competencia ? vinc.competencia + " - " + DB.competenciaTexto(vinc.competencia) : "-") + "\n" +
       "Area: " + p.area + "\n" +
       "Portfolio: " + DB.governanca.portfolio + "\n" +
       "Programa: " + DB.governanca.programa + "\n" +
@@ -517,7 +526,7 @@
   }
   function textoMatriz(p) {
     var gp = DB.governancaProcessos[p.id] || { indicadores: [] };
-    var respPadrao = (p.responsaveis && p.responsaveis.length) ? p.responsaveis[0] : "E/4";
+    var respPadrao = (p.responsaveis && p.responsaveis.length) ? p.responsaveis[0] : "S/4";
     var linhas = ["MATRIZ DE RISCOS (EB10-P-01.004) - " + p.codigo + " - " + p.titulo, ""];
     p.riscos.forEach(function (r, i) {
       var n = DB.nivelRisco(r.probabilidade, r.impacto);
@@ -537,7 +546,7 @@
   }
   function textoResumo(p) {
     return "============================================\n" +
-      "MAPEAMENTO DE PROCESSO - GPEX / E4\n" +
+      "MAPEAMENTO DE PROCESSO - GPEX / S4\n" +
       "============================================\n\n" +
       textoDados(p) + "\n\n" +
       textoEtapas(p) + "\n\n" +
@@ -607,7 +616,7 @@
       $("subMatrizLista").textContent = riscos.length + " risco(s) - nivel " + DB.nivelRisco(MATRIZ_FILTRO.p, MATRIZ_FILTRO.i).nome;
     } else {
       $("tituloMatrizLista").textContent = "Riscos mapeados";
-      $("subMatrizLista").textContent = riscos.length + " riscos nos " + DB.processos.length + " processos do E/4";
+      $("subMatrizLista").textContent = riscos.length + " riscos nos " + DB.processos.length + " processos da S/4";
       document.querySelectorAll("#tabelaMatriz td").forEach(function (td) { td.style.outline = "none"; });
     }
     riscos.sort(function (a, b) { return b.valor - a.valor; });
@@ -892,8 +901,8 @@
 
     var byId = {}; nodes.forEach(function (n) { byId[n.id] = n; });
     var x = '<?xml version="1.0" encoding="UTF-8"?>\n';
-    x += '<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_E4" targetNamespace="http://bda-inf-amv.eb.mil.br/gpex/e4" exporter="GPEX E4 - Bda Inf Amv" exporterVersion="1.0">\n';
-    x += '  <bpmn:collaboration id="Collaboration_1">\n    <bpmn:participant id="Participant_E4" name="E/4 - ' + escXml(DB.governanca.macroprocesso) + '" processRef="Process_' + p.id + '"/>\n  </bpmn:collaboration>\n';
+    x += '<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_E4" targetNamespace="http://bda-inf-amv.eb.mil.br/gpex/e4" exporter="GPEX S4 - Bda Inf Amv" exporterVersion="1.0">\n';
+    x += '  <bpmn:collaboration id="Collaboration_1">\n    <bpmn:participant id="Participant_S4" name="S/4 - ' + escXml(DB.governanca.macroprocesso) + '" processRef="Process_' + p.id + '"/>\n  </bpmn:collaboration>\n';
     x += '  <bpmn:process id="Process_' + p.id + '" name="' + escXml(p.codigo + " - " + p.titulo) + '" isExecutable="false">\n';
     x += '    <bpmn:documentation>' + escXml(p.objetivo + " || Normas: " + DB.riscoEB10.base) + '</bpmn:documentation>\n';
     nodes.forEach(function (n) {
@@ -909,7 +918,7 @@
     var last = nodes[nodes.length - 1];
     var minX = 160, minY = 120, maxX = last.x + last.w + 60, maxY = 430;
     x += '  <bpmndi:BPMNDiagram id="BPMNDiagram_1">\n    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">\n';
-    x += '      <bpmndi:BPMNShape id="Participant_E4_di" bpmnElement="Participant_E4" isHorizontal="true"><dc:Bounds x="' + minX + '" y="' + minY + '" width="' + (maxX - minX) + '" height="' + (maxY - minY) + '"/></bpmndi:BPMNShape>\n';
+    x += '      <bpmndi:BPMNShape id="Participant_S4_di" bpmnElement="Participant_S4" isHorizontal="true"><dc:Bounds x="' + minX + '" y="' + minY + '" width="' + (maxX - minX) + '" height="' + (maxY - minY) + '"/></bpmndi:BPMNShape>\n';
     nodes.forEach(function (n) {
       x += '      <bpmndi:BPMNShape id="' + n.id + '_di" bpmnElement="' + n.id + '"><dc:Bounds x="' + n.x + '" y="' + n.y + '" width="' + n.w + '" height="' + n.h + '"/></bpmndi:BPMNShape>\n';
     });
@@ -926,7 +935,7 @@
     var objs = [], conns = [], k = 1;
     function obj(id, type, name) { objs.push({ id: id, type: type, name: name }); }
     function con(type, from, to) { conns.push({ id: "Conn_" + (k++), type: type, from: from, to: to }); }
-    obj("Obj_ORG_E4", "OT_ORG_UNIT", "E/4 - Secao de Logistica");
+    obj("Obj_ORG_S4", "OT_ORG_UNIT", "S/4 - 4a Secao (Logistica)");
     obj("Obj_EVT_Start", "OT_EVT", "Processo " + p.codigo + " iniciado");
     var prev = "Obj_EVT_Start";
     p.etapas.forEach(function (et, i) {
@@ -935,7 +944,7 @@
       obj(eid, "OT_EVT", "Etapa " + (i + 1) + " concluida");
       con("CT_ACTIV_1", prev, fid);
       con("CT_ACTIV_2", fid, eid);
-      con("CT_EXEC_1", fid, "Obj_ORG_E4");
+      con("CT_EXEC_1", fid, "Obj_ORG_S4");
       prev = eid;
     });
     obj("Obj_RULE_1", "OT_RULE", "Risco identificado? (XOR)");
@@ -943,7 +952,7 @@
     obj("Obj_EVT_Fim", "OT_EVT", "Processo encerrado");
     con("CT_ACTIV_1", prev, "Obj_RULE_1");
     con("CT_ACTIV_1", "Obj_RULE_1", "Obj_FUNC_RISCO");
-    con("CT_EXEC_1", "Obj_FUNC_RISCO", "Obj_ORG_E4");
+    con("CT_EXEC_1", "Obj_FUNC_RISCO", "Obj_ORG_S4");
     con("CT_ACTIV_2", "Obj_FUNC_RISCO", "Obj_EVT_Fim");
     con("CT_ACTIV_2", "Obj_RULE_1", "Obj_EVT_Fim");
 
@@ -954,7 +963,7 @@
 
     var x = '<?xml version="1.0" encoding="UTF-8"?>\n';
     x += '<AML xmlns="http://www.aris.com/AML" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n';
-    x += '  <Header>\n    <Created>' + new Date().toISOString() + '</Created>\n    <Creator>GPEX E4 - Bda Inf Amv</Creator>\n    <AmlVersion>1.0</AmlVersion>\n  </Header>\n';
+    x += '  <Header>\n    <Created>' + new Date().toISOString() + '</Created>\n    <Creator>GPEX S4 - Bda Inf Amv</Creator>\n    <AmlVersion>1.0</AmlVersion>\n  </Header>\n';
     x += '  <Models>\n    <Model id="Model_' + p.id + '" name="' + escXml(p.codigo + " - " + p.titulo) + '" modeltype="EPC">\n';
     x += '      <Attributes>\n' + riscos + '\n      </Attributes>\n';
     x += '      <Objects>\n';
@@ -972,7 +981,7 @@
     var linhas = [cols];
     DB.processos.forEach(function (p) {
       if (procNome && p.titulo !== procNome) return;
-      var resp = (p.responsaveis && p.responsaveis.length) ? p.responsaveis[0] : "E/4";
+      var resp = (p.responsaveis && p.responsaveis.length) ? p.responsaveis[0] : "S/4";
       var evIn = "Processo " + p.codigo + " iniciado";
       p.etapas.forEach(function (et, i) {
         var r = p.riscos[Math.min(i, p.riscos.length - 1)] || { descricao: "", controle: "" };
@@ -997,9 +1006,11 @@
   function planoRiscosTexto() {
     var riscos = DB.todosRiscos().slice().sort(function (a, b) { return b.valor - a.valor; });
     var l = [
-      "PLANO DE GESTAO DE RISCOS - SECAO DE LOGISTICA (E/4)",
+      "PLANO DE GESTAO DE RISCOS - SECAO DE LOGISTICA (S/4 - 4a Secao)",
       "Cmdo Bda Inf Amv",
-      "Base legal: " + DB.riscoEB10.base,
+      "Orgao: " + DB.governanca.orgao + " - subordinada ao " + DB.governanca.subordinacao,
+      "Regimento Interno: finalidade (Art. 1o), missao (Art. 2o), competencias (Art. 3o) e atribuicoes (Arts. 4o a 6o)",
+      "Base legal de riscos: " + DB.riscoEB10.base,
       "Portfolio: " + DB.governanca.portfolio,
       "Macroprocesso: " + DB.governanca.macroprocesso,
       "Gerado em: " + new Date().toLocaleString("pt-BR"),
@@ -1026,12 +1037,12 @@
   }
 
   function riscosCSV() {
-    var cols = ["Processo", "Categoria", "Risco", "Causa", "Consequencia", "Probabilidade", "P_rotulo", "Impacto", "I_rotulo", "Nivel", "Valor", "Controle", "Resposta", "Prazo", "Responsavel", "Indicador"];
+    var cols = ["Processo", "Funcao_logistica", "Competencia_Art3", "Categoria", "Risco", "Causa", "Consequencia", "Probabilidade", "P_rotulo", "Impacto", "I_rotulo", "Nivel", "Valor", "Controle", "Resposta", "Prazo", "Responsavel", "Indicador"];
     function c(v) { return '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"'; }
     var linhas = [cols.map(c).join(";")];
     DB.todosRiscos().slice().sort(function (a, b) { return b.valor - a.valor; }).forEach(function (r) {
       linhas.push([
-        r.processo, r.categoria, r.descricao, r.causa, r.consequencia,
+        r.processo, r.funcaoLogistica, r.competencia, r.categoria, r.descricao, r.causa, r.consequencia,
         r.probabilidade, r.probabilidadeRotulo, r.impacto, r.impactoRotulo,
         r.nivel, r.valor, r.controle, r.resposta, r.prazo, r.responsavel, r.indicador
       ].map(c).join(";"));
@@ -1043,15 +1054,17 @@
     var g = DB.governanca;
     if ($("governancaHierarquia")) {
       $("governancaHierarquia").innerHTML = [
-        ["Portfólio", g.portfolio], ["Programa", g.programa],
-        ["Macroprocesso", g.macroprocesso], ["Cadeia de valor", g.cadeiaValor]
+        ["Órgão", g.orgao], ["Subordinação", g.subordinacao], ["Portfólio", g.portfolio],
+        ["Programa", g.programa], ["Macroprocesso", g.macroprocesso], ["Cadeia de valor", g.cadeiaValor]
       ].map(function (x) { return '<div class="hier-item"><span>' + esc(x[0]) + "</span><strong>" + esc(x[1]) + "</strong></div>"; }).join("");
     }
 
     if ($("tbodyGovernancaIndicadores")) {
       $("tbodyGovernancaIndicadores").innerHTML = DB.processos.map(function (p) {
         var gp = DB.governancaProcessos[p.id] || { tarefa: p.titulo, indicadores: [] };
-        return "<tr><td>" + esc(p.codigo) + "</td><td>" + esc(gp.tarefa || p.titulo) + "</td><td>" +
+        var v = DB.vinculoDe(p.id);
+        return "<tr><td>" + esc(p.codigo) + "</td><td>" + esc(gp.tarefa || p.titulo) + "</td><td>" + esc(v.funcao || "-") +
+          '</td><td><span class="tag">' + esc(v.competencia || "-") + "</span></td><td>" +
           ((gp.indicadores && gp.indicadores.length) ? gp.indicadores.map(function (i) { return esc(i); }).join("<br>") : "-") + "</td></tr>";
       }).join("");
     }
@@ -1074,8 +1087,8 @@
     renderRegistroRiscos();
 
     if ($("btnPlanoRiscos")) $("btnPlanoRiscos").addEventListener("click", function () { copiarTexto(planoRiscosTexto(), $("btnPlanoRiscos")); });
-    if ($("btnBaixarPlano")) $("btnBaixarPlano").addEventListener("click", function () { baixarArquivo("plano-gestao-riscos-e4.txt", planoRiscosTexto()); });
-    if ($("btnCsvRiscos")) $("btnCsvRiscos").addEventListener("click", function () { baixarArquivo("matriz-riscos-e4.csv", riscosCSV(), "text/csv;charset=utf-8"); });
+    if ($("btnBaixarPlano")) $("btnBaixarPlano").addEventListener("click", function () { baixarArquivo("plano-gestao-riscos-s4.txt", planoRiscosTexto()); });
+    if ($("btnCsvRiscos")) $("btnCsvRiscos").addEventListener("click", function () { baixarArquivo("matriz-riscos-s4.csv", riscosCSV(), "text/csv;charset=utf-8"); });
 
     if ($("valTarefaBtn")) {
       $("valTarefaBtn").addEventListener("click", function () {
@@ -1101,7 +1114,7 @@
       if ($("arisBpmn")) $("arisBpmn").addEventListener("click", function () { exportarARIS(arisSel(), "bpmn"); });
       if ($("arisAml")) $("arisAml").addEventListener("click", function () { exportarARIS(arisSel(), "aml"); });
       if ($("arisSmart")) $("arisSmart").addEventListener("click", function () { exportarARIS(arisSel(), "smart"); });
-      if ($("arisSmartTodos")) $("arisSmartTodos").addEventListener("click", function () { baixarArquivo("aris-smart-design-e4-todos.csv", arisSmartLinhas(null), "text/csv;charset=utf-8"); });
+      if ($("arisSmartTodos")) $("arisSmartTodos").addEventListener("click", function () { baixarArquivo("aris-smart-design-s4-todos.csv", arisSmartLinhas(null), "text/csv;charset=utf-8"); });
     }
   }
 
@@ -1130,6 +1143,63 @@
     }
   }
 
+  /* ---------------- REGIMENTO INTERNO ---------------- */
+  var ROMANOS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+
+  function regimentoTexto() {
+    var r = DB.regimento;
+    var l = [r.titulo, r.unidade, "Subordinacao: " + r.subordinacao, ""];
+    l.push("FINALIDADE E SUBORDINACAO (Art. 1o)"); l.push(r.finalidade); l.push("");
+    l.push("MISSAO (Art. 2o)"); l.push(r.missao); l.push("");
+    l.push("COMPETENCIAS (Art. 3o)");
+    r.competencias.forEach(function (c) { l.push("  " + c.inciso + " - " + c.texto); });
+    l.push("");
+    r.atribuicoes.forEach(function (a) {
+      l.push(a.cargo.toUpperCase() + " (" + a.artigo + ")");
+      a.itens.forEach(function (it, i) { l.push("  " + ROMANOS[i] + " - " + it); });
+      l.push("");
+    });
+    return l.join("\n");
+  }
+
+  function initRegimento() {
+    var r = DB.regimento;
+    if ($("regimentoFinalidade")) {
+      $("regimentoFinalidade").innerHTML = "<p>" + esc(r.finalidade) + "</p>" +
+        '<p style="margin-top:10px;"><strong>Subordinação:</strong> ' + esc(r.subordinacao) + "</p>";
+    }
+    if ($("regimentoMissao")) $("regimentoMissao").innerHTML = "<p>" + esc(r.missao) + "</p>";
+    if ($("regimentoFuncoes")) {
+      $("regimentoFuncoes").innerHTML = r.funcoesLogisticas.map(function (f) { return '<span class="tag">' + esc(f) + "</span>"; }).join(" ");
+    }
+    if ($("regimentoCompetencias")) {
+      $("regimentoCompetencias").innerHTML = r.competencias.map(function (c) {
+        var procs = DB.processos.filter(function (p) { return DB.vinculoDe(p.id).competencia === c.inciso; });
+        return '<div class="comp-card"><div class="comp-top"><span class="comp-inc">Art. 3º, ' + esc(c.inciso) + '</span></div>' +
+          "<p>" + esc(c.texto) + "</p>" +
+          '<div class="comp-procs">' + (procs.length ? procs.map(function (p) { return '<button class="tag btn-proc" data-proc="' + p.id + '">' + esc(p.codigo) + "</button>"; }).join(" ") : '<span class="tag cinza">Sem processo vinculado</span>') + "</div></div>";
+      }).join("");
+      $("regimentoCompetencias").querySelectorAll("[data-proc]").forEach(function (b) {
+        b.addEventListener("click", function () { irPara("processos", b.getAttribute("data-proc")); });
+      });
+    }
+    if ($("regimentoAtribuicoes")) {
+      $("regimentoAtribuicoes").innerHTML = r.atribuicoes.map(function (a) {
+        return '<div class="atrib-card"><div class="atrib-top"><h3>' + esc(a.cargo) + '</h3><span class="tag">' + esc(a.artigo) + "</span></div>" +
+          "<ol>" + a.itens.map(function (it, i) { return "<li><b>" + ROMANOS[i] + "</b> " + esc(it) + "</li>"; }).join("") + "</ol></div>";
+      }).join("");
+    }
+    if ($("tbodyRegimentoVinculos")) {
+      $("tbodyRegimentoVinculos").innerHTML = DB.processos.map(function (p) {
+        var v = DB.vinculoDe(p.id);
+        return "<tr><td>" + esc(p.codigo) + "</td><td>" + esc(p.titulo) + "</td><td>" + esc(v.funcao || "-") +
+          '</td><td><span class="tag">' + esc(v.competencia || "-") + "</span></td></tr>";
+      }).join("");
+    }
+    if ($("btnRegimento")) $("btnRegimento").addEventListener("click", function () { copiarTexto(regimentoTexto(), $("btnRegimento")); });
+    if ($("btnRegimentoTxt")) $("btnRegimentoTxt").addEventListener("click", function () { baixarArquivo("regimento-interno-s4.txt", regimentoTexto()); });
+  }
+
   /* ---------------- boot ---------------- */
   try { initVisao(); } catch (e) { console.error(e); }
   try { initProcessos(); } catch (e) { console.error(e); }
@@ -1137,6 +1207,7 @@
   try { initCombustivel(); } catch (e) { console.error(e); }
   try { initCalendario(); } catch (e) { console.error(e); }
   try { initGovernanca(); } catch (e) { console.error(e); }
+  try { initRegimento(); } catch (e) { console.error(e); }
   try { initFontes(); } catch (e) { console.error(e); }
   try { initBusca(); } catch (e) { console.error(e); }
   try { aplicarRota(); } catch (e) { console.error(e); }

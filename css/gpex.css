@@ -256,6 +256,24 @@ ul.lista-simples li { margin-bottom: 3px; }
 .validador { border: 1px solid var(--border); border-radius: 12px; padding: 16px; background: #fbfcf7; }
 .validador h3 { margin-top: 0; }
 
+/* Regimento Interno */
+.texto-regimento { font-size: 13.5px; color: var(--text-secondary); line-height: 1.65; }
+.comp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+.comp-card { border: 1px solid var(--border); border-left: 4px solid var(--green); border-radius: 12px; padding: 14px 16px; background: #fbfcf7; }
+.comp-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.55; }
+.comp-top { margin-bottom: 8px; }
+.comp-inc { display: inline-block; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .4px; color: #fff; background: linear-gradient(135deg, #6b8e23, #556b2f); border-radius: 6px; padding: 3px 9px; }
+.comp-procs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.btn-proc { cursor: pointer; font-family: inherit; }
+.btn-proc:hover { background: var(--green-bg); border-color: var(--green); }
+.atrib-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+.atrib-card { border: 1px solid var(--border); border-radius: 12px; padding: 16px; background: #fbfcf7; }
+.atrib-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.atrib-top h3 { margin: 0; }
+.atrib-card ol { margin: 0 0 0 20px; font-size: 13px; color: var(--text-secondary); line-height: 1.55; }
+.atrib-card ol li { margin-bottom: 6px; }
+.atrib-card ol li b { color: var(--green-dark); margin-right: 4px; }
+
 /* Topo: acoes */
 .topo-acoes { display: flex; gap: 8px; }
 .btn-topo {
