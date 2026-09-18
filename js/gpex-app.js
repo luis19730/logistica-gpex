@@ -27,7 +27,7 @@
   }
 
   function copiarTexto(txt, btn) {
-    function ok() { if (btn) { var o = btn.textContent; btn.textContent = "Copiado!"; setTimeout(function () { btn.textContent = o; }, 1500); } }
+    function ok() { toast("Copiado para a area de transferencia."); if (btn) { var o = btn.textContent; btn.textContent = "Copiado!"; setTimeout(function () { btn.textContent = o; }, 1500); } }
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(txt).then(ok).catch(function () { fallback(); });
     } else { fallback(); }
@@ -40,15 +40,166 @@
     }
   }
 
-  /* ---------------- abas ---------------- */
-  document.querySelectorAll(".gpex-aba").forEach(function (b) {
-    b.addEventListener("click", function () {
-      document.querySelectorAll(".gpex-aba").forEach(function (x) { x.classList.remove("active"); });
-      document.querySelectorAll(".painel").forEach(function (x) { x.classList.remove("active"); });
-      b.classList.add("active");
-      $("painel-" + b.getAttribute("data-painel")).classList.add("active");
-    });
+  /* ---------------- UI: toasts, overlays, rotas e atalhos ---------------- */
+  var TABS = ["visao", "processos", "matriz", "governanca", "combustivel", "calendario", "fontes"];
+
+  function toast(msg, tipo) {
+    var box = $("toasts"); if (!box) return;
+    var el = document.createElement("div");
+    el.className = "toast" + (tipo ? " " + tipo : "");
+    el.textContent = msg;
+    box.appendChild(el);
+    setTimeout(function () { el.classList.add("sai"); }, 2600);
+    setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 3200);
+  }
+
+  function abrirOverlay(id) { var o = $(id); if (o) { o.hidden = false; requestAnimationFrame(function () { o.classList.add("aberto"); }); } }
+  function fecharOverlay(id) { var o = $(id); if (o) { o.classList.remove("aberto"); setTimeout(function () { o.hidden = true; }, 160); } }
+  document.querySelectorAll(".overlay").forEach(function (o) {
+    o.addEventListener("click", function (e) { if (e.target === o) fecharOverlay(o.id); });
   });
+
+  function confirmar(msg, onOk) {
+    if (!$("overlayConfirm")) { if (window.confirm(msg)) onOk(); return; }
+    $("confirmMsg").textContent = msg;
+    abrirOverlay("overlayConfirm");
+    var sim = $("overlayConfirm").querySelector("[data-confirm-sim]");
+    var nao = $("overlayConfirm").querySelector("[data-confirm-nao]");
+    function done(ok) { fecharOverlay("overlayConfirm"); sim.onclick = nao.onclick = null; if (ok && onOk) onOk(); }
+    sim.onclick = function () { done(true); };
+    nao.onclick = function () { done(false); };
+  }
+
+  function ativarPainel(nome, opts) {
+    if (TABS.indexOf(nome) === -1) nome = "visao";
+    document.querySelectorAll(".gpex-aba").forEach(function (x) {
+      var on = x.getAttribute("data-painel") === nome;
+      x.classList.toggle("active", on);
+      x.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    document.querySelectorAll(".painel").forEach(function (x) { x.classList.remove("active"); });
+    var painel = $("painel-" + nome); if (painel) painel.classList.add("active");
+    try { localStorage.setItem("gpex_tab", nome); } catch (e) { }
+    if (!opts || !opts.noHash) {
+      var h = "#" + nome;
+      if (location.hash !== h) { try { history.pushState({ tab: nome }, "", h); } catch (e) { location.hash = h; } }
+    }
+  }
+
+  function irPara(nome, proc) {
+    ativarPainel(nome);
+    if (nome === "processos" && proc) abrirProcesso(proc);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  document.querySelectorAll(".gpex-aba").forEach(function (b) {
+    b.addEventListener("click", function () { irPara(b.getAttribute("data-painel")); });
+  });
+
+  function aplicarRota() {
+    var h = (location.hash || "").replace(/^#/, "");
+    var partes = h.split("/");
+    var nome = TABS.indexOf(partes[0]) !== -1 ? partes[0] : null;
+    if (!nome) { try { nome = localStorage.getItem("gpex_tab"); } catch (e) { } }
+    if (TABS.indexOf(nome) === -1) nome = "visao";
+    ativarPainel(nome, { noHash: true });
+    if (nome === "processos" && partes[1] && PROC_ATUAL !== partes[1]) abrirProcesso(partes[1]);
+  }
+  window.addEventListener("popstate", aplicarRota);
+
+  function digitando(el) {
+    if (!el) return false;
+    var t = (el.tagName || "").toLowerCase();
+    return t === "input" || t === "select" || t === "textarea" || el.isContentEditable;
+  }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { fecharOverlay("overlayBusca"); fecharOverlay("overlayAjuda"); fecharOverlay("overlayConfirm"); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); abrirBusca(); return; }
+    if (e.key === "/" && !digitando(document.activeElement)) { e.preventDefault(); abrirBusca(); return; }
+    if (!digitando(document.activeElement) && /^[1-7]$/.test(e.key)) { irPara(TABS[Number(e.key) - 1]); }
+  });
+
+  /* ---------------- busca global ---------------- */
+  var IDX_BUSCA = null, BUSCA_SEL = 0, BUSCA_ITENS = [];
+
+  function norm(s) {
+    return String(s == null ? "" : s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+  function montarIndice() {
+    if (IDX_BUSCA) return IDX_BUSCA;
+    IDX_BUSCA = [];
+    DB.processos.forEach(function (p) {
+      IDX_BUSCA.push({ tipo: "Processo", titulo: p.titulo, sub: p.codigo + " - " + p.area, acao: function () { irPara("processos", p.id); } });
+      p.riscos.forEach(function (r) {
+        IDX_BUSCA.push({ tipo: "Risco", titulo: r.descricao, sub: p.codigo + " - " + p.titulo, acao: function () { irPara("processos", p.id); } });
+      });
+    });
+    DB.calendario.forEach(function (c) {
+      IDX_BUSCA.push({ tipo: "Obrigacao", titulo: c.obrigacao, sub: c.periodicidade + " - " + c.responsavel, acao: function () { irPara("calendario"); } });
+    });
+    DB.normas.forEach(function (n) {
+      IDX_BUSCA.push({ tipo: "Norma", titulo: n.codigo + " - " + n.titulo, sub: n.aplicacao, acao: function () { irPara("governanca"); } });
+    });
+    DB.fontes.forEach(function (f) {
+      IDX_BUSCA.push({ tipo: "Fonte", titulo: f.nome, sub: f.descricao || f.acesso || "", acao: function () { irPara("fontes"); } });
+    });
+    return IDX_BUSCA;
+  }
+
+  function abrirBusca() {
+    if (!$("overlayBusca")) return;
+    abrirOverlay("overlayBusca");
+    var inp = $("buscaGlobal");
+    inp.value = ""; renderBusca("");
+    setTimeout(function () { inp.focus(); }, 30);
+  }
+
+  function renderBusca(q) {
+    var box = $("resultadosBusca"); if (!box) return;
+    var nq = norm(q);
+    var base = montarIndice();
+    BUSCA_ITENS = (nq ? base.filter(function (i) { return norm(i.titulo).indexOf(nq) !== -1 || norm(i.sub).indexOf(nq) !== -1; }) : base).slice(0, 40);
+    if (!BUSCA_ITENS.length) { box.innerHTML = '<div class="vazio">Nada encontrado.</div>'; return; }
+    BUSCA_SEL = 0;
+    box.innerHTML = BUSCA_ITENS.map(function (i, k) {
+      return '<button class="res' + (k === 0 ? " sel" : "") + '" data-k="' + k + '"><span class="res-tipo">' + esc(i.tipo) + '</span>' +
+        '<span class="res-tit">' + esc(i.titulo) + '</span><small>' + esc(i.sub) + "</small></button>";
+    }).join("");
+    box.querySelectorAll(".res").forEach(function (b) {
+      b.addEventListener("click", function () { executarBusca(Number(b.getAttribute("data-k"))); });
+    });
+  }
+
+  function executarBusca(k) {
+    var i = BUSCA_ITENS[k]; if (!i) return;
+    fecharOverlay("overlayBusca");
+    i.acao();
+    toast(i.tipo + ": " + i.titulo);
+  }
+
+  function moverBusca(d) {
+    var items = $("resultadosBusca").querySelectorAll(".res");
+    if (!items.length) return;
+    BUSCA_SEL = (BUSCA_SEL + d + items.length) % items.length;
+    items.forEach(function (el, k) { el.classList.toggle("sel", k === BUSCA_SEL); });
+    items[BUSCA_SEL].scrollIntoView({ block: "nearest" });
+  }
+
+  function initBusca() {
+    if ($("btnBusca")) $("btnBusca").addEventListener("click", abrirBusca);
+    if ($("buscaGlobal")) {
+      $("buscaGlobal").addEventListener("input", function () { renderBusca(this.value); });
+      $("buscaGlobal").addEventListener("keydown", function (e) {
+        if (e.key === "ArrowDown") { e.preventDefault(); moverBusca(1); }
+        else if (e.key === "ArrowUp") { e.preventDefault(); moverBusca(-1); }
+        else if (e.key === "Enter") { e.preventDefault(); executarBusca(BUSCA_SEL); }
+      });
+    }
+    if ($("btnAjuda")) $("btnAjuda").addEventListener("click", function () { abrirOverlay("overlayAjuda"); });
+    document.querySelectorAll("[data-fechar]").forEach(function (b) { b.addEventListener("click", function () { fecharOverlay(b.closest(".overlay").id); }); });
+    document.querySelectorAll("#passos [data-ir]").forEach(function (li) { li.addEventListener("click", function () { irPara(li.getAttribute("data-ir")); }); });
+  }
 
   /* ---------------- Mermaid ---------------- */
   var mermaidPronto = false;
@@ -130,6 +281,8 @@
 
     var cont = { "Baixo": 0, "Médio": 0, "Alto": 0, "Extremo": 0 };
     riscos.forEach(function (r) { cont[r.nivel]++; });
+    renderDonut(cont, riscos.length);
+    renderConformidade(riscos);
     $("distRiscos").innerHTML = DB.escala.map(function (e) {
       var q = cont[e.nome] || 0;
       var pct = riscos.length ? Math.round((q / riscos.length) * 100) : 0;
@@ -153,6 +306,53 @@
       return '<div class="mini"><div class="label">' + esc(label) + '</div><div class="valor"' +
         (cor ? ' style="color:' + cor + '"' : "") + ">" + esc(valor) + '</div><div class="sub">' + esc(sub) + "</div></div>";
     }
+  }
+
+  function corVar(c) {
+    return c === "verde" ? "#6b8e23" : c === "amarelo" ? "#d9a300" : c === "laranja" ? "#e8842a" : "#dc2626";
+  }
+
+  function renderDonut(cont, total) {
+    var el = $("donutRiscos"); if (!el) return;
+    var dados = DB.escala.map(function (e) { return { nome: e.nome, q: cont[e.nome] || 0, cor: corVar(e.cor) }; });
+    var C = 2 * Math.PI * 54, acc = 0;
+    var segs = dados.filter(function (d) { return d.q > 0; }).map(function (d) {
+      var dash = (d.q / total) * C;
+      var s = '<circle cx="70" cy="70" r="54" fill="none" stroke="' + d.cor + '" stroke-width="18" stroke-dasharray="' +
+        dash.toFixed(2) + " " + (C - dash).toFixed(2) + '" stroke-dashoffset="' + (-acc).toFixed(2) + '" transform="rotate(-90 70 70)"></circle>';
+      acc += dash;
+      return s;
+    }).join("");
+    var legenda = dados.map(function (d) {
+      return '<span><i style="background:' + d.cor + '"></i>' + esc(d.nome) + " <b>" + d.q + "</b></span>";
+    }).join("");
+    el.innerHTML = '<svg viewBox="0 0 140 140" class="donut" role="img" aria-label="Distribuicao de riscos por nivel">' + segs +
+      '<text x="70" y="67" text-anchor="middle" class="donut-num">' + total + '</text>' +
+      '<text x="70" y="85" text-anchor="middle" class="donut-lbl">riscos</text></svg>' +
+      '<div class="donut-legenda">' + legenda + "</div>";
+  }
+
+  function renderConformidade(riscos) {
+    var el = $("conformidade"); if (!el) return;
+    var total = riscos.length || 1;
+    var comControle = riscos.filter(function (r) { return r.controle; }).length;
+    var comResposta = riscos.filter(function (r) { return r.resposta; }).length;
+    var procsComInd = DB.processos.filter(function (p) {
+      var g = DB.governancaProcessos[p.id]; return g && g.indicadores && g.indicadores.length;
+    }).length;
+    var procsComRisco = DB.processos.filter(function (p) { return p.riscos.length > 0; }).length;
+    var itens = [
+      ["Riscos com controle/mitigacao", comControle, total],
+      ["Riscos com plano de resposta (EB10)", comResposta, total],
+      ["Processos com indicador de desempenho", procsComInd, DB.processos.length],
+      ["Processos com riscos mapeados", procsComRisco, DB.processos.length]
+    ];
+    el.innerHTML = '<h3>Conformidade do mapeamento</h3><div class="conf-grid">' + itens.map(function (it) {
+      var pct = Math.round((it[1] / it[2]) * 100);
+      var cls = pct >= 100 ? "" : pct >= 80 ? "alerta" : "excesso";
+      return '<div class="conf-item"><div class="conf-top"><span>' + esc(it[0]) + "</span><strong>" + it[1] + "/" + it[2] +
+        " (" + pct + '%)</strong></div><div class="barra"><span class="' + cls + '" style="width:' + pct + '%"></span></div></div>';
+    }).join("") + "</div>";
   }
 
   /* ---------------- PROCESSOS ---------------- */
@@ -221,6 +421,7 @@
     }
     var p = DB.processos.filter(function (x) { return x.id === id; })[0];
     if (!p) return;
+    try { history.replaceState({ tab: "processos", proc: id }, "", "#processos/" + id); } catch (e) { }
 
     var gp = DB.governancaProcessos[p.id] || { tarefa: p.titulo, indicadores: [] };
     var respPadrao = (p.responsaveis && p.responsaveis.length) ? p.responsaveis[0] : "E/4";
@@ -262,6 +463,7 @@
       '<button class="btn btn-sm" data-aris="bpmn">ARIS: BPMN (.bpmn)</button>' +
       '<button class="btn btn-sm" data-aris="aml">ARIS: AML (.aml)</button>' +
       '<button class="btn btn-sm" data-aris="smart">ARIS: Smart Design (.csv)</button>' +
+      '<button class="btn btn-sm" id="btnImprimir"><svg class="ico"><use href="#i-print"/></svg>Imprimir / PDF</button>' +
       "</div>" +
       "<h3>Objetivo</h3><p style=\"font-size:13px;color:var(--text-secondary);\">" + esc(p.objetivo) + "</p>" +
       '<h3>Hierarquia GPEX / Governança (EB20-D-11.001)</h3><dl class="hierarquia">' + hierarquiaHtml + "</dl>" +
@@ -286,6 +488,7 @@
     $("detalheProcesso").querySelectorAll("[data-aris]").forEach(function (b) {
       b.addEventListener("click", function () { exportarARIS(p, b.getAttribute("data-aris")); });
     });
+    if ($("btnImprimir")) $("btnImprimir").addEventListener("click", function () { toast("Abrindo impressao / salvar em PDF..."); setTimeout(function () { window.print(); }, 300); });
   }
 
   /* ---------------- exportacao de texto (para o ASE) ---------------- */
@@ -437,7 +640,9 @@
 
     $("cboAdd").addEventListener("click", addAbastecimento);
     $("cboLimpar").addEventListener("click", function () {
-      if (confirm("Remover todos os abastecimentos registrados?")) { cbo.itens = []; salvarCbo(); renderCombustivel(); }
+      confirmar("Remover todos os abastecimentos registrados?", function () {
+        cbo.itens = []; salvarCbo(); renderCombustivel(); toast("Abastecimentos removidos.");
+      });
     });
     $("cboMes").addEventListener("change", function () { cbo.mes = $("cboMes").value; salvarCbo(); renderCombustivel(); });
     $("cboCota").addEventListener("input", function () { cbo.cota = Number($("cboCota").value) || 0; salvarCbo(); renderCombustivel(); });
@@ -458,6 +663,7 @@
     salvarCbo();
     $("cboViatura").value = ""; $("cboLitros").value = ""; $("cboKm").value = "";
     renderCombustivel();
+    toast("Abastecimento registrado.");
   }
 
   function consumos() {
@@ -932,4 +1138,6 @@
   try { initCalendario(); } catch (e) { console.error(e); }
   try { initGovernanca(); } catch (e) { console.error(e); }
   try { initFontes(); } catch (e) { console.error(e); }
+  try { initBusca(); } catch (e) { console.error(e); }
+  try { aplicarRota(); } catch (e) { console.error(e); }
 })();
