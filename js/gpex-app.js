@@ -482,7 +482,8 @@
       '<span class="aris-lbl">Exportar fluxograma para o ARIS:</span>' +
       '<button class="btn btn-sm" data-aris="bpmn">BPMN (.bpmn)</button>' +
       '<button class="btn btn-sm" data-aris="aml">AML / EPC (.aml)</button>' +
-      '<button class="btn btn-sm" data-aris="smart">Smart Design (.csv)</button>' +
+      '<button class="btn btn-sm" data-aris="smart">Baixar Smart Design (.csv)</button>' +
+      '<button class="btn btn-sm btn-primary" data-aris="smartcopy">Copiar planilha (ARIS Express)</button>' +
       '<button class="btn btn-sm" data-aris="mermaid">Copiar Mermaid</button>' +
       "</div>" +
       "<h3>Riscos e controles</h3>" + riscosHtml +
@@ -1015,8 +1016,8 @@
     return amlCabecalho() + "  <Models>\n" + ms + "  </Models>\n</AML>\n";
   }
 
-  /* Planilha para o "Smart Design" do ARIS Express (colar). */
-  function arisSmartLinhas(procNome) {
+  /* Planilha para o "Smart Design" do ARIS Express (baixar em CSV ou copiar em TSV). */
+  function arisSmartRows(procNome) {
     var cols = ["Passo", "Evento de entrada", "Funcao", "Evento de saida", "Responsavel", "Sistema de apoio", "Risco relacionado", "Controle"];
     if (procNome) cols.unshift("Processo");
     var linhas = [cols];
@@ -1032,24 +1033,33 @@
         evIn = "Etapa " + (i + 1) + " concluida";
       });
     });
+    return linhas;
+  }
+  function arisSmartLinhas(procNome) {
     function c(v) { return '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"'; }
-    return "\ufeff" + linhas.map(function (l) { return l.map(c).join(";"); }).join("\r\n");
+    return "\ufeff" + arisSmartRows(procNome).map(function (l) { return l.map(c).join(";"); }).join("\r\n");
+  }
+  function arisSmartTSV(procNome) {
+    return arisSmartRows(procNome).map(function (l) {
+      return l.map(function (v) { return String(v == null ? "" : v).replace(/\t/g, " "); }).join("\t");
+    }).join("\n");
   }
 
   function baixar(conteudo, nome, tipo) { baixarArquivo(nome, conteudo, tipo); }
   function exportarARIS(p, formato) {
     var base = p.codigo.toLowerCase() + "-" + slug(p.titulo);
-    if (formato === "bpmn") baixar(arisBPMN(p), base + ".bpmn", "application/xml");
-    else if (formato === "aml") baixar(arisAML(p), base + ".aml", "application/xml");
+    if (formato === "bpmn") { baixar(arisBPMN(p), base + ".bpmn", "application/xml"); toast("BPMN gerado - importe no ARIS."); }
+    else if (formato === "aml") { baixar(arisAML(p), base + ".aml", "application/xml"); toast("AML gerado - importe no ARIS."); }
     else if (formato === "mermaid") copiarTexto(mmFluxoProcesso(p));
-    else baixar(arisSmartLinhas(p.titulo), base + "-smart-design.csv", "text/csv;charset=utf-8");
+    else if (formato === "smartcopy") copiarTexto(arisSmartTSV(p.titulo));
+    else { baixar(arisSmartLinhas(p.titulo), base + "-smart-design.csv", "text/csv;charset=utf-8"); toast("Planilha gerada - cole no Smart Design do ARIS Express."); }
   }
 
   function exportarARISTodos(formato) {
-    if (formato === "bpmn") baixar(arisBPMNTodos(), "gpex-e4-fluxogramas-todos.bpmn", "application/xml");
-    else if (formato === "aml") baixar(arisAMLTodos(), "gpex-e4-fluxogramas-todos.aml", "application/xml");
-    else baixar(arisSmartLinhas(null), "gpex-e4-smart-design-todos.csv", "text/csv;charset=utf-8");
-    toast("Exportacao ARIS (" + formato.toUpperCase() + ") concluida.");
+    if (formato === "bpmn") { baixar(arisBPMNTodos(), "gpex-e4-fluxogramas-todos.bpmn", "application/xml"); toast("BPMN (todos) gerado - importe no ARIS."); }
+    else if (formato === "aml") { baixar(arisAMLTodos(), "gpex-e4-fluxogramas-todos.aml", "application/xml"); toast("AML (todos) gerado - importe no ARIS."); }
+    else if (formato === "smartcopy") copiarTexto(arisSmartTSV(null));
+    else { baixar(arisSmartLinhas(null), "gpex-e4-smart-design-todos.csv", "text/csv;charset=utf-8"); toast("Planilha (todos) gerada - cole no Smart Design do ARIS Express."); }
   }
 
   function guiaARIS() {
@@ -1065,10 +1075,12 @@
       "   Em cada processo, logo abaixo do fluxograma, use a barra 'Exportar fluxograma para o ARIS'.",
       "   - BPMN 2.0 (.bpmn): formato aberto; importar no ARIS Cloud/ARIS Platform, bpmn.io ou Camunda.",
       "   - AML (.aml): ARIS Markup Language (modelo EPC); melhor esforco; importar no ARIS Cloud/Platform.",
-      "   - Smart Design (.csv): planilha para colar no ARIS Express (Smart Design).",
+      "   - Smart Design (.csv): arquivo de planilha para o ARIS Express.",
+      "   - Copiar planilha (ARIS Express): copia a planilha em colunas; cole com Ctrl+V no Smart Design.",
       "   - Copiar Mermaid: copia o fluxo em texto (Mermaid/EPC) para outra ferramenta.",
+      "   BPMN e AML sao ARQUIVOS (baixar e IMPORTAR no ARIS); Smart Design e texto (colar).",
       "   Para TODOS os fluxogramas de uma vez, use os botoes do card 'Integracao ARIS'",
-      "   (BPMN, AML/EPC e Smart Design com os 12 processos no mesmo arquivo).",
+      "   (BPMN, AML/EPC, Smart Design ou 'Copiar planilha' com os 12 processos).",
       "",
       "3) IMPORTAR NO ARIS",
       "   ARIS Cloud / ARIS Platform:",
@@ -1078,7 +1090,8 @@
       "   ARIS Express (gratuito):",
       "     a) NAO importa BPMN/EPC por XML; a importacao nativa e Visio, ARISalign ou ADF.",
       "     b) Abra um modelo de Smart Design compativel (cadeia de valor / processo).",
-      "     c) Cole o conteudo do .csv na tabela (Passo, Evento de entrada, Funcao, Evento de saida, Responsavel, Sistema de apoio, Risco, Controle).",
+      "     c) Clique em 'Copiar planilha (ARIS Express)' e cole com Ctrl+V na tabela do Smart Design",
+      "        (colunas: Processo, Passo, Evento de entrada, Funcao, Evento de saida, Responsavel, Sistema de apoio, Risco, Controle).",
       "     d) Salve em .adf para reutilizar.",
       "",
       "4) CONFERIR E PUBLICAR",
@@ -1210,6 +1223,7 @@
       if ($("arisBpmnTodos")) $("arisBpmnTodos").addEventListener("click", function () { exportarARISTodos("bpmn"); });
       if ($("arisAmlTodos")) $("arisAmlTodos").addEventListener("click", function () { exportarARISTodos("aml"); });
       if ($("arisSmartTodos")) $("arisSmartTodos").addEventListener("click", function () { exportarARISTodos("smart"); });
+      if ($("arisSmartCopy")) $("arisSmartCopy").addEventListener("click", function () { exportarARISTodos("smartcopy"); });
     }
   }
 
