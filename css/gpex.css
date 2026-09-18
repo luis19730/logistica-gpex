@@ -274,6 +274,12 @@ ul.lista-simples li { margin-bottom: 3px; }
 .atrib-card ol li { margin-bottom: 6px; }
 .atrib-card ol li b { color: var(--green-dark); margin-right: 4px; }
 
+/* Guia ARIS */
+.guia-aris { margin: 14px 0 0 20px; font-size: 13.5px; color: var(--text-secondary); line-height: 1.7; }
+.guia-aris > li { margin-bottom: 10px; }
+.guia-aris ul { margin: 6px 0 0 18px; }
+.guia-aris ul li { margin-bottom: 4px; }
+
 /* Topo: acoes */
 .topo-acoes { display: flex; gap: 8px; }
 .btn-topo {

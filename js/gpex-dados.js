@@ -109,6 +109,45 @@ window.GPEX_E4 = (function () {
     p19: { competencia: "I", funcao: "Suprimento" }
   };
 
+  /* Sistemas corporativos de apoio logistico (TIC) utilizados pela S/4. */
+  var sistemas = [
+    {
+      sigla: "SISLOGMNT",
+      nome: "Sistema Logístico de Manutenção (SisLogMnt)",
+      orgao: "Diretoria de Material (D Mat)",
+      finalidade: "Controle da operacao e da manutencao dos Materiais de Emprego Militar (MEM), com enfase na Classe IX (motomecanizados e blindados): cadastro de viaturas, emissao de ordens de servico, controle de estoque de pecas e manutencao preventiva/corretiva.",
+      uso: "Manutencao e motomecanizacao (Classe IX).",
+      acesso: "Ambiente restrito do Exercito",
+      url: "https://bdex.eb.mil.br/jspui/bitstream/123456789/9581/1/majkothe2021_3t.artigo.pdf"
+    },
+    {
+      sigla: "SIGELOG (WEB)",
+      nome: "Sistema Integrado de Gestao Logistica",
+      orgao: "Comando Logistico (COLOG)",
+      finalidade: "Sistema corporativo de gestao do ciclo logistico do MEM e das classes de suprimento, da aquisicao ao desfazimento; sucede o SISCOFIS, o SICATEx e o SISDOT e apoia o cadastramento de necessidades logisticas.",
+      uso: "Suprimento, catalogacao, dotacao, gestao patrimonial e desfazimento.",
+      acesso: "Ambiente restrito do Exercito",
+      url: "https://www.colog.eb.mil.br/images/documentos/menus/2025/Folder_SIGELOG3.pdf"
+    }
+  ];
+
+  var sistemaPorProcesso = {
+    p01: "SIGELOG (WEB)",
+    p02: "SISLOGMNT",
+    p07: "-",
+    p09: "SIGELOG (WEB)",
+    p11: "SISLOGMNT + SIGELOG (WEB)",
+    p13: "SIGELOG (WEB)",
+    p14: "-",
+    p15: "SIGELOG (WEB)",
+    p16: "SISLOGMNT",
+    p17: "SIGELOG (WEB)",
+    p18: "SIGELOG (WEB)",
+    p19: "SIGELOG (WEB)"
+  };
+
+  function sistemaDe(id) { return sistemaPorProcesso[id] || "-"; }
+
   function competenciaTexto(inciso) {
     for (var i = 0; i < regimento.competencias.length; i++) {
       if (regimento.competencias[i].inciso === inciso) return regimento.competencias[i].texto;
@@ -473,131 +512,8 @@ window.GPEX_E4 = (function () {
       fontes: ["R-1 (RISG) art. 34-35", "MC 4.0 Log Mil Ter", "EB70-MC-10.317"]
     },
     {
-      id: "p03",
-      codigo: "S4-03",
-      titulo: "Controle de armamento e municao (paiois/depositos)",
-      area: "Suprimento / Seguranca",
-      classes: ["V"],
-      objetivo:
-        "Manter o controle preciso e seguro do armamento e da municao sob custodia da Bda, " +
-        "em conformidade com as normas tecnicas.",
-      etapas: [
-        "Realizar a revista diaria de armamento",
-        "Controlar temperatura e umidade dos paiois/depositos",
-        "Atualizar o fichario de movimento de municao por lote",
-        "Realizar inspecao mensal do armamento e da municao",
-        "Elaborar mapa termo-higrometrico e relatorio mensal"
-      ],
-      responsaveis: ["S/4", "Armeiro / responsavel pelo paiol", "Fiscal administrativo"],
-      riscos: [
-        {
-          descricao: "Extravio ou divergencia no controle de armamento/municao",
-          causa: "Falha na escrituracao ou na revista diaria",
-          consequencia: "Responsabilizacao administrativa/disciplinar",
-          probabilidade: 2,
-          impacto: 5,
-          controle: "Dupla checagem na revista diaria; auditoria interna"
-        },
-        {
-          descricao: "Deterioracao de municao armazenada",
-          causa: "Condicoes inadequadas de temperatura/umidade no paiol",
-          consequencia: "Perda de material e risco de acidente",
-          probabilidade: 2,
-          impacto: 4,
-          controle: "Monitoramento periodico das condicoes do paiol"
-        }
-      ],
-      fontes: ["R-1 (RISG) art. 34-35", "Normas tecnicas de armamento e municao"]
-    },
-    {
-      id: "p04",
-      codigo: "S4-04",
-      titulo: "Prevencao de acidentes em atividades de risco",
-      area: "Seguranca",
-      classes: [],
-      objetivo:
-        "Garantir que as normas de prevencao de acidentes sejam cumpridas nas oficinas, " +
-        "depositos e demais dependencias sob responsabilidade da 4a Secao.",
-      etapas: [
-        "Elaborar/atualizar o plano de prevencao de acidentes logisticas",
-        "Verificar o uso correto de EPI nas oficinas e depositos",
-        "Realizar inspecoes periodicas das condicoes de seguranca",
-        "Registrar ocorrencias e propor medidas corretivas",
-        "Reportar ao Cmt as nao conformidades identificadas"
-      ],
-      responsaveis: ["S/4", "Chefes de oficina/deposito"],
-      riscos: [
-        {
-          descricao: "Acidente de trabalho em oficina ou deposito",
-          causa: "Descumprimento das normas de prevencao de acidentes",
-          consequencia: "Lesao a militar e possivel interrupcao da atividade",
-          probabilidade: 2,
-          impacto: 4,
-          controle: "Inspecoes periodicas com checklist; reciclagem periodica"
-        }
-      ],
-      fontes: ["R-1 (RISG) art. 34-35", "Normas de seguranca do trabalho"]
-    },
-    {
-      id: "p05",
-      codigo: "S4-05",
-      titulo: "Controle ambiental do aquartelamento",
-      area: "Engenharia / Meio ambiente",
-      classes: [],
-      objetivo:
-        "Assegurar o cumprimento da legislacao ambiental federal, estadual e municipal nas " +
-        "atividades e instalacoes da Bda.",
-      etapas: [
-        "Elaborar/atualizar as normas de controle ambiental",
-        "Difundir as normas as SU e demais dependencias",
-        "Fiscalizar o cumprimento durante exercicios e manobras",
-        "Registrar nao conformidades e encaminhar providencias"
-      ],
-      responsaveis: ["S/4", "E/3 (coordenacao de exercicios)", "SU"],
-      riscos: [
-        {
-          descricao: "Nao conformidade ambiental em exercicio ou manobra",
-          causa: "Desconhecimento das normas ambientais pela tropa",
-          consequencia: "Passivo ambiental e possivel sancao legal",
-          probabilidade: 2,
-          impacto: 3,
-          controle: "Orientacao ambiental no briefing; checklist com o E3"
-        }
-      ],
-      fontes: ["Legislacao ambiental federal/estadual/municipal", "MC 4.0 Log Mil Ter"]
-    },
-    {
-      id: "p06",
-      codigo: "S4-06",
-      titulo: "Apoio material a instrucao (ligacao com o E/3)",
-      area: "Coordenacao / Suprimento",
-      classes: ["I", "III", "V"],
-      objetivo:
-        "Garantir que os meios materiais (viaturas, municao de instrucao, alimentacao em campo etc.) " +
-        "estejam disponiveis conforme o planejamento do E/3.",
-      etapas: [
-        "Receber do E/3 o calendario e as necessidades de apoio material",
-        "Levantar a disponibilidade de meios (viaturas, municao, racao)",
-        "Planejar a distribuicao dos meios entre as unidades",
-        "Executar a distribuicao e o transporte necessario",
-        "Recolher e conferir o material ao termino da atividade"
-      ],
-      responsaveis: ["S/4", "E/3", "Unidades apoiadas"],
-      riscos: [
-        {
-          descricao: "Falta de meio logistico no inicio da instrucao",
-          causa: "Falha na comunicacao entre E/3 e S/4 sobre o cronograma",
-          consequencia: "Atraso ou cancelamento de atividade de instrucao",
-          probabilidade: 3,
-          impacto: 3,
-          controle: "Reuniao de coordenacao E/3-S/4 com antecedencia minima"
-        }
-      ],
-      fontes: ["R-1 (RISG) art. 34-35", "Programa de Instrucao e Adestramento"]
-    },
-    {
       id: "p07",
-      codigo: "S4-07",
+      codigo: "S4-03",
       titulo: "Transporte - planejamento e execucao de comboio logistico",
       area: "Transporte",
       classes: ["III"],
@@ -634,37 +550,8 @@ window.GPEX_E4 = (function () {
       fontes: ["MC 4.0 Log Mil Ter", "EB70-MC-10.317", "R-1 (RISG) art. 34-35"]
     },
     {
-      id: "p08",
-      codigo: "S4-08",
-      titulo: "Recursos Humanos (funcao logistica) - bem-estar e apoio material",
-      area: "Recursos Humanos",
-      classes: ["II"],
-      objetivo:
-        "Assegurar o apoio material ao efetivo da Bda (fardamento, alojamento, alimentacao) em " +
-        "condicoes adequadas de bem-estar.",
-      etapas: [
-        "Levantar necessidades de fardamento e material individual",
-        "Solicitar e distribuir o material de Classe II",
-        "Verificar condicoes de alojamento e do rancho",
-        "Acompanhar indicadores de bem-estar junto as unidades",
-        "Reportar nao conformidades ao Cmt"
-      ],
-      responsaveis: ["S/4", "SU", "Rancho / alojamento"],
-      riscos: [
-        {
-          descricao: "Falta de fardamento/material individual para tropa recem-incorporada",
-          causa: "Levantamento com atraso em relacao ao calendario de incorporacao",
-          consequencia: "Efetivo sem condicoes adequadas de apresentacao/instrucao",
-          probabilidade: 3,
-          impacto: 3,
-          controle: "Antecipar levantamento; manter estoque minimo de reserva"
-        }
-      ],
-      fontes: ["MC 4.0 Log Mil Ter (funcao RH)", "R-1 (RISG) art. 34-35"]
-    },
-    {
       id: "p09",
-      codigo: "S4-09",
+      codigo: "S4-04",
       titulo: "Saude (funcao logistica) - suprimento e evacuacao",
       area: "Saude",
       classes: ["VIII"],
@@ -700,37 +587,8 @@ window.GPEX_E4 = (function () {
       fontes: ["MC 4.0 Log Mil Ter (funcao Saude)", "Legislacao sanitaria"]
     },
     {
-      id: "p10",
-      codigo: "S4-10",
-      titulo: "Engenharia (funcao logistica) - infraestrutura do aquartelamento",
-      area: "Engenharia",
-      classes: ["IV"],
-      objetivo:
-        "Manter a infraestrutura fisica do aquartelamento (instalacoes, redes, vias internas) " +
-        "em condicoes adequadas de uso.",
-      etapas: [
-        "Levantar demandas de manutencao predial/infraestrutura junto as SU",
-        "Priorizar e planejar as intervencoes conforme criticidade",
-        "Solicitar material de Classe IV quando necessario",
-        "Executar ou contratar a obra/reparo",
-        "Vistoriar e registrar a conclusao do servico"
-      ],
-      responsaveis: ["S/4", "SU", "Fiscal de contrato/obra"],
-      riscos: [
-        {
-          descricao: "Instalacao critica (eletrica, hidraulica) sem manutencao",
-          causa: "Ausencia de levantamento periodico de demandas",
-          consequencia: "Risco de acidente ou interrupcao de atividades",
-          probabilidade: 2,
-          impacto: 4,
-          controle: "Vistoria periodica programada; priorizacao de itens de seguranca"
-        }
-      ],
-      fontes: ["MC 4.0 Log Mil Ter (funcao Engenharia)", "PGC Bda Amv"]
-    },
-    {
       id: "p11",
-      codigo: "S4-11",
+      codigo: "S4-05",
       titulo: "Salvamento - recuperacao de material danificado",
       area: "Salvamento",
       classes: ["IX"],
@@ -757,37 +615,8 @@ window.GPEX_E4 = (function () {
       fontes: ["MC 4.0 Log Mil Ter (funcao Salvamento)", "Legislacao patrimonial"]
     },
     {
-      id: "p12",
-      codigo: "S4-12",
-      titulo: "Gestao patrimonial - almoxarifado (Classes II e IV)",
-      area: "Suprimento / Patrimonio",
-      classes: ["II", "IV"],
-      objetivo:
-        "Manter o controle preciso do material de Classe II e IV em deposito, assegurando " +
-        "disponibilidade e rastreabilidade.",
-      etapas: [
-        "Receber e conferir o material que entra no almoxarifado",
-        "Lancar o material no controle de estoque",
-        "Atender as requisicoes das unidades/SU",
-        "Realizar inventario periodico do deposito",
-        "Reportar divergencias e propor reposicao"
-      ],
-      responsaveis: ["S/4", "Almoxarife", "Fiscal administrativo"],
-      riscos: [
-        {
-          descricao: "Divergencia entre estoque fisico e escriturado",
-          causa: "Falha no lancamento das movimentacoes de entrada/saida",
-          consequencia: "Responsabilizacao do almoxarife; dificuldade de planejamento",
-          probabilidade: 3,
-          impacto: 3,
-          controle: "Inventario periodico obrigatorio; dupla conferencia"
-        }
-      ],
-      fontes: ["Legislacao patrimonial", "Plano de Gestao de Riscos - Integridade e Controle OMDS"]
-    },
-    {
       id: "p13",
-      codigo: "S4-13",
+      codigo: "S4-06",
       titulo: "Classe III - controle de combustiveis e lubrificantes",
       area: "Suprimento / Combustivel",
       classes: ["III"],
@@ -825,7 +654,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p14",
-      codigo: "S4-14",
+      codigo: "S4-07",
       titulo: "Controle do calendario de obrigacoes da Secao de Logistica",
       area: "Gestao / Controle interno",
       classes: [],
@@ -863,7 +692,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p15",
-      codigo: "S4-15",
+      codigo: "S4-08",
       titulo: "Classe V - requisicao e distribuicao de municao",
       area: "Suprimento",
       classes: ["V"],
@@ -901,7 +730,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p16",
-      codigo: "S4-16",
+      codigo: "S4-09",
       titulo: "Classe IX - motomecanizacao (pecas de reposicao de viaturas)",
       area: "Suprimento / Manutencao",
       classes: ["IX"],
@@ -939,7 +768,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p17",
-      codigo: "S4-17",
+      codigo: "S4-10",
       titulo: "Desfazimento de material (baixa patrimonial)",
       area: "Patrimonio",
       classes: [],
@@ -977,7 +806,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p18",
-      codigo: "S4-18",
+      codigo: "S4-11",
       titulo: "Classe II - fardamento e equipamento individual",
       area: "Suprimento",
       classes: ["II"],
@@ -1015,7 +844,7 @@ window.GPEX_E4 = (function () {
     },
     {
       id: "p19",
-      codigo: "S4-19",
+      codigo: "S4-12",
       titulo: "Outras classes de suprimento (IV, VI, VII, VIII e X)",
       area: "Suprimento",
       classes: ["IV", "VI", "VII", "VIII", "X"],
@@ -1063,22 +892,15 @@ window.GPEX_E4 = (function () {
   ];
 
   var calendario = [
-    { obrigacao: "Revista diaria de armamento", periodicidade: "Diaria", responsavel: "Armeiro / E4", antecedencia: 0, processo: "p03" },
-    { obrigacao: "Mapa termo-higrometrico dos paiois", periodicidade: "Semanal", responsavel: "Especialista de municao", antecedencia: 2, processo: "p03" },
     { obrigacao: "Conferencia do saldo de cota de combustivel (Classe III)", periodicidade: "Semanal", responsavel: "Fiscal do posto", antecedencia: 2, processo: "p13" },
     { obrigacao: "Registro/consolidacao de abastecimento por viatura", periodicidade: "Semanal", responsavel: "Fiscal do posto", antecedencia: 2, processo: "p13" },
-    { obrigacao: "Inspecao de seguranca de oficinas e depositos", periodicidade: "Mensal", responsavel: "E4 / chefes de oficina", antecedencia: 5, processo: "p04" },
-    { obrigacao: "Inspecao mensal de armamento e municao", periodicidade: "Mensal", responsavel: "E4 / armeiro", antecedencia: 5, processo: "p03" },
     { obrigacao: "Saldo de cota x consumo real de combustivel", periodicidade: "Mensal", responsavel: "E4", antecedencia: 5, processo: "p13" },
     { obrigacao: "Acompanhamento do calendario de obrigacoes do E4", periodicidade: "Mensal", responsavel: "Encarregado de controle interno", antecedencia: 10, processo: "p14" },
-    { obrigacao: "Inventario do almoxarifado (Classes II e IV)", periodicidade: "Mensal", responsavel: "Almoxarife / fiscal", antecedencia: 5, processo: "p12" },
     { obrigacao: "Relatorio mensal de manutencao (viaturas/armamento)", periodicidade: "Mensal", responsavel: "Oficina / E4", antecedencia: 5, processo: "p02" },
     { obrigacao: "Reconciliacao de municao distribuida/recolhida (Classe V)", periodicidade: "Mensal", responsavel: "E4", antecedencia: 5, processo: "p15" },
     { obrigacao: "Controle de validade de medicamentos (Classe VIII / FEFO)", periodicidade: "Mensal", responsavel: "FS / E4", antecedencia: 5, processo: "p09" },
-    { obrigacao: "Vistoria de infraestrutura do aquartelamento", periodicidade: "Trimestral", responsavel: "E4 / SU", antecedencia: 10, processo: "p10" },
     { obrigacao: "Revisao do calendario unico de obrigacoes do E4", periodicidade: "Trimestral", responsavel: "E4", antecedencia: 10, processo: "p14" },
     { obrigacao: "Levantamento de material candidato a desfazimento", periodicidade: "Semestral", responsavel: "Comissao de desfazimento", antecedencia: 15, processo: "p17" },
-    { obrigacao: "Atualizacao do Plano de Prevencao de Acidentes", periodicidade: "Semestral", responsavel: "E4", antecedencia: 15, processo: "p04" },
     { obrigacao: "Consolidacao anual de necessidades (fardamento, viveres, combustivel)", periodicidade: "Anual", responsavel: "E4", antecedencia: 30, processo: "p18" },
     { obrigacao: "Revisao do mapeamento de processos/riscos no ASE (GPEX)", periodicidade: "Anual", responsavel: "E4", antecedencia: 30, processo: "p14" }
   ];
@@ -1180,7 +1002,8 @@ window.GPEX_E4 = (function () {
           indicador: (gp.indicadores && gp.indicadores.length) ? gp.indicadores[0] : "Monitorar indicadores do processo",
           tarefa: gp.tarefa || proc.titulo,
           competencia: vinculoDe(proc.id).competencia,
-          funcaoLogistica: vinculoDe(proc.id).funcao
+          funcaoLogistica: vinculoDe(proc.id).funcao,
+          sistema: sistemaDe(proc.id)
         });
       });
     });
@@ -1214,6 +1037,9 @@ window.GPEX_E4 = (function () {
     regimento: regimento,
     vinculoRegimento: vinculoRegimento,
     vinculoDe: vinculoDe,
-    competenciaTexto: competenciaTexto
+    competenciaTexto: competenciaTexto,
+    sistemas: sistemas,
+    sistemaPorProcesso: sistemaPorProcesso,
+    sistemaDe: sistemaDe
   };
 })();

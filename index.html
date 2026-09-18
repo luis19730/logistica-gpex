@@ -75,7 +75,7 @@
           <span class="hint" title="Fluxo sugerido: mapear, validar, exportar e publicar. O sistema apenas prepara o conteudo; a publicacao no ASE e manual.">?</span>
         </div>
         <ol class="passos" id="passos">
-          <li data-ir="processos"><span>1</span>Escolha o processo do E/4</li>
+          <li data-ir="processos"><span>1</span>Escolha o processo da S/4</li>
           <li data-ir="processos"><span>2</span>Revise riscos, respostas e indicadores</li>
           <li data-ir="processos"><span>3</span>Exporte: resumo ASE, BPMN, AML ou PDF</li>
           <li data-ir="fontes"><span>4</span>Registre a fonte e publique no ASE</li>
@@ -116,8 +116,8 @@
     <!-- PROCESSOS -->
     <section class="painel" id="painel-processos">
       <div class="card">
-        <h2>Tarefas da Secao de Logistica (E/4)</h2>
-        <p class="sub">19 processos: suprimento por classe, manutencao, transporte, engenharia, saude, salvamento, patrimonio, combustivel, calendario e desfazimento.</p>
+        <h2>Tarefas da 4a Secao / S/4</h2>
+        <p class="sub">12 processos: suprimento por classe (I, II, III, V, IX e demais), manutencao, transporte, saude, salvamento, combustivel, calendario de obrigacoes e desfazimento.</p>
         <div class="gpex-filtros">
           <input class="filtro-input" id="buscaProc" placeholder="Buscar processo, risco, etapa...">
           <select class="filtro-input" id="filtroArea"></select>
@@ -261,6 +261,33 @@
           Formato EPC/EPK e o padrao do ARIS Express; o BPMN 2.0 e o formato aberto recomendado para interoperabilidade (ARIS Cloud, bpmn.io, Camunda). O AML e gerado em melhor esforco e pode exigir ajuste de versao no ARIS.
         </div>
       </div>
+
+      <div class="card" id="cardGuiaAris">
+        <div class="detalhe-topo">
+          <div>
+            <h2>Orientacao: como exportar para o ARIS</h2>
+            <p class="sub">Passo a passo para BPMN 2.0, AML e Smart Design, conforme o seu ARIS.</p>
+          </div>
+          <div class="linha-acoes" style="margin:0;">
+            <button class="btn btn-sm" id="btnGuiaAris">Copiar guia</button>
+            <button class="btn btn-sm" id="btnGuiaArisTxt">Baixar guia (.txt)</button>
+          </div>
+        </div>
+        <ol class="guia-aris">
+          <li><strong>Escolha o processo</strong> em "Processos e Riscos" (botoes ARIS no detalhe) ou no seletor do card ARIS acima.</li>
+          <li><strong>Gere o arquivo</strong> no formato desejado: <em>BPMN 2.0</em> (.bpmn), <em>AML</em> (.aml) ou <em>planilha Smart Design</em> (.csv).</li>
+          <li><strong>Importe no ARIS</strong>:
+            <ul>
+              <li><strong>ARIS Cloud / ARIS Platform:</strong> repositorio de destino &rarr; Importar &rarr; AML/BPMN &rarr; selecione o arquivo.</li>
+              <li><strong>ARIS Express (gratuito):</strong> nao importa BPMN/EPC por XML. Abra um modelo de <strong>Smart Design</strong> compativel e cole o conteudo do .csv na tabela. Salve em .adf.</li>
+            </ul>
+          </li>
+          <li><strong>Confira e publique</strong>: revise eventos, funcoes, responsaveis e conexoes; registre a fonte do mapeamento; faca a revisao humana antes de publicar.</li>
+        </ol>
+        <div class="aviso" style="margin-top:12px;">
+          Nada e enviado automaticamente. Formatos recomendados: BPMN 2.0 (interoperabilidade) e AML (nativo ARIS). O Smart Design do ARIS Express tem limitacoes de tipos de modelo.
+        </div>
+      </div>
     </section>
 
     <!-- REGIMENTO INTERNO -->
@@ -304,10 +331,16 @@
         <p class="sub">Rastreabilidade entre cada processo mapeado e a competencia do Art. 3o e a funcao logistica.</p>
         <div class="tabela-gpex">
           <table>
-            <thead><tr><th>Codigo</th><th>Processo</th><th>Funcao logistica</th><th>Competencia (Art. 3o)</th></tr></thead>
+            <thead><tr><th>Codigo</th><th>Processo</th><th>Funcao logistica</th><th>Sistema de apoio</th><th>Competencia (Art. 3o)</th></tr></thead>
             <tbody id="tbodyRegimentoVinculos"></tbody>
           </table>
         </div>
+      </div>
+
+      <div class="card">
+        <h2>Sistemas de apoio logistico (TIC)</h2>
+        <p class="sub">Sistemas corporativos do Exercito utilizados pelos processos da S/4. Clique no codigo para abrir o processo.</p>
+        <div class="fontes-grid" id="regimentoSistemas"></div>
       </div>
     </section>
 
@@ -355,7 +388,7 @@
     <!-- CALENDARIO -->
     <section class="painel" id="painel-calendario">
       <div class="card">
-        <h2>Calendario de obrigacoes da 4a Secao (E/4)</h2>
+        <h2>Calendario de obrigacoes da 4a Secao / S/4</h2>
         <p class="sub">Selecione o mes de referencia para gerar a agenda de vencimentos. Marque os itens cumpridos.</p>
         <div class="form-grid">
           <div class="campo"><label>Mes de referencia</label><input type="month" id="calMes"></div>
@@ -379,7 +412,7 @@
       </div>
       <div class="card">
         <h2>Cadastro completo de obrigacoes</h2>
-        <p class="sub">Base consolidada - revisar trimestralmente (processo E4-14).</p>
+        <p class="sub">Base consolidada - revisar trimestralmente (processo S4-07 - calendario de obrigacoes).</p>
         <div class="tabela-gpex">
           <table>
             <thead><tr><th>Obrigacao</th><th>Periodicidade</th><th>Responsavel</th><th>Antecedencia (dias)</th><th>Processo</th></tr></thead>
@@ -434,9 +467,9 @@
     <div class="modal" role="dialog" aria-modal="true" aria-label="Ajuda">
       <button class="modal-fechar" data-fechar aria-label="Fechar">&times;</button>
       <h2>Como usar o sistema</h2>
-      <p class="sub">Apoio ao mapeamento de processos e a gestao de riscos da Secao de Logistica (E/4), no padrao GPEX.</p>
+      <p class="sub">Apoio ao mapeamento de processos e a gestao de riscos da 4a Secao / S/4 (Secao de Logistica), no padrao GPEX.</p>
       <ol class="ajuda-passos">
-        <li><strong>1. Processos e Riscos</strong> - escolha um dos 19 processos, revise objetivo, etapas, riscos e controles. Use "Copiar resumo completo (ASE)" para colar no sistema ASE.</li>
+        <li><strong>1. Processos e Riscos</strong> - escolha um dos 12 processos, revise objetivo, etapas, riscos e controles. Use "Copiar resumo completo (ASE)" para colar no sistema ASE.</li>
         <li><strong>2. Matriz de Riscos</strong> - visualise a matriz P x I; clique numa celula para filtrar os riscos.</li>
         <li><strong>3. Governanca (EB10/EB20)</strong> - plano de resposta de cada risco, indicadores, marcos, validadores de nomenclatura/cronograma e exportacao ARIS (BPMN, AML, Smart Design).</li>
         <li><strong>4. Regimento Interno</strong> - finalidade e subordinacao (Art. 1o), missao (Art. 2o), competencias (Art. 3o) e atribuicoes dos integrantes (Arts. 4o a 6o), com o vinculo de cada processo a sua competencia.</li>

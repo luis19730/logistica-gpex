@@ -448,6 +448,7 @@
       ["Programa", DB.governanca.programa],
       ["Macroprocesso", DB.governanca.macroprocesso],
       ["Função logística", vinc.funcao || "-"],
+      ["Sistema de apoio", DB.sistemaDe(p.id)],
       ["Competência (Art. 3º)", vinc.competencia ? vinc.competencia + " - " + DB.competenciaTexto(vinc.competencia) : "-"],
       ["Processo", p.codigo + " - " + p.titulo],
       ["Tarefa (nomenclatura)", gp.tarefa || p.titulo]
@@ -506,6 +507,7 @@
       "Tarefa (Verbo + Objeto + Complemento): " + (gp.tarefa || p.titulo) + "\n" +
       "Orgao: " + DB.governanca.orgao + " - subordinada ao " + DB.governanca.subordinacao + "\n" +
       "Funcao logistica (Art. 3o, I): " + (vinc.funcao || "-") + "\n" +
+      "Sistema de apoio (TIC): " + DB.sistemaDe(p.id) + "\n" +
       "Competencia (Art. 3o): " + (vinc.competencia ? vinc.competencia + " - " + DB.competenciaTexto(vinc.competencia) : "-") + "\n" +
       "Area: " + p.area + "\n" +
       "Portfolio: " + DB.governanca.portfolio + "\n" +
@@ -727,7 +729,7 @@
       linhas += '<div style="display:flex;justify-content:space-between;font-size:13px;"><span>Consumido: <strong>' +
         totalLitros.toFixed(2) + " L</strong></span><span>Cota: <strong>" + cota.toFixed(0) + " L</strong> - " + pct + "%</span></div>" +
         '<div class="barra"><span class="' + cls + '" style="width:' + pct + '%;"></span></div>';
-      if (totalLitros > cota) linhas += '<p class="sub" style="color:var(--red);margin-top:8px;">Consumo acima da cota. Registrar justificativa e reportar ao Cmt (risco do processo E4-13).</p>';
+      if (totalLitros > cota) linhas += '<p class="sub" style="color:var(--red);margin-top:8px;">Consumo acima da cota. Registrar justificativa e reportar ao Cmt (risco do processo S4-06).</p>';
     } else {
       linhas += '<p class="sub">Informe a cota mensal para comparar o consumo.</p>';
     }
@@ -976,7 +978,7 @@
 
   /* Planilha para o "Smart Design" do ARIS Express (colar). */
   function arisSmartLinhas(procNome) {
-    var cols = ["Passo", "Evento de entrada", "Funcao", "Evento de saida", "Responsavel", "Risco relacionado", "Controle"];
+    var cols = ["Passo", "Evento de entrada", "Funcao", "Evento de saida", "Responsavel", "Sistema de apoio", "Risco relacionado", "Controle"];
     if (procNome) cols.unshift("Processo");
     var linhas = [cols];
     DB.processos.forEach(function (p) {
@@ -985,7 +987,7 @@
       var evIn = "Processo " + p.codigo + " iniciado";
       p.etapas.forEach(function (et, i) {
         var r = p.riscos[Math.min(i, p.riscos.length - 1)] || { descricao: "", controle: "" };
-        var linha = [(i + 1), evIn, et, "Etapa " + (i + 1) + " concluida", resp, r.descricao, r.controle];
+        var linha = [(i + 1), evIn, et, "Etapa " + (i + 1) + " concluida", resp, DB.sistemaDe(p.id), r.descricao, r.controle];
         if (procNome) linha.unshift(p.codigo + " - " + p.titulo);
         linhas.push(linha);
         evIn = "Etapa " + (i + 1) + " concluida";
@@ -1001,6 +1003,44 @@
     if (formato === "bpmn") baixar(arisBPMN(p), base + ".bpmn", "application/xml");
     else if (formato === "aml") baixar(arisAML(p), base + ".aml", "application/xml");
     else baixar(arisSmartLinhas(p.titulo), base + "-smart-design.csv", "text/csv;charset=utf-8");
+  }
+
+  function guiaARIS() {
+    return [
+      "GUIA DE EXPORTACAO PARA O ARIS - SECAO DE LOGISTICA (S/4)",
+      "Cmdo Bda Inf Amv",
+      "",
+      "1) ESCOLHA O PROCESSO",
+      "   Em 'Processos e Riscos', selecione o processo e confira objetivo, etapas e riscos.",
+      "   Ou, na aba 'Governanca (EB10/EB20)', use o seletor do card 'Integracao ARIS'.",
+      "",
+      "2) GERE O ARQUIVO",
+      "   - BPMN 2.0 (.bpmn): formato aberto; importar no ARIS Cloud/ARIS Platform, bpmn.io ou Camunda.",
+      "   - AML (.aml): ARIS Markup Language (modelo EPC); melhor esforco; importar no ARIS Cloud/Platform.",
+      "   - Smart Design (.csv): planilha para colar no ARIS Express (Smart Design).",
+      "",
+      "3) IMPORTAR NO ARIS",
+      "   ARIS Cloud / ARIS Platform:",
+      "     a) Abra o repositorio (grupo) de destino.",
+      "     b) Menu Importar > AML/BPMN e selecione o arquivo gerado.",
+      "     c) Confira o modelo EPC criado e ajuste nomes/atributos, se necessario.",
+      "   ARIS Express (gratuito):",
+      "     a) NAO importa BPMN/EPC por XML; a importacao nativa e Visio, ARISalign ou ADF.",
+      "     b) Abra um modelo de Smart Design compativel (cadeia de valor / processo).",
+      "     c) Cole o conteudo do .csv na tabela (Passo, Evento de entrada, Funcao, Evento de saida, Responsavel, Sistema de apoio, Risco, Controle).",
+      "     d) Salve em .adf para reutilizar.",
+      "",
+      "4) CONFERIR E PUBLICAR",
+      "   - Revise eventos, funcoes, responsaveis e conexoes.",
+      "   - Registre a fonte (documento e item do Portal da Gestao) no modelo.",
+      "   - Submeta a revisao humana antes de publicar.",
+      "",
+      "OBSERVACOES",
+      "   - Nada e enviado automaticamente; o dominio ase.cmse.eb.mil.br nao recebe automacao.",
+      "   - Formatos recomendados: BPMN 2.0 (interoperabilidade) e AML (nativo ARIS).",
+      "   - O Smart Design do ARIS Express tem limitacoes de tipos de modelo.",
+      "   - Sistemas citados nos modelos: SISLOGMNT (manutencao) e SIGELOG (WEB) (suprimento/gestao patrimonial)."
+    ].join("\n");
   }
 
   function planoRiscosTexto() {
@@ -1086,6 +1126,8 @@
     }
     renderRegistroRiscos();
 
+    if ($("btnGuiaAris")) $("btnGuiaAris").addEventListener("click", function () { copiarTexto(guiaARIS(), $("btnGuiaAris")); });
+    if ($("btnGuiaArisTxt")) $("btnGuiaArisTxt").addEventListener("click", function () { baixarArquivo("guia-exportacao-aris.txt", guiaARIS()); });
     if ($("btnPlanoRiscos")) $("btnPlanoRiscos").addEventListener("click", function () { copiarTexto(planoRiscosTexto(), $("btnPlanoRiscos")); });
     if ($("btnBaixarPlano")) $("btnBaixarPlano").addEventListener("click", function () { baixarArquivo("plano-gestao-riscos-s4.txt", planoRiscosTexto()); });
     if ($("btnCsvRiscos")) $("btnCsvRiscos").addEventListener("click", function () { baixarArquivo("matriz-riscos-s4.csv", riscosCSV(), "text/csv;charset=utf-8"); });
@@ -1193,8 +1235,23 @@
       $("tbodyRegimentoVinculos").innerHTML = DB.processos.map(function (p) {
         var v = DB.vinculoDe(p.id);
         return "<tr><td>" + esc(p.codigo) + "</td><td>" + esc(p.titulo) + "</td><td>" + esc(v.funcao || "-") +
-          '</td><td><span class="tag">' + esc(v.competencia || "-") + "</span></td></tr>";
+          "</td><td>" + esc(DB.sistemaDe(p.id)) + '</td><td><span class="tag">' + esc(v.competencia || "-") + "</span></td></tr>";
       }).join("");
+    }
+    if ($("regimentoSistemas")) {
+      $("regimentoSistemas").innerHTML = DB.sistemas.map(function (s) {
+        var procs = DB.processos.filter(function (p) { return DB.sistemaDe(p.id).indexOf(s.sigla.replace(" (WEB)", "")) !== -1; });
+        return '<div class="fonte"><div class="n">' + esc(s.sigla) + " - " + esc(s.orgao) + '</div><div class="nome">' + esc(s.nome) + "</div>" +
+          '<div class="desc">' + esc(s.finalidade) + "</div>" +
+          '<div style="font-size:11.5px;color:var(--text-muted);margin-top:6px;">Uso: ' + esc(s.uso) + " | Acesso: " + esc(s.acesso) + "</div>" +
+          '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">' +
+          procs.map(function (p) { return '<button class="tag btn-proc" data-proc="' + p.id + '">' + esc(p.codigo) + "</button>"; }).join(" ") +
+          "</div>" +
+          (s.url ? '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">Fonte publica</a>' : "") + "</div>";
+      }).join("");
+      $("regimentoSistemas").querySelectorAll("[data-proc]").forEach(function (b) {
+        b.addEventListener("click", function () { irPara("processos", b.getAttribute("data-proc")); });
+      });
     }
     if ($("btnRegimento")) $("btnRegimento").addEventListener("click", function () { copiarTexto(regimentoTexto(), $("btnRegimento")); });
     if ($("btnRegimentoTxt")) $("btnRegimentoTxt").addEventListener("click", function () { baixarArquivo("regimento-interno-s4.txt", regimentoTexto()); });
