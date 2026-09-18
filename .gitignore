@@ -29,3 +29,5 @@ datajs_body.json
 push_body.json
 temp_body.json
 *.xlsx
+.neon
+.env.local
