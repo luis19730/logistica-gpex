@@ -1,9 +1,9 @@
-/* GPEX / Gestao de Riscos - E/4 | aplicacao (vanilla JS) */
+/* GPEX / Gestão de Riscos - E/4 | aplicação (vanilla JS) */
 (function () {
   "use strict";
 
   var DB = window.GPEX_E4;
-  if (!DB) { console.error("Base GPEX nao carregada."); return; }
+  if (!DB) { console.error("Base GPEX não carregada."); return; }
 
   var MATRIZ_FILTRO = null;
   var PROC_ATUAL = null;
@@ -27,7 +27,7 @@
   }
 
   function copiarTexto(txt, btn) {
-    function ok() { toast("Copiado para a area de transferencia."); if (btn) { var o = btn.textContent; btn.textContent = "Copiado!"; setTimeout(function () { btn.textContent = o; }, 1500); } }
+    function ok() { toast("Copiado para a área de transferencia."); if (btn) { var o = btn.textContent; btn.textContent = "Copiado!"; setTimeout(function () { btn.textContent = o; }, 1500); } }
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(txt).then(ok).catch(function () { fallback(); });
     } else { fallback(); }
@@ -35,13 +35,13 @@
       var ta = document.createElement("textarea");
       ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0";
       document.body.appendChild(ta); ta.select();
-      try { document.execCommand("copy"); ok(); } catch (e) { alert("Nao foi possivel copiar."); }
+      try { document.execCommand("copy"); ok(); } catch (e) { alert("Não foi possível copiar."); }
       document.body.removeChild(ta);
     }
   }
 
   /* ---------------- UI: toasts, overlays, rotas e atalhos ---------------- */
-  var TABS = ["visao", "processos", "matriz", "governanca", "regimento", "combustivel", "calendario", "fontes"];
+  var TABS = ["visao", "processos", "matriz", "governança", "regimento", "combustível", "calendário", "fontes"];
 
   function toast(msg, tipo) {
     var box = $("toasts"); if (!box) return;
@@ -64,10 +64,10 @@
     $("confirmMsg").textContent = msg;
     abrirOverlay("overlayConfirm");
     var sim = $("overlayConfirm").querySelector("[data-confirm-sim]");
-    var nao = $("overlayConfirm").querySelector("[data-confirm-nao]");
-    function done(ok) { fecharOverlay("overlayConfirm"); sim.onclick = nao.onclick = null; if (ok && onOk) onOk(); }
+    var não = $("overlayConfirm").querySelector("[data-confirm-não]");
+    function done(ok) { fecharOverlay("overlayConfirm"); sim.onclick = não.onclick = null; if (ok && onOk) onOk(); }
     sim.onclick = function () { done(true); };
-    nao.onclick = function () { done(false); };
+    não.onclick = function () { done(false); };
   }
 
   function ativarPainel(nome, opts) {
@@ -135,11 +135,11 @@
         IDX_BUSCA.push({ tipo: "Risco", titulo: r.descricao, sub: p.codigo + " - " + p.titulo, acao: function () { irPara("processos", p.id); } });
       });
     });
-    DB.calendario.forEach(function (c) {
-      IDX_BUSCA.push({ tipo: "Obrigacao", titulo: c.obrigacao, sub: c.periodicidade + " - " + c.responsavel, acao: function () { irPara("calendario"); } });
+    DB.calendário.forEach(function (c) {
+      IDX_BUSCA.push({ tipo: "Obrigação", titulo: c.obrigacao, sub: c.periodicidade + " - " + c.responsavel, acao: function () { irPara("calendário"); } });
     });
     DB.normas.forEach(function (n) {
-      IDX_BUSCA.push({ tipo: "Norma", titulo: n.codigo + " - " + n.titulo, sub: n.aplicacao, acao: function () { irPara("governanca"); } });
+      IDX_BUSCA.push({ tipo: "Norma", titulo: n.codigo + " - " + n.titulo, sub: n.aplicacao, acao: function () { irPara("governança"); } });
     });
     DB.fontes.forEach(function (f) {
       IDX_BUSCA.push({ tipo: "Fonte", titulo: f.nome, sub: f.descricao || f.acesso || "", acao: function () { irPara("fontes"); } });
@@ -247,7 +247,7 @@
     });
     l.push('  ' + ant + ' --> D{"Risco identificado?"}');
     l.push('  D -- "Sim" --> RT["Aplicar tratamento de risco em 5 etapas"]');
-    l.push('  D -- "Nao" --> F(["Fim"])');
+    l.push('  D -- "Não" --> F(["Fim"])');
     l.push("  RT --> F");
     return l.join("\n");
   }
@@ -259,7 +259,7 @@
       l.push('  ' + id + '["' + mmLabel(t.etapa) + '"]');
       if (i > 0) l.push("  R" + i + " --> " + id);
     });
-    l.push("  R" + DB.tratamentoRisco.length + ' --> M["Monitoramento continuo"]');
+    l.push("  R" + DB.tratamentoRisco.length + ' --> M["Monitoramento contínuo"]');
     l.push('  M -. "Reavaliar" .-> R2');
     return l.join("\n");
   }
@@ -268,15 +268,15 @@
   function initVisao() {
     var riscos = DB.todosRiscos();
     var altos = riscos.filter(function (r) { return r.nivel === "Alto" || r.nivel === "Extremo"; });
-    var media = riscos.length ? (riscos.reduce(function (a, r) { return a + r.valor; }, 0) / riscos.length) : 0;
+    var média = riscos.length ? (riscos.reduce(function (a, r) { return a + r.valor; }, 0) / riscos.length) : 0;
 
     $("cardsVisao").innerHTML = [
-      card("Processos mapeados", DB.processos.length, "Tarefas da E/4 (4a Secao)"),
-      card("Riscos identificados", riscos.length, "Com causa, consequencia e controle"),
+      card("Processos mapeados", DB.processos.length, "Tarefas da E/4 (4ª Seção)"),
+      card("Riscos identificados", riscos.length, "Com causa, consequência e controle"),
       card("Riscos Alto/Extremo", altos.length, "Tratamento prioritário (EB10-P-01.004)", altos.length ? "var(--red)" : "var(--green)"),
       card("Classes de suprimento", DB.classes.length, "I a X"),
-      card("Obrigacoes periodicas", DB.calendario.length, "Calendario da E/4"),
-      card("Nivel medio (P x I)", media.toFixed(1), "Escala de 1 a 25", "var(--yellow)")
+      card("Obrigações periódicas", DB.calendário.length, "Calendário da E/4"),
+      card("Nível medio (P x I)", média.toFixed(1), "Escala de 1 a 25", "var(--yellow)")
     ].join("");
 
     var cont = { "Baixo": 0, "Médio": 0, "Alto": 0, "Extremo": 0 };
@@ -326,7 +326,7 @@
     var legenda = dados.map(function (d) {
       return '<span><i style="background:' + d.cor + '"></i>' + esc(d.nome) + " <b>" + d.q + "</b></span>";
     }).join("");
-    el.innerHTML = '<svg viewBox="0 0 140 140" class="donut" role="img" aria-label="Distribuicao de riscos por nivel">' + segs +
+    el.innerHTML = '<svg viewBox="0 0 140 140" class="donut" role="img" aria-label="Distribuição de riscos por nível">' + segs +
       '<text x="70" y="67" text-anchor="middle" class="donut-num">' + total + '</text>' +
       '<text x="70" y="85" text-anchor="middle" class="donut-lbl">riscos</text></svg>' +
       '<div class="donut-legenda">' + legenda + "</div>";
@@ -342,7 +342,7 @@
     }).length;
     var procsComRisco = DB.processos.filter(function (p) { return p.riscos.length > 0; }).length;
     var itens = [
-      ["Riscos com controle/mitigacao", comControle, total],
+      ["Riscos com controle/mitigação", comControle, total],
       ["Riscos com plano de resposta (EB10)", comResposta, total],
       ["Processos com indicador de desempenho", procsComInd, DB.processos.length],
       ["Processos com riscos mapeados", procsComRisco, DB.processos.length]
@@ -357,14 +357,14 @@
 
   /* ---------------- PROCESSOS ---------------- */
   function initProcessos() {
-    var areas = [], classes = [];
+    var áreas = [], classes = [];
     DB.processos.forEach(function (p) {
-      if (areas.indexOf(p.area) === -1) areas.push(p.area);
+      if (áreas.indexOf(p.area) === -1) áreas.push(p.area);
       p.classes.forEach(function (c) { if (classes.indexOf(c) === -1) classes.push(c); });
     });
-    areas.sort(); classes.sort();
+    áreas.sort(); classes.sort();
 
-    $("filtroArea").innerHTML = '<option value="">Todas as areas</option>' + areas.map(function (a) { return '<option>' + esc(a) + "</option>"; }).join("");
+    $("filtroArea").innerHTML = '<option value="">Todas as áreas</option>' + áreas.map(function (a) { return '<option>' + esc(a) + "</option>"; }).join("");
     $("filtroClasse").innerHTML = '<option value="">Todas as classes</option>' + classes.map(function (c) { return '<option>' + esc(c) + "</option>"; }).join("");
 
     ["buscaProc", "filtroArea", "filtroClasse", "filtroNivel"].forEach(function (id) { $(id).addEventListener("input", renderListaProc); });
@@ -377,14 +377,14 @@
 
   function renderListaProc() {
     var q = ($("buscaProc").value || "").toLowerCase();
-    var area = $("filtroArea").value;
+    var área = $("filtroArea").value;
     var classe = $("filtroClasse").value;
-    var nivel = $("filtroNivel").value;
+    var nível = $("filtroNivel").value;
 
     var lista = DB.processos.filter(function (p) {
-      if (area && p.area !== area) return false;
+      if (área && p.area !== área) return false;
       if (classe && p.classes.indexOf(classe) === -1) return false;
-      if (nivel && procNiveis(p).indexOf(nivel) === -1) return false;
+      if (nível && procNiveis(p).indexOf(nível) === -1) return false;
       if (q) {
         var blob = (p.titulo + " " + p.objetivo + " " + p.area + " " + p.etapas.join(" ") + " " +
           p.riscos.map(function (r) { return r.descricao + " " + r.causa + " " + r.consequencia; }).join(" ")).toLowerCase();
@@ -394,8 +394,8 @@
     });
 
     $("listaProcessos").innerHTML = lista.length ? lista.map(function (p) {
-      var niveis = procNiveis(p);
-      var pior = ["Extremo", "Alto", "Médio", "Baixo"].filter(function (n) { return niveis.indexOf(n) !== -1; })[0] || "Baixo";
+      var níveis = procNiveis(p);
+      var pior = ["Extremo", "Alto", "Médio", "Baixo"].filter(function (n) { return níveis.indexOf(n) !== -1; })[0] || "Baixo";
       var tags = p.classes.length ? p.classes.map(function (c) { return '<span class="tag cinza">Classe ' + esc(c) + "</span>"; }).join(" ") : '<span class="tag cinza">Sem classe</span>';
       return '<div class="proc-item' + (PROC_ATUAL === p.id ? " active" : "") + '" data-id="' + p.id + '">' +
         '<div class="cod">' + esc(p.codigo) + " - " + esc(p.area) + "</div>" +
@@ -460,7 +460,7 @@
     var html = '<div class="card">' +
       '<div class="detalhe-topo"><div><div class="cod">' + esc(p.codigo) + " - " + esc(p.area) + '</div><h2>' + esc(p.titulo) + "</h2></div>" +
       '<div>' + (p.classes.length ? p.classes.map(function (c) { return '<span class="tag">Classe ' + esc(c) + "</span>"; }).join(" ") : "") + "</div></div>" +
-      '<div class="linha-acoes">' +
+      '<div class="linha-ações">' +
       '<button class="btn btn-sm" data-exp="dados">Copiar dados do processo</button>' +
       '<button class="btn btn-sm" data-exp="etapas">Copiar etapas</button>' +
       '<button class="btn btn-sm" data-exp="fluxo">Copiar fluxo (Mermaid)</button>' +
@@ -502,28 +502,28 @@
     $("detalheProcesso").querySelectorAll("[data-aris]").forEach(function (b) {
       b.addEventListener("click", function () { exportarARIS(p, b.getAttribute("data-aris")); });
     });
-    if ($("btnImprimir")) $("btnImprimir").addEventListener("click", function () { toast("Abrindo impressao / salvar em PDF..."); setTimeout(function () { window.print(); }, 300); });
+    if ($("btnImprimir")) $("btnImprimir").addEventListener("click", function () { toast("Abrindo impressão / salvar em PDF..."); setTimeout(function () { window.print(); }, 300); });
   }
 
-  /* ---------------- exportacao de texto (para o ASE) ---------------- */
+  /* ---------------- exportação de texto (para o ASE) ---------------- */
   function textoDados(p) {
     var gp = DB.governancaProcessos[p.id] || { tarefa: p.titulo, indicadores: [] };
     var vinc = DB.vinculoDe(p.id);
     return "DADOS DO PROCESSO\n" +
-      "Codigo: " + p.codigo + "\n" +
-      "Titulo: " + p.titulo + "\n" +
+      "Código: " + p.codigo + "\n" +
+      "Título: " + p.titulo + "\n" +
       "Tarefa (Verbo + Objeto + Complemento): " + (gp.tarefa || p.titulo) + "\n" +
-      "Orgao: " + DB.governanca.orgao + " - subordinada ao " + DB.governanca.subordinacao + "\n" +
-      "Funcao logistica (Art. 3o, I): " + (vinc.funcao || "-") + "\n" +
+      "Órgão: " + DB.governanca.orgao + " - subordinada ao " + DB.governanca.subordinacao + "\n" +
+      "Função logística (Art. 3º, I): " + (vinc.funcao || "-") + "\n" +
       "Sistema de apoio (TIC): " + DB.sistemaDe(p.id) + "\n" +
-      "Competencia (Art. 3o): " + (vinc.competencia ? vinc.competencia + " - " + DB.competenciaTexto(vinc.competencia) : "-") + "\n" +
-      "Area: " + p.area + "\n" +
-      "Portfolio: " + DB.governanca.portfolio + "\n" +
+      "Competência (Art. 3º): " + (vinc.competencia ? vinc.competencia + " - " + DB.competenciaTexto(vinc.competencia) : "-") + "\n" +
+      "Área: " + p.area + "\n" +
+      "Portfólio: " + DB.governanca.portfolio + "\n" +
       "Programa: " + DB.governanca.programa + "\n" +
       "Macroprocesso: " + DB.governanca.macroprocesso + "\n" +
-      "Classes de suprimento: " + (p.classes.length ? p.classes.join(", ") : "Nao aplicavel") + "\n" +
+      "Classes de suprimento: " + (p.classes.length ? p.classes.join(", ") : "Não aplicavel") + "\n" +
       "Objetivo: " + p.objetivo + "\n" +
-      "Responsaveis: " + p.responsaveis.join("; ") + "\n" +
+      "Responsáveis: " + p.responsaveis.join("; ") + "\n" +
       "Indicadores: " + ((gp.indicadores && gp.indicadores.length) ? gp.indicadores.join("; ") : "Definir") + "\n" +
       "Fonte: " + p.fontes.join("; ");
   }
@@ -561,9 +561,9 @@
       textoDados(p) + "\n\n" +
       textoEtapas(p) + "\n\n" +
       textoMatriz(p) +
-      "TRATAMENTO DO RISCO (fluxo padrao EME)\n" +
+      "TRATAMENTO DO RISCO (fluxo padrão EME)\n" +
       DB.tratamentoRisco.map(function (t) { return "  " + t.etapa + " - " + t.descricao; }).join("\n") + "\n\n" +
-      "FLUXO (Mermaid - colar no ASE/ARIS como referencia)\n\n" + mmFluxoProcesso(p) + "\n\n" +
+      "FLUXO (Mermaid - colar no ASE/ARIS como referência)\n\n" + mmFluxoProcesso(p) + "\n\n" +
       "--------------------------------------------\n" +
       "Escala de risco (EB10-P-01.004): 1-4 Baixo | 5-9 Médio | 10-14 Alto | 15-25 Extremo\n" +
       "Respostas: Evitar | Reduzir | Compartilhar | Aceitar\n" +
@@ -623,7 +623,7 @@
     if (MATRIZ_FILTRO) {
       riscos = riscos.filter(function (r) { return r.probabilidade === MATRIZ_FILTRO.p && r.impacto === MATRIZ_FILTRO.i; });
       $("tituloMatrizLista").textContent = "Riscos em P " + MATRIZ_FILTRO.p + " x I " + MATRIZ_FILTRO.i;
-      $("subMatrizLista").textContent = riscos.length + " risco(s) - nivel " + DB.nivelRisco(MATRIZ_FILTRO.p, MATRIZ_FILTRO.i).nome;
+      $("subMatrizLista").textContent = riscos.length + " risco(s) - nível " + DB.nivelRisco(MATRIZ_FILTRO.p, MATRIZ_FILTRO.i).nome;
     } else {
       $("tituloMatrizLista").textContent = "Riscos mapeados";
       $("subMatrizLista").textContent = riscos.length + " riscos nos " + DB.processos.length + " processos da E/4";
@@ -731,7 +731,7 @@
     var pct = cota > 0 ? Math.min(100, Math.round((totalLitros / cota) * 100)) : 0;
     var cls = pct >= 100 ? "excesso" : pct >= 85 ? "alerta" : "";
 
-    $("cboResumoObs").textContent = "Mes " + (cbo.mes || "-") + " - " + doMes.length + " abastecimento(s)";
+    $("cboResumoObs").textContent = "Mês " + (cbo.mes || "-") + " - " + doMes.length + " abastecimento(s)";
     var linhas = "";
     if (cota > 0) {
       linhas += '<div style="display:flex;justify-content:space-between;font-size:13px;"><span>Consumido: <strong>' +
@@ -747,9 +747,9 @@
     linhas += "</div>";
     $("cboPainelResumo").innerHTML = linhas;
 
-    function blocoLista(titulo, obj, un) {
+    function blocoLista(título, obj, un) {
       var ks = Object.keys(obj).sort();
-      return '<div class="fonte"><div class="nome">' + esc(titulo) + '</div><div style="margin-top:6px;font-size:12.5px;">' +
+      return '<div class="fonte"><div class="nome">' + esc(título) + '</div><div style="margin-top:6px;font-size:12.5px;">' +
         (ks.length ? ks.map(function (k) { return esc(k) + " - <strong>" + obj[k].toFixed(2) + " " + un + "</strong>"; }).join("<br>") : '<span class="vazio" style="padding:4px;">Sem dados</span>') +
         "</div></div>";
     }
@@ -764,7 +764,7 @@
   var PERIODOS = null;
   function initCalendario() {
     var per = [], resps = [];
-    DB.calendario.forEach(function (c) {
+    DB.calendário.forEach(function (c) {
       if (per.indexOf(c.periodicidade) === -1) per.push(c.periodicidade);
       if (resps.indexOf(c.responsavel) === -1) resps.push(c.responsavel);
     });
@@ -775,7 +775,7 @@
     $("calMes").value = mesAtual();
     ["calMes", "calPeriodicidade", "calResp"].forEach(function (id) { $(id).addEventListener("change", renderCalendario); });
 
-    $("tbodyCalCadastro").innerHTML = DB.calendario.map(function (c) {
+    $("tbodyCalCadastro").innerHTML = DB.calendário.map(function (c) {
       var p = DB.processos.filter(function (x) { return x.id === c.processo; })[0];
       return "<tr><td>" + esc(c.obrigacao) + "</td><td>" + esc(c.periodicidade) + "</td><td>" + esc(c.responsavel) +
         "</td><td>" + c.antecedencia + "</td><td>" + esc(p ? p.codigo + " - " + p.titulo : c.processo) + "</td></tr>";
@@ -786,36 +786,36 @@
 
   function ocorrencias(mesStr) {
     var partes = (mesStr || mesAtual()).split("-");
-    var ano = Number(partes[0]), mes = Number(partes[1]);
-    var diasNoMes = new Date(ano, mes, 0).getDate();
+    var ano = Number(partes[0]), mês = Number(partes[1]);
+    var diasNoMes = new Date(ano, mês, 0).getDate();
     var out = [];
-    DB.calendario.forEach(function (c) {
+    DB.calendário.forEach(function (c) {
       function add(dia, extra) {
         dia = Math.min(Math.max(1, dia), diasNoMes);
-        var d = new Date(ano, mes - 1, dia);
+        var d = new Date(ano, mês - 1, dia);
         out.push({ obrigacao: c.obrigacao, periodicidade: c.periodicidade, responsavel: c.responsavel, processo: c.processo, dia: dia, data: d, rotulo: extra || "" });
       }
-      if (c.periodicidade === "Diaria") {
+      if (c.periodicidade === "Diária") {
         for (var d = 1; d <= diasNoMes; d++) {
-          var dow = new Date(ano, mes - 1, d).getDay();
+          var dow = new Date(ano, mês - 1, d).getDay();
           if (dow !== 0 && dow !== 6) add(d);
         }
       } else if (c.periodicidade === "Semanal") {
-        for (var w = 1; w <= diasNoMes; w++) if (new Date(ano, mes - 1, w).getDay() === 1) add(w, "segunda");
+        for (var w = 1; w <= diasNoMes; w++) if (new Date(ano, mês - 1, w).getDay() === 1) add(w, "segunda");
       } else if (c.periodicidade === "Mensal") { add(5); }
-      else if (c.periodicidade === "Trimestral") { if ([1, 4, 7, 10].indexOf(mes) !== -1) add(10); }
-      else if (c.periodicidade === "Semestral") { if ([1, 7].indexOf(mes) !== -1) add(15); }
-      else if (c.periodicidade === "Anual") { if (mes === 1) add(30); }
+      else if (c.periodicidade === "Trimestral") { if ([1, 4, 7, 10].indexOf(mês) !== -1) add(10); }
+      else if (c.periodicidade === "Semestral") { if ([1, 7].indexOf(mês) !== -1) add(15); }
+      else if (c.periodicidade === "Anual") { if (mês === 1) add(30); }
     });
     out.sort(function (a, b) { return a.dia - b.dia; });
     return out;
   }
 
   function renderCalendario() {
-    var mes = $("calMes").value || mesAtual();
+    var mês = $("calMes").value || mesAtual();
     var per = $("calPeriodicidade").value;
     var resp = $("calResp").value;
-    var oc = ocorrencias(mes).filter(function (o) {
+    var oc = ocorrencias(mês).filter(function (o) {
       if (per && o.periodicidade !== per) return false;
       if (resp && o.responsavel !== resp) return false;
       return true;
@@ -823,16 +823,16 @@
 
     var feitos = 0;
     $("tbodyCalendario").innerHTML = oc.length ? oc.map(function (o, idx) {
-      var key = mes + "|" + o.dia + "|" + o.obrigacao;
+      var key = mês + "|" + o.dia + "|" + o.obrigacao;
       var done = !!calDone[key];
       if (done) feitos++;
       var p = DB.processos.filter(function (x) { return x.id === o.processo; })[0];
-      var dataFmt = String(o.dia).padStart(2, "0") + "/" + mes.split("-")[1] + "/" + mes.split("-")[0];
+      var dataFmt = String(o.dia).padStart(2, "0") + "/" + mês.split("-")[1] + "/" + mês.split("-")[0];
       return '<tr><td><input type="checkbox" data-key="' + esc(key) + '"' + (done ? " checked" : "") + "></td>" +
         "<td>" + dataFmt + (o.rotulo ? " <span class=\"tag cinza\">" + esc(o.rotulo) + "</span>" : "") + "</td>" +
         "<td>" + esc(o.obrigacao) + "</td><td>" + esc(o.periodicidade) + "</td><td>" + esc(o.responsavel) +
         '</td><td>' + esc(p ? p.codigo : o.processo) + "</td></tr>";
-    }).join("") : '<tr><td colspan="6" class="vazio">Sem obrigacoes para os filtros selecionados.</td></tr>';
+    }).join("") : '<tr><td colspan="6" class="vazio">Sem obrigações para os filtros selecionados.</td></tr>';
 
     $("tbodyCalendario").querySelectorAll("input[data-key]").forEach(function (cb) {
       cb.addEventListener("change", function () {
@@ -843,7 +843,7 @@
     });
 
     var pct = oc.length ? Math.round((feitos / oc.length) * 100) : 0;
-    $("calTitulo").textContent = "Agenda de " + mes;
+    $("calTitulo").textContent = "Agenda de " + mês;
     $("calProgresso").textContent = feitos + " de " + oc.length + " itens cumpridos (" + pct + "%)";
     var barra = $("calBarra");
     barra.style.width = pct + "%";
@@ -877,22 +877,22 @@
   }
 
   /* ---------------- GOVERNANCA (EB10 / EB20) ---------------- */
-  function baixarArquivo(nome, conteudo, tipo) {
-    var blob = new Blob([conteudo], { type: tipo || "text/plain;charset=utf-8" });
+  function baixarArquivo(nome, conteúdo, tipo) {
+    var blob = new Blob([conteúdo], { type: tipo || "text/plain;charset=utf-8" });
     var a = document.createElement("a");
     a.href = URL.createObjectURL(blob); a.download = nome;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
   }
 
-  /* ---------------- integracao ARIS (BPMN 2.0 / AML / Smart Design) ---------------- */
+  /* ---------------- integração ARIS (BPMN 2.0 / AML / Smart Design) ---------------- */
   function slug(s) {
     return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       .replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 60);
   }
   function escXml(s) {
     return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&após;");
   }
 
   /* BPMN 2.0 - importavel no ARIS Cloud/Plataforma ARIS e ferramentas BPMN. */
@@ -915,7 +915,7 @@
 
     function flow(from, to, name) { flows.push({ id: pre + "Flow_" + (fid++), from: from, to: to, name: name || "" }); }
     for (var i = 0; i < nodes.length - 1; i++) flow(nodes[i].id, nodes[i + 1].id, nodes[i].id === gwId ? "Sim" : "");
-    flow(gwId, pre + "EndEvent_1", "Nao");
+    flow(gwId, pre + "EndEvent_1", "Não");
 
     var byId = {}; nodes.forEach(function (n) { byId[n.id] = n; });
     var procId = "Process_" + p.id, collId = "Collaboration_" + p.id, partId = "Participant_" + p.id;
@@ -973,13 +973,13 @@
     var objs = [], conns = [], k = 1;
     function obj(id, type, name) { objs.push({ id: pre + id, type: type, name: name }); }
     function con(type, from, to) { conns.push({ id: pre + "Conn_" + (k++), type: type, from: pre + from, to: pre + to }); }
-    obj("Obj_ORG_E4", "OT_ORG_UNIT", "E/4 - 4a Secao (Logistica)");
+    obj("Obj_ORG_E4", "OT_ORG_UNIT", "E/4 - 4ª Seção (Logística)");
     obj("Obj_EVT_Start", "OT_EVT", "Processo " + p.codigo + " iniciado");
     var prev = "Obj_EVT_Start";
     p.etapas.forEach(function (et, i) {
       var fid = "Obj_FUNC_" + (i + 1), eid = "Obj_EVT_" + (i + 1);
       obj(fid, "OT_FUNC", et);
-      obj(eid, "OT_EVT", "Etapa " + (i + 1) + " concluida");
+      obj(eid, "OT_EVT", "Etapa " + (i + 1) + " concluída");
       con("CT_ACTIV_1", prev, fid);
       con("CT_ACTIV_2", fid, eid);
       con("CT_EXEC_1", fid, "Obj_ORG_E4");
@@ -996,7 +996,7 @@
 
     var riscos = p.riscos.map(function (r) {
       var n = DB.nivelRisco(r.probabilidade, r.impacto);
-      return '        <AttrDef id="Attr_' + pre + 'Risco" name="Risco"><Value>' + escXml(r.descricao + " (Nivel " + n.nome + ")") + "</Value></AttrDef>";
+      return '        <AttrDef id="Attr_' + pre + 'Risco" name="Risco"><Value>' + escXml(r.descricao + " (Nível " + n.nome + ")") + "</Value></AttrDef>";
     }).join("\n");
 
     var m = '    <Model id="Model_' + p.id + '" name="' + escXml(p.codigo + " - " + p.titulo) + '" modeltype="EPC">\n';
@@ -1018,7 +1018,7 @@
 
   /* Planilha para o "Smart Design" do ARIS Express (baixar em CSV ou copiar em TSV). */
   function arisSmartRows(procNome) {
-    var cols = ["Passo", "Evento de entrada", "Funcao", "Evento de saida", "Responsavel", "Sistema de apoio", "Risco relacionado", "Controle"];
+    var cols = ["Passo", "Evento de entrada", "Função", "Evento de saída", "Responsável", "Sistema de apoio", "Risco relacionado", "Controle"];
     if (procNome) cols.unshift("Processo");
     var linhas = [cols];
     DB.processos.forEach(function (p) {
@@ -1027,10 +1027,10 @@
       var evIn = "Processo " + p.codigo + " iniciado";
       p.etapas.forEach(function (et, i) {
         var r = p.riscos[Math.min(i, p.riscos.length - 1)] || { descricao: "", controle: "" };
-        var linha = [(i + 1), evIn, et, "Etapa " + (i + 1) + " concluida", resp, DB.sistemaDe(p.id), r.descricao, r.controle];
+        var linha = [(i + 1), evIn, et, "Etapa " + (i + 1) + " concluída", resp, DB.sistemaDe(p.id), r.descricao, r.controle];
         if (procNome) linha.unshift(p.codigo + " - " + p.titulo);
         linhas.push(linha);
-        evIn = "Etapa " + (i + 1) + " concluida";
+        evIn = "Etapa " + (i + 1) + " concluída";
       });
     });
     return linhas;
@@ -1045,7 +1045,7 @@
     }).join("\n");
   }
 
-  function baixar(conteudo, nome, tipo) { baixarArquivo(nome, conteudo, tipo); }
+  function baixar(conteúdo, nome, tipo) { baixarArquivo(nome, conteúdo, tipo); }
   function exportarARIS(p, formato) {
     var base = p.codigo.toLowerCase() + "-" + slug(p.titulo);
     if (formato === "bpmn") { baixar(arisBPMN(p), base + ".bpmn", "application/xml"); toast("BPMN gerado - importe no ARIS."); }
@@ -1064,12 +1064,12 @@
 
   function guiaARIS() {
     return [
-      "GUIA DE EXPORTACAO PARA O ARIS - SECAO DE LOGISTICA (E/4)",
+      "GUIA DE EXPORTAÇÃO PARA O ARIS - SEÇÃO DE LOGÍSTICA (E/4)",
       "Cmdo Bda Inf Amv",
       "",
       "1) ESCOLHA O PROCESSO",
       "   Em 'Processos e Riscos', selecione o processo e confira objetivo, etapas e riscos.",
-      "   Ou, na aba 'Governanca (EB10/EB20)', use o seletor do card 'Integracao ARIS'.",
+      "   Ou, na aba 'Governança (EB10/EB20)', use o seletor do card 'Integração ARIS'.",
       "",
       "2) GERE O ARQUIVO",
       "   Em cada processo, logo abaixo do fluxograma, use a barra 'Exportar fluxograma para o ARIS'.",
@@ -1078,8 +1078,8 @@
       "   - Smart Design (.csv): arquivo de planilha para o ARIS Express.",
       "   - Copiar planilha (ARIS Express): copia a planilha em colunas; cole com Ctrl+V no Smart Design.",
       "   - Copiar Mermaid: copia o fluxo em texto (Mermaid/EPC) para outra ferramenta.",
-      "   BPMN e AML sao ARQUIVOS (baixar e IMPORTAR no ARIS); Smart Design e texto (colar).",
-      "   Para TODOS os fluxogramas de uma vez, use os botoes do card 'Integracao ARIS'",
+      "   BPMN e AML são ARQUIVOS (baixar e IMPORTAR no ARIS); Smart Design e texto (colar).",
+      "   Para TODOS os fluxogramas de uma vez, use os botoes do card 'Integração ARIS'",
       "   (BPMN, AML/EPC, Smart Design ou 'Copiar planilha' com os 12 processos).",
       "",
       "3) IMPORTAR NO ARIS",
@@ -1089,33 +1089,33 @@
       "     c) Confira o modelo EPC criado e ajuste nomes/atributos, se necessario.",
       "   ARIS Express (gratuito):",
       "     a) NAO importa BPMN/EPC por XML; a importacao nativa e Visio, ARISalign ou ADF.",
-      "     b) Abra um modelo de Smart Design compativel (cadeia de valor / processo).",
+      "     b) Abra um modelo de Smart Design compatível (cadeia de valor / processo).",
       "     c) Clique em 'Copiar planilha (ARIS Express)' e cole com Ctrl+V na tabela do Smart Design",
-      "        (colunas: Processo, Passo, Evento de entrada, Funcao, Evento de saida, Responsavel, Sistema de apoio, Risco, Controle).",
+      "        (colunas: Processo, Passo, Evento de entrada, Função, Evento de saída, Responsável, Sistema de apoio, Risco, Controle).",
       "     d) Salve em .adf para reutilizar.",
       "",
       "4) CONFERIR E PUBLICAR",
-      "   - Revise eventos, funcoes, responsaveis e conexoes.",
-      "   - Registre a fonte (documento e item do Portal da Gestao) no modelo.",
-      "   - Submeta a revisao humana antes de publicar.",
+      "   - Revise eventos, funções, responsáveis e conexoes.",
+      "   - Registre a fonte (documento e item do Portal da Gestão) no modelo.",
+      "   - Submeta a revisão humana antes de públicar.",
       "",
-      "OBSERVACOES",
-      "   - Nada e enviado automaticamente; o dominio ase.cmse.eb.mil.br nao recebe automacao.",
+      "OBSERVAÇÕES",
+      "   - Nada e enviado automaticamente; o dominio ase.cmse.eb.mil.br não recebe automação.",
       "   - Formatos recomendados: BPMN 2.0 (interoperabilidade) e AML (nativo ARIS).",
       "   - O Smart Design do ARIS Express tem limitacoes de tipos de modelo.",
-      "   - Sistemas citados nos modelos: SISLOGMNT (manutencao) e SIGELOG (WEB) (suprimento/gestao patrimonial)."
+      "   - Sistemas citados nos modelos: SISLOGMNT (manutenção) e SIGELOG (WEB) (suprimento/gestão patrimonial)."
     ].join("\n");
   }
 
   function planoRiscosTexto() {
     var riscos = DB.todosRiscos().slice().sort(function (a, b) { return b.valor - a.valor; });
     var l = [
-      "PLANO DE GESTAO DE RISCOS - SECAO DE LOGISTICA (E/4 - 4a Secao)",
+      "PLANO DE GESTÃO DE RISCOS - SEÇÃO DE LOGÍSTICA (E/4 - 4ª Seção)",
       "Cmdo Bda Inf Amv",
-      "Orgao: " + DB.governanca.orgao + " - subordinada ao " + DB.governanca.subordinacao,
-      "Regimento Interno: finalidade (Art. 1o), missao (Art. 2o), competencias (Art. 3o) e atribuicoes (Arts. 4o a 6o)",
+      "Órgão: " + DB.governanca.orgao + " - subordinada ao " + DB.governanca.subordinacao,
+      "Regimento Interno: finalidade (Art. 1º), missão (Art. 2º), competências (Art. 3º) e atribuições (Arts. 4º a 6º)",
       "Base legal de riscos: " + DB.riscoEB10.base,
-      "Portfolio: " + DB.governanca.portfolio,
+      "Portfólio: " + DB.governanca.portfolio,
       "Macroprocesso: " + DB.governanca.macroprocesso,
       "Gerado em: " + new Date().toLocaleString("pt-BR"),
       "Escala: 1-4 Baixo | 5-9 Medio | 10-14 Alto | 15-25 Extremo",
@@ -1127,11 +1127,11 @@
     l.push("");
     riscos.forEach(function (r, i) {
       l.push((i + 1) + ". [" + r.processoId.toUpperCase() + "] " + r.descricao);
-      l.push("   Categoria: " + r.categoria + " | Nivel: " + r.nivel + " (P " + r.probabilidade + " x I " + r.impacto + " = " + r.valor + ")");
+      l.push("   Categoria: " + r.categoria + " | Nível: " + r.nivel + " (P " + r.probabilidade + " x I " + r.impacto + " = " + r.valor + ")");
       l.push("   P: " + r.probabilidade + " - " + r.probabilidadeRotulo + " | I: " + r.impacto + " - " + r.impactoRotulo);
       l.push("   Causa: " + r.causa);
       l.push("   Consequencia: " + r.consequencia);
-      l.push("   Controle/Mitigacao: " + r.controle);
+      l.push("   Controle/Mitigação: " + r.controle);
       l.push("   Resposta: " + r.resposta + " | Prazo: " + r.prazo + " | Responsavel: " + r.responsavel);
       l.push("   Indicador: " + r.indicador);
       l.push("");
@@ -1141,7 +1141,7 @@
   }
 
   function riscosCSV() {
-    var cols = ["Processo", "Funcao_logistica", "Competencia_Art3", "Categoria", "Risco", "Causa", "Consequencia", "Probabilidade", "P_rotulo", "Impacto", "I_rotulo", "Nivel", "Valor", "Controle", "Resposta", "Prazo", "Responsavel", "Indicador"];
+    var cols = ["Processo", "Funcao_logistica", "Competencia_Art3", "Categoria", "Risco", "Causa", "Consequência", "Probabilidade", "P_rotulo", "Impacto", "I_rotulo", "Nível", "Valor", "Controle", "Resposta", "Prazo", "Responsável", "Indicador"];
     function c(v) { return '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"'; }
     var linhas = [cols.map(c).join(";")];
     DB.todosRiscos().slice().sort(function (a, b) { return b.valor - a.valor; }).forEach(function (r) {
@@ -1257,10 +1257,10 @@
 
   function regimentoTexto() {
     var r = DB.regimento;
-    var l = [r.titulo, r.unidade, "Subordinacao: " + r.subordinacao, ""];
-    l.push("FINALIDADE E SUBORDINACAO (Art. 1o)"); l.push(r.finalidade); l.push("");
-    l.push("MISSAO (Art. 2o)"); l.push(r.missao); l.push("");
-    l.push("COMPETENCIAS (Art. 3o)");
+    var l = [r.titulo, r.unidade, "Subordinação: " + r.subordinacao, ""];
+    l.push("FINALIDADE E SUBORDINACAO (Art. 1º)"); l.push(r.finalidade); l.push("");
+    l.push("MISSAO (Art. 2º)"); l.push(r.missao); l.push("");
+    l.push("COMPETENCIAS (Art. 3º)");
     r.competencias.forEach(function (c) { l.push("  " + c.inciso + " - " + c.texto); });
     l.push("");
     r.atribuicoes.forEach(function (a) {
@@ -1314,7 +1314,7 @@
           '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">' +
           procs.map(function (p) { return '<button class="tag btn-proc" data-proc="' + p.id + '">' + esc(p.codigo) + "</button>"; }).join(" ") +
           "</div>" +
-          (s.url ? '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">Fonte publica</a>' : "") + "</div>";
+          (s.url ? '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">Fonte pública</a>' : "") + "</div>";
       }).join("");
       $("regimentoSistemas").querySelectorAll("[data-proc]").forEach(function (b) {
         b.addEventListener("click", function () { irPara("processos", b.getAttribute("data-proc")); });
