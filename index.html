@@ -8,7 +8,11 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>E/4 (4ª Seção) / Bda Inf Amv - Mapeamento de Processos e Gestão de Riscos (GPEX)</title>
-  <link rel="stylesheet" href="css/gpex.css?v=3">
+  <meta name="theme-color" content="#4B5F28">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="img/logo.png">
+  <link rel="apple-touch-icon" href="img/logo.png">
+  <link rel="stylesheet" href="css/gpex.css?v=4">
 </head>
 <body>
   <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
@@ -513,8 +517,15 @@
     }
     tick(); setInterval(tick, 1000);
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="vendor/mermaid.min.js"></script>
   <script src="js/gpex-dados.js"></script>
   <script src="js/gpex-app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').catch(function () { /* offline apenas */ });
+      });
+    }
+  </script>
 </body>
 </html>
