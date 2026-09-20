@@ -665,6 +665,17 @@
     });
     $("cboMes").addEventListener("change", function () { cbo.mes = $("cboMes").value; salvarCbo(); renderCombustivel(); });
     $("cboCota").addEventListener("input", function () { cbo.cota = Number($("cboCota").value) || 0; salvarCbo(); renderCombustivel(); });
+    if ($("cboRelatorio")) $("cboRelatorio").addEventListener("click", relatorioCombustivel);
+    if ($("cboExportar")) $("cboExportar").addEventListener("click", cboExportarCSV);
+    if ($("cboImportar") && $("cboArquivo")) {
+      $("cboImportar").addEventListener("click", function () { $("cboArquivo").click(); });
+      $("cboArquivo").addEventListener("change", function (e) {
+        var f = e.target.files && e.target.files[0]; if (!f) return;
+        var r = new FileReader();
+        r.onload = function () { cboImportarCSV(String(r.result)); e.target.value = ""; };
+        r.readAsText(f);
+      });
+    }
 
     renderCombustivel();
   }
@@ -673,12 +684,23 @@
     var data = $("cboData").value || hojeISO();
     var viatura = $("cboViatura").value.trim();
     var litros = Number($("cboLitros").value);
-    if (!viatura) { alert("Informe a viatura/equipamento."); return; }
-    if (!litros || litros <= 0) { alert("Informe os litros abastecidos."); return; }
-    cbo.itens.push({
-      id: Date.now(), data: data, viatura: viatura, tipo: $("cboTipo").value,
-      litros: litros, km: Number($("cboKm").value) || 0, resp: $("cboResp").value.trim()
+    var km = Number($("cboKm").value) || 0;
+    if (!viatura) { toast("Informe a viatura/equipamento."); return; }
+    if (!litros || litros <= 0) { toast("Informe os litros abastecidos (maior que zero)."); return; }
+    if (litros > 2000) { toast("Litros suspeito (> 2000). Verifique o valor."); return; }
+    // Hodômetro deve ser crescente para a mesma viatura
+    var anteriores = cbo.itens.filter(function (x) { return x.viatura.toLowerCase() === viatura.toLowerCase() && x.km > 0; });
+    var ultimo = anteriores.length ? Math.max.apply(null, anteriores.map(function (x) { return x.km; })) : 0;
+    if (km > 0 && ultimo > 0 && km < ultimo) {
+      toast("Hodômetro menor que o último registro (" + ultimo + "). Verifique a viatura/valor.");
+      return;
+    }
+    // Duplicidade
+    var dup = cbo.itens.some(function (x) {
+      return x.viatura.toLowerCase() === viatura.toLowerCase() && x.data === data && Math.abs(x.litros - litros) < 0.01 && (x.km || 0) === km;
     });
+    if (dup) { toast("Registro duplicado (mesma viatura, data, litros e hodômetro)."); return; }
+    cbo.itens.push({ id: Date.now(), data: data, viatura: viatura, tipo: $("cboTipo").value, litros: litros, km: km, resp: $("cboResp").value.trim() });
     salvarCbo();
     $("cboViatura").value = ""; $("cboLitros").value = ""; $("cboKm").value = "";
     renderCombustivel();
@@ -1141,14 +1163,14 @@
   }
 
   function riscosCSV() {
-    var cols = ["Processo", "Funcao_logistica", "Competencia_Art3", "Categoria", "Risco", "Causa", "Consequência", "Probabilidade", "P_rotulo", "Impacto", "I_rotulo", "Nível", "Valor", "Controle", "Resposta", "Prazo", "Responsável", "Indicador"];
+    var cols = ["Processo", "Funcao_logistica", "Competencia_Art3", "Categoria", "Risco", "Causa", "Consequência", "Probabilidade", "P_rotulo", "Impacto", "I_rotulo", "Nível", "Inerente", "Residual", "Controle", "Resposta", "Status", "Prazo", "Responsável", "KRI", "Proxima_revisao"];
     function c(v) { return '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"'; }
     var linhas = [cols.map(c).join(";")];
     DB.todosRiscos().slice().sort(function (a, b) { return b.valor - a.valor; }).forEach(function (r) {
       linhas.push([
         r.processo, r.funcaoLogistica, r.competencia, r.categoria, r.descricao, r.causa, r.consequencia,
         r.probabilidade, r.probabilidadeRotulo, r.impacto, r.impactoRotulo,
-        r.nivel, r.valor, r.controle, r.resposta, r.prazo, r.responsavel, r.indicador
+        r.nivel, r.riscoInerente, r.riscoResidual, r.controle, r.resposta, r.statusTratamento, r.prazo, r.responsavel, r.kri, r.proximaRevisao
       ].map(c).join(";"));
     });
     return "\ufeff" + linhas.join("\r\n");
@@ -1240,8 +1262,9 @@
     $("tbodyGovernancaRiscos").innerHTML = riscos.length ? riscos.map(function (r) {
       return "<tr><td>" + esc(r.processoId.toUpperCase()) + "</td><td>" + esc(r.descricao) + "</td><td>" + esc(r.categoria) +
         "</td><td>" + r.probabilidade + " (" + esc(r.probabilidadeRotulo) + ")</td><td>" + r.impacto + " (" + esc(r.impactoRotulo) + ")" +
-        "</td><td>" + nivelTag(r.nivel) + "</td><td><strong>" + esc(r.resposta) + "</strong></td><td>" + esc(r.prazo) +
-        "</td><td>" + esc(r.responsavel) + "</td><td>" + esc(r.indicador) + "</td></tr>";
+        "</td><td>" + nivelTag(r.nivel) + "</td><td>" + r.riscoInerente + "</td><td>" + r.riscoResidual +
+        "</td><td><strong>" + esc(r.resposta) + "</strong></td><td>" + esc(r.statusTratamento) + "</td><td>" + esc(r.prazo) +
+        "</td><td>" + esc(r.responsavel) + "</td><td>" + esc(r.kri) + "</td><td>" + esc(r.proximaRevisao) + "</td></tr>";
     }).join("") : '<tr><td colspan="10" class="vazio">Nenhum risco nos filtros selecionados.</td></tr>';
 
     if ($("governancaResumo")) {
@@ -1324,6 +1347,173 @@
     if ($("btnRegimentoTxt")) $("btnRegimentoTxt").addEventListener("click", function () { baixarArquivo("regimento-interno-e4.txt", regimentoTexto()); });
   }
 
+  /* ---------------- RODAPÉ, TEMA, BACKUP, ICS E COMBUSTÍVEL ---------------- */
+  function formatarData(iso) {
+    var p = String(iso || "").split("-");
+    return p.length === 3 ? p[2] + "/" + p[1] + "/" + p[0] : iso;
+  }
+
+  function initRodape() {
+    var el = $("rodapeVersao");
+    if (el) {
+      el.textContent = "Versão " + DB.meta.versao + " - Última revisão: " + formatarData(DB.meta.atualizado) +
+        " - " + DB.processos.length + " processos / " + DB.todosRiscos().length + " riscos";
+    }
+    var aviso = $("revisaoAviso");
+    if (aviso && DB.meta.atualizado) {
+      var dias = Math.floor((Date.now() - new Date(DB.meta.atualizado + "T00:00:00").getTime()) / 86400000);
+      var limite = DB.meta.revisaoValidadeDias || 90;
+      if (dias > limite) {
+        aviso.hidden = false;
+        aviso.textContent = "Atenção: a última revisão do conteúdo foi há " + dias + " dias (limite de " + limite +
+          " dias). Revisar os dados e atualizar a versão.";
+      }
+    }
+    if ($("btnChangelog")) {
+      $("btnChangelog").addEventListener("click", function () {
+        var c = $("changelogConteudo");
+        if (c) {
+          c.innerHTML = (DB.meta.changelog || []).map(function (v) {
+            return '<div class="fonte" style="margin-bottom:10px;"><div class="n">v' + esc(v.versao) + " - " + esc(v.data) +
+              '</div><ul class="lista-simples">' + v.itens.map(function (i) { return "<li>" + esc(i) + "</li>"; }).join("") + "</ul></div>";
+          }).join("");
+        }
+        abrirOverlay("overlayChangelog");
+      });
+    }
+  }
+
+  function initTema() {
+    var btn = $("btnTema");
+    function aplicar(t) {
+      document.documentElement.setAttribute("data-tema", t);
+      try { localStorage.setItem("gpex_tema", t); } catch (e) { }
+      if (btn) btn.setAttribute("aria-pressed", t === "escuro" ? "true" : "false");
+    }
+    var salvo = "claro";
+    try { salvo = localStorage.getItem("gpex_tema") || "claro"; } catch (e) { }
+    aplicar(salvo);
+    if (btn) btn.addEventListener("click", function () {
+      aplicar(document.documentElement.getAttribute("data-tema") === "escuro" ? "claro" : "escuro");
+    });
+  }
+
+  function initBackup() {
+    if ($("btnBackup")) $("btnBackup").addEventListener("click", function () {
+      var pacote = { sistema: "logistica-gpex", versao: DB.meta.versao, geradoEm: new Date().toISOString(), dados: {} };
+      ["gpex_combustivel_v1", "gpex_calendario_v1", "gpex_tema", "gpex_tab"].forEach(function (k) {
+        try { var v = localStorage.getItem(k); if (v !== null) pacote.dados[k] = v; } catch (e) { }
+      });
+      baixarArquivo("backup-gpex-e4.json", JSON.stringify(pacote, null, 2), "application/json");
+      toast("Backup gerado.");
+    });
+    if ($("btnRestaurar") && $("arquivoBackup")) {
+      $("btnRestaurar").addEventListener("click", function () { $("arquivoBackup").click(); });
+      $("arquivoBackup").addEventListener("change", function (e) {
+        var f = e.target.files && e.target.files[0];
+        if (!f) return;
+        var r = new FileReader();
+        r.onload = function () {
+          try {
+            var p = JSON.parse(r.result);
+            if (!p || !p.dados) throw new Error("formato");
+            confirmar("Restaurar backup e substituir os dados locais deste navegador?", function () {
+              Object.keys(p.dados).forEach(function (k) { try { localStorage.setItem(k, p.dados[k]); } catch (err) { } });
+              toast("Backup restaurado. Recarregando...");
+              setTimeout(function () { location.reload(); }, 900);
+            });
+          } catch (err) { toast("Arquivo de backup inválido."); }
+        };
+        r.readAsText(f);
+      });
+    }
+  }
+
+  function gerarICS() {
+    function d8(d) { return d.getFullYear() + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0"); }
+    var agora = new Date();
+    var l = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//GPEX E4//Calendario de Obrigacoes//PT-BR", "CALSCALE:GREGORIAN", "METHOD:PUBLISH"];
+    for (var m = 0; m < 12; m++) {
+      var base = new Date(agora.getFullYear(), agora.getMonth() + m, 1);
+      var mes = base.getFullYear() + "-" + String(base.getMonth() + 1).padStart(2, "0");
+      ocorrencias(mes).forEach(function (o) {
+        var limpo = o.obrigacao.replace(/[;,\n]/g, " ");
+        l.push("BEGIN:VEVENT");
+        l.push("UID:gpex-e4-" + mes + "-" + o.dia + "-" + norm(o.obrigacao).replace(/[^a-z0-9]+/g, "-").slice(0, 40) + "@bda-inf-amv");
+        l.push("DTSTAMP:" + new Date().toISOString().replace(/[-:]/g, "").slice(0, 15) + "Z");
+        l.push("DTSTART;VALUE=DATE:" + d8(o.data));
+        l.push("DTEND;VALUE=DATE:" + d8(new Date(o.data.getTime() + 86400000)));
+        l.push("SUMMARY:" + limpo + " (" + o.periodicidade + ")");
+        l.push("DESCRIPTION:Responsável: " + o.responsavel.replace(/[;,\n]/g, " ") + " - Processo " + o.processo);
+        if (o.periodicidade !== "Diária") {
+          l.push("BEGIN:VALARM", "TRIGGER:-P5D", "ACTION:DISPLAY", "DESCRIPTION:Lembrete: " + limpo, "END:VALARM");
+        }
+        l.push("END:VEVENT");
+      });
+    }
+    l.push("END:VCALENDAR");
+    return l.join("\r\n");
+  }
+
+  function initICS() {
+    if ($("btnICS")) $("btnICS").addEventListener("click", function () {
+      baixarArquivo("calendario-obrigacoes-e4.ics", gerarICS(), "text/calendar;charset=utf-8");
+      toast("Calendário .ics gerado (12 meses).");
+    });
+  }
+
+  function relatorioCombustivel() {
+    var mes = cbo.mes;
+    var itens = cbo.itens.filter(function (it) { return it.data.slice(0, 7) === mes; })
+      .sort(function (a, b) { return a.data.localeCompare(b.data); });
+    var kml = consumos();
+    var total = itens.reduce(function (a, it) { return a + it.litros; }, 0);
+    var cota = Number(cbo.cota) || 0;
+    var linhas = itens.map(function (it) {
+      return "<tr><td>" + esc(it.data) + "</td><td>" + esc(it.viatura) + "</td><td>" + esc(it.tipo) + "</td><td>" +
+        it.litros.toFixed(2) + "</td><td>" + (it.km || "-") + "</td><td>" + (kml[it.id] || "-") + "</td><td>" + esc(it.resp || "-") + "</td></tr>";
+    }).join("");
+    var html = "<!DOCTYPE html><html lang='pt-BR'><head><meta charset='UTF-8'><title>Relatório de Combustível - E/4</title>" +
+      "<style>body{font-family:'Segoe UI',Arial,sans-serif;color:#24301a;padding:24px}h1{font-size:18px}h2{font-size:14px;color:#556b2f}" +
+      "table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #ccc;padding:6px;text-align:left}" +
+      "th{background:#eef3df}.rodape{margin-top:20px;font-size:11px;color:#555}</style></head><body>" +
+      "<h1>Relatório Mensal de Combustível (Classe III)</h1>" +
+      "<p>4ª Seção / E/4 (Seção de Logística) - Cmdo Bda Inf Amv<br>Mês: " + esc(mes) + "</p>" +
+      "<h2>Resumo</h2><p>Total abastecido: <strong>" + total.toFixed(2) + " L</strong> - Cota: <strong>" + (cota ? cota.toFixed(0) + " L (" + Math.round(total / cota * 100) + "%)" : "não informada") + "</strong></p>" +
+      "<h2>Abastecimentos</h2><table><thead><tr><th>Data</th><th>Viatura</th><th>Tipo</th><th>Litros</th><th>Hodômetro</th><th>Km/L</th><th>Responsável</th></tr></thead><tbody>" + linhas + "</tbody></table>" +
+      "<div class='rodape'>Documento de trabalho - sujeito a revisão humana. Gerado em " + new Date().toLocaleString("pt-BR") + ".</div>" +
+      "</body></html>";
+    var w = window.open("", "_blank");
+    if (!w) { toast("Permita pop-ups para gerar o relatório."); return; }
+    w.document.write(html); w.document.close(); w.focus(); w.print();
+  }
+
+  function cboExportarCSV() {
+    function c(v) { return '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"'; }
+    var linhas = [["Data", "Viatura", "Tipo", "Litros", "Hodometro", "Responsavel"].map(c).join(";")];
+    cbo.itens.slice().sort(function (a, b) { return a.data.localeCompare(b.data); }).forEach(function (it) {
+      linhas.push([it.data, it.viatura, it.tipo, it.litros, it.km, it.resp].map(c).join(";"));
+    });
+    baixarArquivo("combustivel-e4.csv", "\ufeff" + linhas.join("\r\n"), "text/csv;charset=utf-8");
+    toast("CSV de combustível gerado.");
+  }
+
+  function cboImportarCSV(texto) {
+    var linhas = texto.replace(/\r/g, "").split("\n").filter(function (l) { return l.trim(); });
+    var importados = 0, erros = 0;
+    linhas.forEach(function (l, idx) {
+      if (idx === 0 && /data/i.test(l)) return;
+      var campos = l.split(/[;,]/).map(function (s) { return s.replace(/^"|"$/g, "").trim(); });
+      if (campos.length < 4) { erros++; return; }
+      var data = campos[0], viatura = campos[1], tipo = campos[2] || "Outros", litros = Number(String(campos[3]).replace(",", ".")), km = Number(campos[4]) || 0, resp = campos[5] || "";
+      if (!viatura || !(litros > 0)) { erros++; return; }
+      cbo.itens.push({ id: Date.now() + idx, data: data, viatura: viatura, tipo: tipo, litros: litros, km: km, resp: resp });
+      importados++;
+    });
+    salvarCbo(); renderCombustivel();
+    toast("Importados: " + importados + " registro(s)" + (erros ? " | ignorados: " + erros : ""));
+  }
+
   /* ---------------- boot ---------------- */
   try { initVisao(); } catch (e) { console.error(e); }
   try { initProcessos(); } catch (e) { console.error(e); }
@@ -1333,6 +1523,10 @@
   try { initGovernanca(); } catch (e) { console.error(e); }
   try { initRegimento(); } catch (e) { console.error(e); }
   try { initFontes(); } catch (e) { console.error(e); }
+  try { initRodape(); } catch (e) { console.error(e); }
+  try { initTema(); } catch (e) { console.error(e); }
+  try { initBackup(); } catch (e) { console.error(e); }
+  try { initICS(); } catch (e) { console.error(e); }
   try { initBusca(); } catch (e) { console.error(e); }
   try { aplicarRota(); } catch (e) { console.error(e); }
 })();

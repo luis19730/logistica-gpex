@@ -157,7 +157,7 @@ select.filtro-input { cursor: pointer; }
 .mermaid-box pre.mermaid { margin: 0; }
 
 /* Tabelas */
-.tabela-gpex { width: 100%; background: var(--bg-card); border: 1px solid rgba(0, 0, 0, 0.06); border-radius: 14px; overflow: hidden; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); }
+.tabela-gpex { width: 100%; background: var(--bg-card); border: 1px solid rgba(0, 0, 0, 0.06); border-radius: 14px; overflow-x: auto; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); }
 .tabela-gpex table { width: 100%; border-collapse: collapse; }
 .tabela-gpex th {
   padding: 11px 14px; text-align: left; font-size: 10.5px; text-transform: uppercase; letter-spacing: .6px;
@@ -364,6 +364,45 @@ kbd { font-family: inherit; font-size: 11px; background: var(--bg-secondary); bo
 
 /* Acessibilidade */
 :focus-visible { outline: 3px solid rgba(107, 142, 35, 0.55); outline-offset: 2px; border-radius: 6px; }
+
+/* Rodapé: dados locais (backup) */
+.rodape-dados { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 12px 0 30px; }
+
+/* Modo escuro */
+:root[data-tema="escuro"] {
+  --bg-primary: #10150b;
+  --bg-secondary: #1e2716;
+  --bg-card: #1b2317;
+  --bg-card-hover: #23301c;
+  --border: #35441f;
+  --text-primary: #e8edda;
+  --text-secondary: #aebd96;
+  --text-muted: #808f6b;
+  --green: #8fbf4a;
+  --green-dark: #a7d36a;
+  --green-bg: rgba(143, 191, 74, 0.18);
+  --yellow: #e0b63a;
+  --yellow-bg: rgba(224, 182, 58, 0.18);
+  --red: #ef6b6b;
+  --red-bg: rgba(239, 107, 107, 0.18);
+  --blue: #7fb0e8;
+  --blue-bg: rgba(127, 176, 232, 0.18);
+  --orange: #f0a35a;
+}
+:root[data-tema="escuro"] .card,
+:root[data-tema="escuro"] .fonte,
+:root[data-tema="escuro"] .validador,
+:root[data-tema="escuro"] .risco-card,
+:root[data-tema="escuro"] .comp-card,
+:root[data-tema="escuro"] .atrib-card,
+:root[data-tema="escuro"] .hier-item,
+:root[data-tema="escuro"] .conf-item,
+:root[data-tema="escuro"] .mermaid-box,
+:root[data-tema="escuro"] .passos li { background: var(--bg-card); }
+:root[data-tema="escuro"] .guia { background: linear-gradient(135deg, #1b2317, #23301c); }
+:root[data-tema="escuro"] .tabela-gpex tr:hover td { background: #23301c; }
+:root[data-tema="escuro"] .modal,
+:root[data-tema="escuro"] .paleta { background: #1b2317; color: var(--text-primary); }
 
 @media (max-width: 760px) {
   .container { padding: 16px; }

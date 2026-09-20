@@ -3,8 +3,36 @@
     "titulo": "Mapeamento de Processos e Gestão de Riscos",
     "subtitulo": "4ª Seção / E/4 (Seção de Logística) - Cmdo Bda Inf Amv",
     "metodologia": "GPEX / Projeto Piloto 2.0 de Mapeamento de Processos (CMSE)",
-    "versao": "1.1.0",
+    "versao": "2.0.0",
     "atualizado": "2026-09-18",
+    "revisaoValidadeDias": 90,
+    "apetiteRisco": "Baixo",
+    "changelog": [
+      {
+        "versao": "2.0.0",
+        "data": "2026-09-18",
+        "itens": [
+          "Versionamento, PWA offline, JSON validado e testes",
+          "Campos de risco (inerente/residual, KRI, próxima revisão)",
+          "Exportações .ics, backup JSON e relatório de combustível"
+        ]
+      },
+      {
+        "versao": "1.1.0",
+        "data": "2026-09-18",
+        "itens": [
+          "Ajuste ao Regimento Interno (Arts. 1º a 6º)",
+          "Sistemas SisLogMnt e SIGELOG (WEB)"
+        ]
+      },
+      {
+        "versao": "1.0.0",
+        "data": "2026-09-18",
+        "itens": [
+          "Versão inicial: 12 processos, matriz P×I, exportações ARIS"
+        ]
+      }
+    ],
     "org": "E/4 (4ª Seção)",
     "orgCurto": "E/4",
     "subordinacao": "Chefe do Estado-Maior da Brigada (Ch EM Bda)",

@@ -27,6 +27,7 @@
     <symbol id="i-busca" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16" y1="16" x2="21" y2="21"/></symbol>
     <symbol id="i-ajuda" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 4 2c-.8.6-1.5 1-1.5 2"/><circle cx="12" cy="17" r=".9"/></symbol>
     <symbol id="i-print" viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="2"/><path d="M8 17h8v4H8z"/></symbol>
+    <symbol id="i-tema" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.5" y1="4.5" x2="6.5" y2="6.5"/><line x1="17.5" y1="17.5" x2="19.5" y2="19.5"/><line x1="4.5" y1="19.5" x2="6.5" y2="17.5"/><line x1="17.5" y1="6.5" x2="19.5" y2="4.5"/></symbol>
   </svg>
 
   <a class="pular" href="#conteúdo">Pular para o conteúdo</a>
@@ -44,6 +45,9 @@
         </button>
         <button class="btn-topo" id="btnAjuda" aria-label="Abrir ajuda">
           <svg class="ico"><use href="#i-ajuda"/></svg><span>Ajuda</span>
+        </button>
+        <button class="btn-topo" id="btnTema" aria-label="Alternar modo claro/escuro" aria-pressed="false">
+          <svg class="ico"><use href="#i-tema"/></svg><span>Tema</span>
         </button>
       </div>
       <div class="topo-relogio">
@@ -201,7 +205,7 @@
         </div>
         <div class="tabela-gpex">
           <table>
-            <thead><tr><th>Proc.</th><th>Risco</th><th>Categoria</th><th>Probabilidade</th><th>Impacto</th><th>Nível</th><th>Resposta</th><th>Prazo</th><th>Responsável</th><th>Indicador</th></tr></thead>
+            <thead><tr><th>Proc.</th><th>Risco</th><th>Categoria</th><th>Probabilidade</th><th>Impacto</th><th>Nível</th><th>Inerente</th><th>Residual</th><th>Resposta</th><th>Status</th><th>Prazo</th><th>Responsável</th><th>KRI (indicador)</th><th>Próx. revisão</th></tr></thead>
             <tbody id="tbodyGovernancaRiscos"></tbody>
           </table>
         </div>
@@ -377,13 +381,21 @@
             <div class="campo"><label>Mês de referência</label><input type="month" id="cboMes"></div>
             <div class="campo"><label>Cota mensal (L)</label><input type="number" min="0" step="1" id="cboCota" placeholder="0"></div>
             <button class="btn btn-sm" id="cboLimpar">Limpar todos</button>
+            <button class="btn btn-sm" id="cboRelatorio">Relatório mensal (imprimir)</button>
           </div>
         </div>
         <div id="cboPainelResumo"></div>
       </div>
 
       <div class="card">
-        <h2>Abastecimentos registrados</h2>
+        <div class="detalhe-topo">
+          <h2>Abastecimentos registrados</h2>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-sm" id="cboExportar">Exportar CSV</button>
+            <button class="btn btn-sm" id="cboImportar">Importar CSV</button>
+            <input type="file" id="cboArquivo" accept=".csv,text/csv" hidden>
+          </div>
+        </div>
         <div class="tabela-gpex">
           <table>
             <thead>
@@ -409,7 +421,10 @@
       <div class="card">
         <div class="detalhe-topo">
           <div><h2 id="calTitulo">Agenda do mês</h2><p class="sub" id="calProgresso"></p></div>
-          <div class="barra" style="width:220px;"><span id="calBarra" style="width:0%"></span></div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <div class="barra" style="width:200px;"><span id="calBarra" style="width:0%"></span></div>
+            <button class="btn btn-sm" id="btnICS">Baixar calendário (.ics)</button>
+          </div>
         </div>
         <div class="tabela-gpex" style="margin-top:14px;">
           <table>
@@ -458,8 +473,16 @@
       Sistema de apoio ao mapeamento de processos e gestão de riscos - 4ª Seção / E/4 (Seção de Logística) - Cmdo Bda Inf Amv<br>
       Subordinada ao Chefe do Estado-Maior da Brigada (Ch EM Bda) - conforme Regimento Interno (Arts. 1º a 6º)<br>
       Metodologia GPEX / Projeto Piloto 2.0 (CMSE) - Saída compatível com ARIS Express (EPC) e Mermaid/BPMN<br>
+      <span id="rodapeVersao"></span><br>
       Toda saída gerada passa por revisão humana antes de se tornar documento oficial.
     </footer>
+    <div class="aviso forte" id="revisaoAviso" hidden></div>
+    <div class="rodape-dados">
+      <button class="btn btn-sm" id="btnBackup">Baixar backup (JSON)</button>
+      <button class="btn btn-sm" id="btnRestaurar">Restaurar backup (JSON)</button>
+      <input type="file" id="arquivoBackup" accept="application/json,.json" hidden>
+      <button class="btn btn-sm" id="btnChangelog">Ver changelog</button>
+    </div>
   </main>
 
   <div class="overlay" id="overlayBusca" hidden>
@@ -490,6 +513,15 @@
         <p><strong>Atalhos:</strong> <kbd>Ctrl</kbd>+<kbd>K</kbd> busca global; teclas <kbd>1</kbd> a <kbd>8</kbd> trocam de aba; <kbd>/</kbd> abre a busca; <kbd>Esc</kbd> fecha janelas.</p>
         <p><strong>Conformidade:</strong> riscos seguem a EB10-P-01.004; macroprocessos, indicadores e portafolio seguem a EB20-D-11.001. Toda saída exige revisão humana antes de virar documento oficial.</p>
       </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlayChangelog" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Changelog">
+      <button class="modal-fechar" data-fechar aria-label="Fechar">&times;</button>
+      <h2>Changelog</h2>
+      <p class="sub">Histórico de versões do sistema.</p>
+      <div id="changelogConteudo"></div>
     </div>
   </div>
 

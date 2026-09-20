@@ -19,8 +19,15 @@ window.GPEX_E4 = (function () {
     titulo: "Mapeamento de Processos e Gestão de Riscos",
     subtitulo: "4ª Seção / E/4 (Seção de Logística) - Cmdo Bda Inf Amv",
     metodologia: "GPEX / Projeto Piloto 2.0 de Mapeamento de Processos (CMSE)",
-    versao: "1.1.0",
+    versao: "2.0.0",
     atualizado: "2026-09-18",
+    revisaoValidadeDias: 90,
+    apetiteRisco: "Baixo",
+    changelog: [
+      { versao: "2.0.0", data: "2026-09-18", itens: ["Versionamento, PWA offline, JSON validado e testes", "Campos de risco (inerente/residual, KRI, próxima revisão)", "Exportações .ics, backup JSON e relatório de combustível"] },
+      { versao: "1.1.0", data: "2026-09-18", itens: ["Ajuste ao Regimento Interno (Arts. 1º a 6º)", "Sistemas SisLogMnt e SIGELOG (WEB)"] },
+      { versao: "1.0.0", data: "2026-09-18", itens: ["Versão inicial: 12 processos, matriz P×I, exportações ARIS"] }
+    ],
     org: ORG,
     orgCurto: ORG_CURTO,
     subordinacao: "Chefe do Estado-Maior da Brigada (Ch EM Bda)",
@@ -147,6 +154,22 @@ window.GPEX_E4 = (function () {
   };
 
   function sistemaDe(id) { return sistemaPorProcesso[id] || "-"; }
+
+  /* Prazo de próxima revisão do risco (ISO 31000 / EB10-P-01.004), a partir da data-base. */
+  function diasRevisao(nivel) {
+    return (nivel === "Extremo" || nivel === "Alto") ? 90 : nivel === "Médio" ? 180 : 365;
+  }
+  function dataRevisao(nivel) {
+    var base = new Date((meta.atualizado || "2026-01-01") + "T00:00:00");
+    base.setDate(base.getDate() + diasRevisao(nivel));
+    return base.toISOString().slice(0, 10);
+  }
+  /* Risco residual estimado (após o controle pretendido). Valor de referência - a eficácia
+     real do controle deve ser verificada pela S/4 (marcado "VERIFICAR NA FONTE"). */
+  function riscoResidual(p, i, nivel) {
+    var fator = (nivel === "Extremo" || nivel === "Alto") ? 0.6 : nivel === "Médio" ? 0.7 : 0.9;
+    return Math.max(1, Math.round(p * i * fator));
+  }
 
   function competenciaTexto(inciso) {
     for (var i = 0; i < regimento.competencias.length; i++) {
@@ -1003,7 +1026,15 @@ window.GPEX_E4 = (function () {
           tarefa: gp.tarefa || proc.titulo,
           competencia: vinculoDe(proc.id).competencia,
           funcaoLogistica: vinculoDe(proc.id).funcao,
-          sistema: sistemaDe(proc.id)
+          sistema: sistemaDe(proc.id),
+          riscoInerente: r.probabilidade * r.impacto,
+          riscoResidual: riscoResidual(r.probabilidade, r.impacto, n.nome),
+          eficaciaControle: r.controle ? "Pretendida (verificar eficácia)" : "Inexistente",
+          statusTratamento: (n.nome === "Extremo" || n.nome === "Alto") ? "Em tratamento prioritário" : n.nome === "Médio" ? "Em tratamento" : "Aceito / monitorado",
+          apetite: meta.apetiteRisco,
+          kri: (gp.indicadores && gp.indicadores.length) ? gp.indicadores[0] : "Definir KRI",
+          proximaRevisao: dataRevisao(n.nome),
+          diasRevisao: diasRevisao(n.nome)
         });
       });
     });
@@ -1040,6 +1071,9 @@ window.GPEX_E4 = (function () {
     competenciaTexto: competenciaTexto,
     sistemas: sistemas,
     sistemaPorProcesso: sistemaPorProcesso,
-    sistemaDe: sistemaDe
+    sistemaDe: sistemaDe,
+    diasRevisao: diasRevisao,
+    dataRevisao: dataRevisao,
+    riscoResidual: riscoResidual
   };
 })();

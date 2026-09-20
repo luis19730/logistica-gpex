@@ -23,7 +23,15 @@
     "tarefa": "Garantir o suprimento das classes I, III e V às OMDS",
     "competencia": "I",
     "funcaoLogistica": "Suprimento",
-    "sistema": "SIGELOG (WEB)"
+    "sistema": "SIGELOG (WEB)",
+    "riscoInerente": 12,
+    "riscoResidual": 7,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Em tratamento prioritário",
+    "apetite": "Baixo",
+    "kri": "Prazo médio de atendimento do pedido (dias)",
+    "proximaRevisao": "2026-12-17",
+    "diasRevisao": 90
   },
   {
     "id": "p01-r2",
@@ -49,7 +57,15 @@
     "tarefa": "Garantir o suprimento das classes I, III e V às OMDS",
     "competencia": "I",
     "funcaoLogistica": "Suprimento",
-    "sistema": "SIGELOG (WEB)"
+    "sistema": "SIGELOG (WEB)",
+    "riscoInerente": 6,
+    "riscoResidual": 4,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Em tratamento",
+    "apetite": "Baixo",
+    "kri": "Prazo médio de atendimento do pedido (dias)",
+    "proximaRevisao": "2027-03-17",
+    "diasRevisao": 180
   },
   {
     "id": "p02-r1",
@@ -75,7 +91,15 @@
     "tarefa": "Executar a manutenção de 2º escalão de viaturas e armamento",
     "competencia": "I",
     "funcaoLogistica": "Manutenção",
-    "sistema": "SISLOGMNT"
+    "sistema": "SISLOGMNT",
+    "riscoInerente": 12,
+    "riscoResidual": 7,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Em tratamento prioritário",
+    "apetite": "Baixo",
+    "kri": "Índice de disponibilidade da frota (%)",
+    "proximaRevisao": "2026-12-17",
+    "diasRevisao": 90
   },
   {
     "id": "p02-r2",
@@ -101,7 +125,15 @@
     "tarefa": "Executar a manutenção de 2º escalão de viaturas e armamento",
     "competencia": "I",
     "funcaoLogistica": "Manutenção",
-    "sistema": "SISLOGMNT"
+    "sistema": "SISLOGMNT",
+    "riscoInerente": 8,
+    "riscoResidual": 6,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Em tratamento",
+    "apetite": "Baixo",
+    "kri": "Índice de disponibilidade da frota (%)",
+    "proximaRevisao": "2027-03-17",
+    "diasRevisao": 180
   },
   {
     "id": "p07-r1",
@@ -127,7 +159,15 @@
     "tarefa": "Planejar e executar comboios logísticos",
     "competencia": "I",
     "funcaoLogistica": "Transporte",
-    "sistema": "-"
+    "sistema": "-",
+    "riscoInerente": 8,
+    "riscoResidual": 6,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Em tratamento",
+    "apetite": "Baixo",
+    "kri": "Comboios realizados no prazo (%)",
+    "proximaRevisao": "2027-03-17",
+    "diasRevisao": 180
   },
   {
     "id": "p07-r2",
@@ -153,7 +193,15 @@
     "tarefa": "Planejar e executar comboios logísticos",
     "competencia": "I",
     "funcaoLogistica": "Transporte",
-    "sistema": "-"
+    "sistema": "-",
+    "riscoInerente": 6,
+    "riscoResidual": 4,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Em tratamento",
+    "apetite": "Baixo",
+    "kri": "Comboios realizados no prazo (%)",
+    "proximaRevisao": "2027-03-17",
+    "diasRevisao": 180
   },
   {
     "id": "p09-r1",
@@ -179,7 +227,15 @@
     "tarefa": "Garantir o suprimento de saúde e a evacuação",
     "competencia": "V",
     "funcaoLogistica": "Saúde",
-    "sistema": "SIGELOG (WEB)"
+    "sistema": "SIGELOG (WEB)",
+    "riscoInerente": 10,
+    "riscoResidual": 6,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Em tratamento prioritário",
+    "apetite": "Baixo",
+    "kri": "Itens de Classe VIII dentro da validade (%)",
+    "proximaRevisao": "2026-12-17",
+    "diasRevisao": 90
   },
   {
     "id": "p09-r2",
@@ -205,7 +261,15 @@
     "tarefa": "Garantir o suprimento de saúde e a evacuação",
     "competencia": "V",
     "funcaoLogistica": "Saúde",
-    "sistema": "SIGELOG (WEB)"
+    "sistema": "SIGELOG (WEB)",
+    "riscoInerente": 8,
+    "riscoResidual": 6,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Em tratamento",
+    "apetite": "Baixo",
+    "kri": "Itens de Classe VIII dentro da validade (%)",
+    "proximaRevisao": "2027-03-17",
+    "diasRevisao": 180
   },
   {
     "id": "p11-r1",
@@ -231,7 +295,15 @@
     "tarefa": "Recuperar material danificado (salvamento)",
     "competencia": "III",
     "funcaoLogistica": "Serviços Gerais",
-    "sistema": "SISLOGMNT + SIGELOG (WEB)"
+    "sistema": "SISLOGMNT + SIGELOG (WEB)",
+    "riscoInerente": 6,
+    "riscoResidual": 4,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Em tratamento",
+    "apetite": "Baixo",
+    "kri": "Índice de recuperação de material (%)",
+    "proximaRevisao": "2027-03-17",
+    "diasRevisao": 180
   },
   {
     "id": "p13-r1",
@@ -257,7 +329,15 @@
     "tarefa": "Controlar combustíveis e lubrificantes (Classe III)",
     "competencia": "II",
     "funcaoLogistica": "Suprimento",
-    "sistema": "SIGELOG (WEB)"
+    "sistema": "SIGELOG (WEB)",
+    "riscoInerente": 9,
+    "riscoResidual": 6,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Em tratamento",
+    "apetite": "Baixo",
+    "kri": "Consumo real x cota (%)",
+    "proximaRevisao": "2027-03-17",
+    "diasRevisao": 180
   },
   {
     "id": "p13-r2",
@@ -283,7 +363,15 @@
     "tarefa": "Controlar combustíveis e lubrificantes (Classe III)",
     "competencia": "II",
     "funcaoLogistica": "Suprimento",
-    "sistema": "SIGELOG (WEB)"
+    "sistema": "SIGELOG (WEB)",
+    "riscoInerente": 8,
+    "riscoResidual": 6,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Em tratamento",
+    "apetite": "Baixo",
+    "kri": "Consumo real x cota (%)",
+    "proximaRevisao": "2027-03-17",
+    "diasRevisao": 180
   },
   {
     "id": "p14-r1",
@@ -309,7 +397,15 @@
     "tarefa": "Controlar o calendário de obrigações da seção",
     "competencia": "IV",
     "funcaoLogistica": "Serviços Gerais",
-    "sistema": "-"
+    "sistema": "-",
+    "riscoInerente": 9,
+    "riscoResidual": 6,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Em tratamento",
+    "apetite": "Baixo",
+    "kri": "Obrigações cumpridas no prazo (%)",
+    "proximaRevisao": "2027-03-17",
+    "diasRevisao": 180
   },
   {
     "id": "p14-r2",
@@ -335,7 +431,15 @@
     "tarefa": "Controlar o calendário de obrigações da seção",
     "competencia": "IV",
     "funcaoLogistica": "Serviços Gerais",
-    "sistema": "-"
+    "sistema": "-",
+    "riscoInerente": 4,
+    "riscoResidual": 4,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Aceito / monitorado",
+    "apetite": "Baixo",
+    "kri": "Obrigações cumpridas no prazo (%)",
+    "proximaRevisao": "2027-09-18",
+    "diasRevisao": 365
   },
   {
     "id": "p15-r1",
@@ -361,7 +465,15 @@
     "tarefa": "Requisitar e distribuir munição (Classe V)",
     "competencia": "III",
     "funcaoLogistica": "Suprimento",
-    "sistema": "SIGELOG (WEB)"
+    "sistema": "SIGELOG (WEB)",
+    "riscoInerente": 10,
+    "riscoResidual": 6,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Em tratamento prioritário",
+    "apetite": "Baixo",
+    "kri": "Divergência de munição requisitada x devolvida (nº)",
+    "proximaRevisao": "2026-12-17",
+    "diasRevisao": 90
   },
   {
     "id": "p15-r2",
@@ -387,7 +499,15 @@
     "tarefa": "Requisitar e distribuir munição (Classe V)",
     "competencia": "III",
     "funcaoLogistica": "Suprimento",
-    "sistema": "SIGELOG (WEB)"
+    "sistema": "SIGELOG (WEB)",
+    "riscoInerente": 6,
+    "riscoResidual": 4,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Em tratamento",
+    "apetite": "Baixo",
+    "kri": "Divergência de munição requisitada x devolvida (nº)",
+    "proximaRevisao": "2027-03-17",
+    "diasRevisao": 180
   },
   {
     "id": "p16-r1",
@@ -413,7 +533,15 @@
     "tarefa": "Prover peças de reposição de viaturas (Classe IX)",
     "competencia": "III",
     "funcaoLogistica": "Manutenção",
-    "sistema": "SISLOGMNT"
+    "sistema": "SISLOGMNT",
+    "riscoInerente": 12,
+    "riscoResidual": 7,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Em tratamento prioritário",
+    "apetite": "Baixo",
+    "kri": "Viaturas paradas por falta de peça (nº)",
+    "proximaRevisao": "2026-12-17",
+    "diasRevisao": 90
   },
   {
     "id": "p16-r2",
@@ -439,7 +567,15 @@
     "tarefa": "Prover peças de reposição de viaturas (Classe IX)",
     "competencia": "III",
     "funcaoLogistica": "Manutenção",
-    "sistema": "SISLOGMNT"
+    "sistema": "SISLOGMNT",
+    "riscoInerente": 4,
+    "riscoResidual": 4,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Aceito / monitorado",
+    "apetite": "Baixo",
+    "kri": "Viaturas paradas por falta de peça (nº)",
+    "proximaRevisao": "2027-09-18",
+    "diasRevisao": 365
   },
   {
     "id": "p17-r1",
@@ -465,7 +601,15 @@
     "tarefa": "Executar o desfazimento de material",
     "competencia": "III",
     "funcaoLogistica": "Suprimento",
-    "sistema": "SIGELOG (WEB)"
+    "sistema": "SIGELOG (WEB)",
+    "riscoInerente": 8,
+    "riscoResidual": 6,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Em tratamento",
+    "apetite": "Baixo",
+    "kri": "Processos de desfazimento sem nulidade (%)",
+    "proximaRevisao": "2027-03-17",
+    "diasRevisao": 180
   },
   {
     "id": "p17-r2",
@@ -491,7 +635,15 @@
     "tarefa": "Executar o desfazimento de material",
     "competencia": "III",
     "funcaoLogistica": "Suprimento",
-    "sistema": "SIGELOG (WEB)"
+    "sistema": "SIGELOG (WEB)",
+    "riscoInerente": 4,
+    "riscoResidual": 4,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Aceito / monitorado",
+    "apetite": "Baixo",
+    "kri": "Processos de desfazimento sem nulidade (%)",
+    "proximaRevisao": "2027-09-18",
+    "diasRevisao": 365
   },
   {
     "id": "p18-r1",
@@ -517,7 +669,15 @@
     "tarefa": "Suprir fardamento e equipamento individual (Classe II)",
     "competencia": "III",
     "funcaoLogistica": "Suprimento",
-    "sistema": "SIGELOG (WEB)"
+    "sistema": "SIGELOG (WEB)",
+    "riscoInerente": 6,
+    "riscoResidual": 4,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Em tratamento",
+    "apetite": "Baixo",
+    "kri": "Praças com Classe II completa (%)",
+    "proximaRevisao": "2027-03-17",
+    "diasRevisao": 180
   },
   {
     "id": "p18-r2",
@@ -543,7 +703,15 @@
     "tarefa": "Suprir fardamento e equipamento individual (Classe II)",
     "competencia": "III",
     "funcaoLogistica": "Suprimento",
-    "sistema": "SIGELOG (WEB)"
+    "sistema": "SIGELOG (WEB)",
+    "riscoInerente": 4,
+    "riscoResidual": 4,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Aceito / monitorado",
+    "apetite": "Baixo",
+    "kri": "Praças com Classe II completa (%)",
+    "proximaRevisao": "2027-09-18",
+    "diasRevisao": 365
   },
   {
     "id": "p19-r1",
@@ -569,7 +737,15 @@
     "tarefa": "Acompanhar as demais classes de suprimento",
     "competencia": "I",
     "funcaoLogistica": "Suprimento",
-    "sistema": "SIGELOG (WEB)"
+    "sistema": "SIGELOG (WEB)",
+    "riscoInerente": 6,
+    "riscoResidual": 4,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Em tratamento",
+    "apetite": "Baixo",
+    "kri": "Classes com responsável e rotina definidos (%)",
+    "proximaRevisao": "2027-03-17",
+    "diasRevisao": 180
   },
   {
     "id": "p19-r2",
@@ -595,6 +771,14 @@
     "tarefa": "Acompanhar as demais classes de suprimento",
     "competencia": "I",
     "funcaoLogistica": "Suprimento",
-    "sistema": "SIGELOG (WEB)"
+    "sistema": "SIGELOG (WEB)",
+    "riscoInerente": 4,
+    "riscoResidual": 4,
+    "eficaciaControle": "Pretendida (verificar eficácia)",
+    "statusTratamento": "Aceito / monitorado",
+    "apetite": "Baixo",
+    "kri": "Classes com responsável e rotina definidos (%)",
+    "proximaRevisao": "2027-09-18",
+    "diasRevisao": 365
   }
 ]
