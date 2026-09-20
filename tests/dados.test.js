@@ -38,6 +38,24 @@ test('calendário referencia processos existentes', function () {
   });
 });
 
+test('normas têm situação, portaria e fonte quando vigentes', function () {
+  const sit = ['vigente', 'provavel-revogada', 'verificar'];
+  assert.ok(DB.normas.length >= 1);
+  DB.normas.forEach(function (n) {
+    assert.ok(n.codigo && n.titulo, 'norma sem código/título');
+    assert.ok(sit.indexOf(n.situacao) !== -1, n.codigo + ': situação inválida');
+    if (n.situacao === 'vigente') { assert.ok(n.portaria, n.codigo + ': vigente sem portaria'); assert.ok(n.url, n.codigo + ': vigente sem fonte'); }
+  });
+  // nenhuma norma revogada citada como vigente
+  const d11 = DB.normas.filter(function (n) { return n.codigo === 'EB20-D-11.001'; })[0];
+  assert.ok(d11 && d11.situacao === 'provavel-revogada', 'EB20-D-11.001 deve constar como provável revogada');
+});
+
+test('regimento está marcado como MODELO', function () {
+  assert.ok(DB.regimento.modelo === true, 'regimento deve estar marcado como modelo');
+  assert.ok(DB.regimento.avisoModelo, 'regimento deve ter aviso de modelo');
+});
+
 test('regimento tem competências e atribuições', function () {
   assert.ok(DB.regimento.competencias.length >= 1);
   assert.ok(DB.regimento.atribuicoes.length >= 1);

@@ -40,6 +40,8 @@ window.GPEX_E4 = (function () {
   /* Regimento Interno da 4ª Seção / E/4 - Arts. 1º a 6º. */
   var regimento = {
     titulo: "Regimento Interno - 4ª Seção / E/4 (Seção de Logística)",
+    modelo: true,
+    avisoModelo: "MODELO de referência - NÃO é o Regimento oficial. Substituir pelo Regimento Interno oficial da OM antes de publicar. Conteúdo não verificado (arts. e redação a conferir).",
     unidade: "Comando da Brigada de Infantaria Aeromóvel",
     subordinacao: "Chefe do Estado-Maior da Brigada (Ch EM Bda)",
     finalidade:
@@ -210,7 +212,7 @@ window.GPEX_E4 = (function () {
     ]
   };
 
-  /* Hierarquia de dados GPEX (EB20-D-11.001): Portfólio > Programa > Macroprocesso >
+  /* Hierarquia de dados GPEX (EB10-P-01.007 / EB20-N-11.002): Portfólio > Programa > Macroprocesso >
      Processo > Tarefa. Indicadores de desempenho associados a cada processo. */
   var governança = {
     portfolio: "Portfólio de Apoio Logístico - Cmdo Bda Inf Amv",
@@ -406,15 +408,15 @@ window.GPEX_E4 = (function () {
       url: "https://portalgovernanca.eme.eb.mil.br/"
     },
     {
-      sigla: "Port. 1.582-EME",
-      titulo: "Política de Governança do Exército (EB20-N-11.002)",
-      aplicacao: "Diretrizes de governança pública aplicaveis a gestão de riscos e controles internos.",
-      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/GESTAO%20ORGANIZACIONAL/NORMAS/port_1582-eme_imptc_politica_gov_eb20-n-11.002.pdf"
+      sigla: "EB20-N-11.002",
+      titulo: "Normas para Implementação da Política de Governança do Exército",
+      aplicacao: "Normas de implementação da governança (substitui a EB20-D-11.001). Número da portaria própria: VERIFICAR NA FONTE.",
+      url: ""
     },
     {
-      sigla: "Port. 2.508-C Ex",
-      titulo: "Plano de Longo Prazo de Governança (EB10-P-01.007)",
-      aplicacao: "Norma de governança e gestão que orienta o mapeamento de processos organizacionais.",
+      sigla: "EB10-P-01.007",
+      titulo: "Política de Governança do Exército (Portaria C Ex nº 2.508, de 14/07/2025)",
+      aplicacao: "Política de governança que orienta processos, riscos e controles internos.",
       url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/GESTAO%20ORGANIZACIONAL/NORMAS/port_2508-c%20ex_pltc_governanca_eb10-p-01.007.pdf"
     },
     {
@@ -925,52 +927,81 @@ window.GPEX_E4 = (function () {
   /* Normas de referência para conformidade do cadastro no GPEx/ASE. */
   var normas = [
     {
-      codigo: "EB10-P-01.004", titulo: "Política de Riscos do Exército Brasileiro",
-      edicao: "2ª ed., 2018", portaria: "Portaria Nº 004-Cmt Ex, de 3 de janeiro de 2019",
+      codigo: "EB10-P-01.004", titulo: "Política de Gestão de Riscos do Exército Brasileiro",
+      edicao: "2ª ed., 2018", portaria: "Portaria C Ex nº 004, de 03/01/2019 (BE nº 32, de 09/08/2019)", data: "2019-01-03",
+      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/RISCOS/NORMAS/Port004-CmtEx_3jan19.pdf",
+      situacao: "vigente", verificadoEm: "2026-09-18",
       aplicacao: "Modelagem de riscos: probabilidade, impacto/severidade, nível (P x I) e plano de resposta (evitar, reduzir, compartilhar, aceitar).",
-      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/RISCOS/NORMAS/Port004-CmtEx_3jan19.pdf"
+      observacao: "Consultada no Portal da Governança; conferir vigência no Boletim do Exército antes de publicar."
     },
     {
       codigo: "EB20-D-02.010", titulo: "Diretriz Reguladora da Política de Gestão de Riscos do Exército",
-      edicao: "1ª ed., 2019", portaria: "Portaria Nº 225-EME, de 26 de julho de 2019",
+      edicao: "1ª ed., 2019", portaria: "Portaria nº 225-EME, de 26/07/2019", data: "2019-07-26",
+      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/RISCOS/NORMAS/Port225-EME_26jul19.pdf",
+      situacao: "vigente", verificadoEm: "2026-09-18",
       aplicacao: "Orientação metodológica para identificação, análise, avaliação, tratamento e monitoramento dos riscos.",
-      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/RISCOS/NORMAS/Port225-EME_26jul19.pdf"
+      observacao: "Consultada no Portal da Governança; conferir vigência no Boletim do Exército."
     },
     {
-      codigo: "EB10-P-01.014", titulo: "Missão do Exército (Plano) - Planejamento Estratégico 2024-2027",
-      edicao: "1ª ed., 2023", portaria: "Portaria Nº 2.146-C Ex, de 20 de dezembro de 2023",
-      aplicacao: "Alinhamento estratégico e de portfólio institucional (base dos objetivos estratégicos).",
-      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/PROCESSOS/NORMAS/PORTARIA_C_Ex_2146_DE_20_DE_DEZEMBRO_DE_2023.pdf"
+      codigo: "EB20-D-07.089", titulo: "Metodologia de Gestão de Riscos do Exército Brasileiro",
+      edicao: "1ª ed. (conferir)", portaria: "Citada na Portaria C Ex nº 004/2019", data: "",
+      url: "", situacao: "verificar", verificadoEm: "",
+      aplicacao: "Metodologia de gestão de riscos do EB (probabilidade, impacto, níveis e respostas).",
+      observacao: "Não localizada em fonte pública: confirmar código, edição e vigência antes de citar."
     },
     {
-      codigo: "Cadeia de Valor (EME)", titulo: "Cadeia de Valor Agregado do Estado-Maior do Exército",
-      edicao: "2026", portaria: "Portaria EME/C Ex nº 1.729, de 30 de abril de 2026",
-      aplicacao: "Referência de macroprocessos e processos organizacionais.",
-      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/sepbe19_port1729-cva-eme%201.pdf"
+      codigo: "EB10-P-01.007", titulo: "Política de Governança do Exército Brasileiro",
+      edicao: "2ª ed., 2025", portaria: "Portaria C Ex nº 2.508, de 14/07/2025", data: "2025-07-14",
+      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/GESTAO%20ORGANIZACIONAL/NORMAS/port_2508-c%20ex_pltc_governanca_eb10-p-01.007.pdf",
+      situacao: "vigente", verificadoEm: "2026-09-18",
+      aplicacao: "Política de governança; base para processos, riscos e controles internos.",
+      observacao: "Substitui a citação anterior de EB20-D-11.001 como norma de governança vigente."
     },
     {
-      codigo: "EB20-D-01.016", titulo: "Diretriz de Racionalização Administrativa do Exército",
-      edicao: "1ª ed., 2014", portaria: "Portaria nº 295-EME, de 17 de dezembro de 2014",
-      aplicacao: "Mapeamento e melhoria de processos organizacionais.",
-      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/PROCESSOS/NORMAS/Portaria_295_EME.pdf"
+      codigo: "EB20-N-11.002", titulo: "Normas para Implementação da Política de Governança do Exército Brasileiro",
+      edicao: "1ª ed., 2025", portaria: "VERIFICAR NA FONTE (revoga a Portaria EME/C Ex nº 465/2021)", data: "",
+      url: "", situacao: "verificar", verificadoEm: "",
+      aplicacao: "Normas de implementação da governança; substitui a Diretriz de Governança e Gestão (D-11.001).",
+      observacao: "Informar o número da portaria própria desta norma (campo pendente)."
     },
     {
-      codigo: "EB20-D-11.001", titulo: "Diretriz de Governança e Gestão do Exército (SG2Ex)",
-      edicao: "conforme citado no prompt", portaria: "Confirmar número/vigência no Portal da Governança",
-      aplicacao: "Alinhamento com macroprocessos, processos, indicadores de desempenho e portfólios institucionais.",
-      verificar: true
+      codigo: "EB20-D-11.001", titulo: "Diretriz de Governança e Gestão do Exército Brasileiro",
+      edicao: "1ª ed., 2021", portaria: "Portaria EME/C Ex nº 465, de 09/08/2021", data: "2021-08-09",
+      url: "", situacao: "provavel-revogada", verificadoEm: "",
+      aplicacao: "Documento histórico (governança e gestão). NÃO tratar como vigente.",
+      observacao: "Provavelmente REVOGADA pela EB20-N-11.002; confirmar no Boletim do Exército."
     },
     {
-      codigo: "EB10-P-01.027", titulo: "Programa de Integridade do Exército",
-      edicao: "1ª ed., 2025", portaria: "Portaria C Ex nº 2.430, de 24 de fevereiro de 2025",
+      codigo: "EB10-P-01.014", titulo: "Missão do Exército (Plano) - SIPLEx, ciclo 2024-2027",
+      edicao: "1ª ed., 2023", portaria: "Portaria C Ex nº 2.146, de 20/12/2023", data: "2023-12-20",
+      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/PROCESSOS/NORMAS/PORTARIA_C_Ex_2146_DE_20_DE_DEZEMBRO_DE_2023.pdf",
+      situacao: "vigente", verificadoEm: "2026-09-18",
+      aplicacao: "Alinhamento estratégico e de portfólio institucional (objetivos estratégicos).",
+      observacao: "Consultada no Portal da Governança; conferir vigência no Boletim do Exército."
+    },
+    {
+      codigo: "EB10-P-01.027", titulo: "Programa de Integridade do Exército Brasileiro",
+      edicao: "1ª ed., 2025", portaria: "Portaria C Ex nº 2.430, de 24/02/2025", data: "2025-02-24",
+      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/RISCOS/NORMAS/port_2430_c_ex_prg_integridade_2025%201.pdf",
+      situacao: "vigente", verificadoEm: "2026-09-18",
       aplicacao: "Riscos de integridade e controles internos.",
-      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/RISCOS/NORMAS/port_2430_c_ex_prg_integridade_2025%201.pdf"
+      observacao: "Consultada no Portal da Governança; conferir vigência no Boletim do Exército."
     },
     {
-      codigo: "EB20-P-11.001", titulo: "Plano de Integridade do Exército",
-      edicao: "2ª ed., 2025", portaria: "Portaria EME/C Ex nº 1.493, de 25 de fevereiro de 2025",
-      aplicacao: "Medidas de integridade e conformidade aplicáveis ao E/4.",
-      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/RISCOS/NORMAS/port_1493_eme_pl_integridade_2025%201.pdf"
+      codigo: "EB20-P-11.001", titulo: "Plano de Integridade do Exército Brasileiro",
+      edicao: "2ª ed., 2025", portaria: "Portaria EME/C Ex nº 1.493, de 25/02/2025", data: "2025-02-25",
+      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/RISCOS/NORMAS/port_1493_eme_pl_integridade_2025%201.pdf",
+      situacao: "vigente", verificadoEm: "2026-09-18",
+      aplicacao: "Medidas de integridade e conformidade aplicáveis à E/4.",
+      observacao: "Revoga a Portaria 316-EME/2018 (conferir no BE)."
+    },
+    {
+      codigo: "EB20-D-01.016", titulo: "Diretriz de Racionalização Administrativa do Exército Brasileiro",
+      edicao: "1ª ed., 2014", portaria: "Portaria nº 295-EME, de 17/12/2014", data: "2014-12-17",
+      url: "https://portalgovernanca.eme.eb.mil.br/images/documentos/PROCESSOS/NORMAS/Portaria_295_EME.pdf",
+      situacao: "verificar", verificadoEm: "2026-09-18",
+      aplicacao: "Mapeamento e melhoria de processos organizacionais.",
+      observacao: "Confirmar vigência e pertinência para a E/4."
     }
   ];
 

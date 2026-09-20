@@ -72,7 +72,13 @@ if (!reg.atribuicoes || !reg.atribuicoes.length) erro('regimento sem atribuiçõ
 (reg.competencias || []).forEach(function (c) { if (!c.inciso || !c.texto) erro('competência incompleta'); });
 
 // 5) Normas / fontes / sistemas
-(DB.normas || []).forEach(function (n) { if (!n.codigo || !n.titulo) erro('norma sem código/título'); if (!n.url && !n.verificar) aviso('norma sem link oficial: ' + n.codigo); });
+const SITUACOES = ['vigente', 'provavel-revogada', 'verificar'];
+(DB.normas || []).forEach(function (n) {
+  if (!n.codigo || !n.titulo) erro('norma sem código/título');
+  if (SITUACOES.indexOf(n.situacao) === -1) erro('norma com situação inválida: ' + n.codigo + ' (' + n.situacao + ')');
+  if (n.situacao === 'vigente' && !n.portaria) erro('norma vigente sem portaria: ' + n.codigo);
+  if (n.situacao === 'vigente' && !n.url) aviso('norma vigente sem link oficial: ' + n.codigo);
+});
 (DB.fontes || []).forEach(function (f) { if (!f.nome) erro('fonte sem nome'); });
 (DB.sistemas || []).forEach(function (s) { if (!s.sigla || !s.nome) erro('sistema sem sigla/nome'); });
 

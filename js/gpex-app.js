@@ -472,7 +472,7 @@
       '<button class="btn btn-sm" id="btnImprimir"><svg class="ico"><use href="#i-print"/></svg>Imprimir / PDF</button>' +
       "</div>" +
       "<h3>Objetivo</h3><p style=\"font-size:13px;color:var(--text-secondary);\">" + esc(p.objetivo) + "</p>" +
-      '<h3>Hierarquia GPEX / Governança (EB20-D-11.001)</h3><dl class="hierarquia">' + hierarquiaHtml + "</dl>" +
+      '<h3>Hierarquia GPEX / Governança (EB10-P-01.007 / EB20-N-11.002)</h3><dl class="hierarquia">' + hierarquiaHtml + "</dl>" +
       '<h3>Indicadores de desempenho</h3><ul class="lista-simples">' + indicadoresHtml + "</ul>" +
       "<h3>Responsáveis</h3><p style=\"font-size:13px;color:var(--text-secondary);\">" + esc(p.responsaveis.join("; ")) + "</p>" +
       "<h3>Etapas do processo</h3><ol class=\"etapas\">" + p.etapas.map(function (e) { return "<li>" + esc(e) + "</li>"; }).join("") + "</ol>" +
@@ -883,12 +883,18 @@
     }).join("");
     if ($("gridNormas")) {
       $("gridNormas").innerHTML = DB.normas.map(function (n) {
+        var badge = n.situacao === "vigente" ? '<span class="tag verde">vigente</span>'
+          : n.situacao === "provavel-revogada" ? '<span class="tag vermelho">provável revogada</span>'
+            : '<span class="tag amarelo">verificar vigência</span>';
+        var verif = n.verificadoEm ? "Verificado em " + formatarData(n.verificadoEm) : "Não verificado";
         return '<div class="fonte"><div class="n">' + esc(n.codigo) + (n.edicao ? " - " + esc(n.edicao) : "") + '</div>' +
           '<div class="nome">' + esc(n.titulo) + "</div>" +
-          '<div class="desc">' + esc(n.aplicacao) + "</div>" +
-          '<div style="font-size:11.5px;color:var(--text-muted);margin-top:6px;">' + esc(n.portaria) + "</div>" +
-          (n.url ? '<a href="' + esc(n.url) + '" target="_blank" rel="noopener">Acessar norma</a>'
-            : '<span class="tag amarelo" style="margin-top:6px;">confirmar vigência</span>') + "</div>";
+          '<div style="margin:6px 0;">' + badge + '</div>' +
+          '<div class="desc">' + esc(n.aplicacao || "") + "</div>" +
+          '<div style="font-size:11.5px;color:var(--text-muted);margin-top:6px;">' + esc(n.portaria || "") +
+          " | " + esc(verif) + "</div>" +
+          (n.observacao ? '<div style="font-size:11.5px;color:var(--text-secondary);margin-top:4px;">' + esc(n.observacao) + "</div>" : "") +
+          (n.url ? '<a href="' + esc(n.url) + '" target="_blank" rel="noopener">Acessar norma</a>' : "") + "</div>";
       }).join("");
     }
     $("gridDoutrina").innerHTML = DB.doutrina.map(function (d) {
@@ -1280,7 +1286,9 @@
 
   function regimentoTexto() {
     var r = DB.regimento;
-    var l = [r.titulo, r.unidade, "Subordinação: " + r.subordinacao, ""];
+    var l = [r.titulo, r.unidade];
+    if (r.modelo) l.push("*** " + (r.avisoModelo || "MODELO - substituir pelo Regimento oficial da OM.") + " ***");
+    l.push("Subordinação: " + r.subordinacao, "");
     l.push("FINALIDADE E SUBORDINACAO (Art. 1º)"); l.push(r.finalidade); l.push("");
     l.push("MISSAO (Art. 2º)"); l.push(r.missao); l.push("");
     l.push("COMPETENCIAS (Art. 3º)");
