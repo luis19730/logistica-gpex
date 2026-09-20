@@ -381,7 +381,7 @@ kbd { font-family: inherit; font-size: 11px; background: var(--surface-2); borde
 :root[data-tema="escuro"] .guia { background: var(--surface); }
 :root[data-tema="escuro"] .aviso { color: #fbbf24; }
 :root[data-tema="escuro"] .aviso.forte { color: #fca5a5; }
-:root[data-tema="escuro"] .matriz td { color: #0b1220; }
+:root[data-tema="escuro"] .matriz td { color: #141a0e; }
 
 /* ---------------- Responsivo ---------------- */
 @media (max-width: 1024px) {
