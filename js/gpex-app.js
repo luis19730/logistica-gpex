@@ -994,9 +994,9 @@
     con("CT_ACTIV_2", "Obj_FUNC_RISCO", "Obj_EVT_Fim");
     con("CT_ACTIV_2", "Obj_RULE_1", "Obj_EVT_Fim");
 
-    var riscos = p.riscos.map(function (r) {
+    var riscos = p.riscos.map(function (r, i) {
       var n = DB.nivelRisco(r.probabilidade, r.impacto);
-      return '        <AttrDef id="Attr_' + pre + 'Risco" name="Risco"><Value>' + escXml(r.descricao + " (Nível " + n.nome + ")") + "</Value></AttrDef>";
+      return '        <AttrDef id="Attr_' + pre + 'Risco_' + (i + 1) + '" name="Risco"><Value>' + escXml(r.descricao + " (Nível " + n.nome + ")") + "</Value></AttrDef>";
     }).join("\n");
 
     var m = '    <Model id="Model_' + p.id + '" name="' + escXml(p.codigo + " - " + p.titulo) + '" modeltype="EPC">\n';
