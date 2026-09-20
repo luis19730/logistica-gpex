@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="img/logo.png">
   <link rel="apple-touch-icon" href="img/logo.png">
-  <link rel="stylesheet" href="css/gpex.css?v=4">
+  <link rel="stylesheet" href="css/gpex.css?v=5">
 </head>
 <body>
   <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
@@ -30,48 +30,57 @@
 
   <a class="pular" href="#conteudo">Pular para o conteúdo</a>
 
-  <header class="topo">
-    <div class="topo-inner">
-      <img class="topo-logo" src="img/logo.png" alt="Logo Bda Inf Amv">
-      <div class="topo-titulo">
-        <h1>E/4 / Bda Inf Amv</h1>
-        <p>4ª Seção (Seção de Logística) - Mapeamento de Processos e Gestão de Riscos - GPEX (CMSE)</p>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <img class="sidebar-logo" src="img/logo.png" alt="Logo Bda Inf Amv">
+        <div class="sidebar-brand-txt">
+          <strong>E/4 · Bda Inf Amv</strong>
+          <span>GPEX · Gestão de Riscos</span>
+        </div>
       </div>
-      <div class="topo-acoes">
-        <button class="btn-topo" id="btnBusca" aria-label="Abrir busca global">
-          <svg class="ico"><use href="#i-busca"/></svg><span>Buscar</span><kbd>Ctrl K</kbd>
-        </button>
-        <button class="btn-topo" id="btnAjuda" aria-label="Abrir ajuda">
-          <svg class="ico"><use href="#i-ajuda"/></svg><span>Ajuda</span>
-        </button>
-        <button class="btn-topo" id="btnTema" aria-label="Alternar modo claro/escuro" aria-pressed="false">
-          <svg class="ico"><use href="#i-tema"/></svg><span>Tema</span>
-        </button>
-      </div>
-      <div class="topo-relogio">
-        <div id="dataAtual"></div>
-        <div class="hora" id="horaAtual"></div>
-      </div>
-    </div>
-  </header>
+      <nav class="gpex-abas" id="abas" role="tablist" aria-label="Seções do sistema">
+        <button class="gpex-aba active" role="tab" aria-selected="true" data-painel="visao"><svg class="ico"><use href="#i-visao"/></svg>Visão Geral</button>
+        <button class="gpex-aba" role="tab" aria-selected="false" data-painel="processos"><svg class="ico"><use href="#i-processos"/></svg>Processos e Riscos</button>
+        <button class="gpex-aba" role="tab" aria-selected="false" data-painel="matriz"><svg class="ico"><use href="#i-matriz"/></svg>Matriz de Riscos</button>
+        <button class="gpex-aba" role="tab" aria-selected="false" data-painel="governanca"><svg class="ico"><use href="#i-governanca"/></svg>Governança</button>
+        <button class="gpex-aba" role="tab" aria-selected="false" data-painel="regimento"><svg class="ico"><use href="#i-regimento"/></svg>Regimento Interno</button>
+        <button class="gpex-aba" role="tab" aria-selected="false" data-painel="combustivel"><svg class="ico"><use href="#i-combustivel"/></svg>Combustível (Classe III)</button>
+        <button class="gpex-aba" role="tab" aria-selected="false" data-painel="calendario"><svg class="ico"><use href="#i-calendario"/></svg>Calendário de Obrigações</button>
+        <button class="gpex-aba" role="tab" aria-selected="false" data-painel="fontes"><svg class="ico"><use href="#i-fontes"/></svg>Fontes e Doutrina</button>
+      </nav>
+      <div class="sidebar-foot"><span id="rodapeVersaoSidebar"></span></div>
+    </aside>
 
-  <main class="container" id="conteudo">
-    <div class="aviso">
-      Metodologia GPEX / Projeto Piloto 2.0 de Mapeamento de Processos (CMSE).
-      Os modelos abaixo são de referência e devem ser ajustados ao processo real da OM.
-      A publicação no ASE é manual, por usuário autorizado, após revisão humana.
-    </div>
+    <div class="app-content">
+      <header class="topbar">
+        <div class="topbar-titulo">
+          <h1 id="tituloSecao">Visão Geral</h1>
+          <p class="sub">4ª Seção (Seção de Logística) · Mapeamento de Processos e Gestão de Riscos</p>
+        </div>
+        <div class="topbar-acoes">
+          <button class="btn-topo" id="btnBusca" aria-label="Abrir busca global">
+            <svg class="ico"><use href="#i-busca"/></svg><span>Buscar</span><kbd>Ctrl K</kbd>
+          </button>
+          <button class="btn-topo" id="btnAjuda" aria-label="Abrir ajuda">
+            <svg class="ico"><use href="#i-ajuda"/></svg><span>Ajuda</span>
+          </button>
+          <button class="btn-topo" id="btnTema" aria-label="Alternar modo claro/escuro" aria-pressed="false">
+            <svg class="ico"><use href="#i-tema"/></svg><span>Tema</span>
+          </button>
+          <div class="topo-relogio">
+            <div id="dataAtual"></div>
+            <div class="hora" id="horaAtual"></div>
+          </div>
+        </div>
+      </header>
 
-    <div class="gpex-abas" id="abas" role="tablist" aria-label="Seções do sistema">
-      <button class="gpex-aba active" role="tab" aria-selected="true" data-painel="visao"><svg class="ico"><use href="#i-visao"/></svg>Visao Geral</button>
-      <button class="gpex-aba" role="tab" aria-selected="false" data-painel="processos"><svg class="ico"><use href="#i-processos"/></svg>Processos e Riscos</button>
-      <button class="gpex-aba" role="tab" aria-selected="false" data-painel="matriz"><svg class="ico"><use href="#i-matriz"/></svg>Matriz de Riscos</button>
-      <button class="gpex-aba" role="tab" aria-selected="false" data-painel="governanca"><svg class="ico"><use href="#i-governanca"/></svg>Governança (EB10/EB20)</button>
-      <button class="gpex-aba" role="tab" aria-selected="false" data-painel="regimento"><svg class="ico"><use href="#i-regimento"/></svg>Regimento Interno</button>
-      <button class="gpex-aba" role="tab" aria-selected="false" data-painel="combustivel"><svg class="ico"><use href="#i-combustivel"/></svg>Combustível (Classe III)</button>
-      <button class="gpex-aba" role="tab" aria-selected="false" data-painel="calendario"><svg class="ico"><use href="#i-calendario"/></svg>Calendário de Obrigações</button>
-      <button class="gpex-aba" role="tab" aria-selected="false" data-painel="fontes"><svg class="ico"><use href="#i-fontes"/></svg>Fontes e Doutrina</button>
-    </div>
+      <main class="container" id="conteudo">
+        <div class="aviso">
+          Metodologia GPEX / Projeto Piloto 2.0 de Mapeamento de Processos (CMSE).
+          Os modelos abaixo são de referência e devem ser ajustados ao processo real da OM.
+          A publicação no ASE é manual, por usuário autorizado, após revisão humana.
+        </div>
 
     <!-- VISao GERAL -->
     <section class="painel active" id="painel-visao">
@@ -481,7 +490,9 @@
       <input type="file" id="arquivoBackup" accept="application/json,.json" hidden>
       <button class="btn btn-sm" id="btnChangelog">Ver changelog</button>
     </div>
-  </main>
+      </main>
+    </div>
+  </div>
 
   <div class="overlay" id="overlayBusca" hidden>
     <div class="paleta" role="dialog" aria-modal="true" aria-label="Busca global">

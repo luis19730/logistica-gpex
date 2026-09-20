@@ -70,6 +70,12 @@
     não.onclick = function () { done(false); };
   }
 
+  var TITULOS = {
+    visao: "Visão Geral", processos: "Processos e Riscos", matriz: "Matriz de Riscos",
+    governanca: "Governança (EB10 / EB20)", regimento: "Regimento Interno",
+    combustivel: "Combustível (Classe III)", calendario: "Calendário de Obrigações", fontes: "Fontes e Doutrina"
+  };
+
   function ativarPainel(nome, opts) {
     if (TABS.indexOf(nome) === -1) nome = "visao";
     document.querySelectorAll(".gpex-aba").forEach(function (x) {
@@ -79,6 +85,7 @@
     });
     document.querySelectorAll(".painel").forEach(function (x) { x.classList.remove("active"); });
     var painel = $("painel-" + nome); if (painel) painel.classList.add("active");
+    if ($("tituloSecao") && TITULOS[nome]) $("tituloSecao").textContent = TITULOS[nome];
     try { localStorage.setItem("gpex_tab", nome); } catch (e) { }
     if (!opts || !opts.noHash) {
       var h = "#" + nome;
@@ -1373,6 +1380,8 @@
     }
     var aviso = $("revisaoAviso");
     document.querySelectorAll("[data-qtd-processos]").forEach(function (e) { e.textContent = DB.processos.length; });
+    var sb = $("rodapeVersaoSidebar");
+    if (sb) sb.textContent = "v" + DB.meta.versao + " · " + DB.processos.length + " processos";
     if (aviso && DB.meta.atualizado) {
       var dias = Math.floor((Date.now() - new Date(DB.meta.atualizado + "T00:00:00").getTime()) / 86400000);
       var limite = DB.meta.revisaoValidadeDias || 90;
