@@ -19,11 +19,12 @@ window.GPEX_E4 = (function () {
     titulo: "Mapeamento de Processos e Gestão de Riscos",
     subtitulo: "4ª Seção / E/4 (Seção de Logística) - Cmdo Bda Inf Amv",
     metodologia: "GPEX / Projeto Piloto 2.0 de Mapeamento de Processos (CMSE)",
-    versao: "2.0.0",
+    versao: "2.1.0",
     atualizado: "2026-09-18",
     revisaoValidadeDias: 90,
     apetiteRisco: "Baixo",
     changelog: [
+      { versao: "2.1.0", data: "2026-09-18", itens: ["P0: corrige &apos; no escXml, datas em fuso local, identificadores ASCII, remove órfãos e unifica id = código (E4-01 a E4-12)", "P1: normas com situação/verificadoEm; EB20-D-11.001 como provável revogada; Regimento marcado como MODELO", "P4: id único no combustível, prefers-color-scheme/reduced-motion, PWA; AML rotulado como experimental"] },
       { versao: "2.0.0", data: "2026-09-18", itens: ["Versionamento, PWA offline, JSON validado e testes", "Campos de risco (inerente/residual, KRI, próxima revisão)", "Exportações .ics, backup JSON e relatório de combustível"] },
       { versao: "1.1.0", data: "2026-09-18", itens: ["Ajuste ao Regimento Interno (Arts. 1º a 6º)", "Sistemas SisLogMnt e SIGELOG (WEB)"] },
       { versao: "1.0.0", data: "2026-09-18", itens: ["Versão inicial: 12 processos, matriz P×I, exportações ARIS"] }
@@ -898,7 +899,7 @@ window.GPEX_E4 = (function () {
     { etapa: "1. Identificação", descricao: "Identificar os riscos do processo e suas fontes (interno/externo)." },
     { etapa: "2. Análise", descricao: "Analisar causa, consequência, probabilidade e impacto de cada risco." },
     { etapa: "3. Avaliação", descricao: "Comparar o nível de risco (P x I) com os critérios da OM e priorizar." },
-    { etapa: "4. Tratamento", descricao: "Definir controle/mitigação, responsável e prazo; decidir tratar, transferir, evitar ou aceitar." },
+    { etapa: "4. Tratamento", descricao: "Definir controle/mitigação, responsável e prazo; escolher a resposta: Evitar, Reduzir, Compartilhar ou Aceitar." },
     { etapa: "5. Monitoramento", descricao: "Acompanhar indicadores, reavaliar periodicamente e reportar ao Cmt." }
   ];
 

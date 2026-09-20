@@ -3,11 +3,20 @@
     "titulo": "Mapeamento de Processos e Gestão de Riscos",
     "subtitulo": "4ª Seção / E/4 (Seção de Logística) - Cmdo Bda Inf Amv",
     "metodologia": "GPEX / Projeto Piloto 2.0 de Mapeamento de Processos (CMSE)",
-    "versao": "2.0.0",
+    "versao": "2.1.0",
     "atualizado": "2026-09-18",
     "revisaoValidadeDias": 90,
     "apetiteRisco": "Baixo",
     "changelog": [
+      {
+        "versao": "2.1.0",
+        "data": "2026-09-18",
+        "itens": [
+          "P0: corrige &apos; no escXml, datas em fuso local, identificadores ASCII, remove órfãos e unifica id = código (E4-01 a E4-12)",
+          "P1: normas com situação/verificadoEm; EB20-D-11.001 como provável revogada; Regimento marcado como MODELO",
+          "P4: id único no combustível, prefers-color-scheme/reduced-motion, PWA; AML rotulado como experimental"
+        ]
+      },
       {
         "versao": "2.0.0",
         "data": "2026-09-18",

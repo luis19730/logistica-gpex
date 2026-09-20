@@ -14,6 +14,20 @@ Desktop.ini
 node_modules/
 package-lock.json
 
+# Projetos locais nao relacionados a este repositorio
+.agents/
+.next/
+dist/
+chesscodex-go/
+painel-pncp/
+projeto-pregoes-brasil/
+review-ai/
+neon.ts
+next-env.d.ts
+parse_csv_missoes.js
+push_missoes_csv.js
+skills-lock.json
+
 # Arquivos de outros projetos / temporarios
 .env.example
 .env

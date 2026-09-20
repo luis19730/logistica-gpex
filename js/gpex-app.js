@@ -467,7 +467,7 @@
       '<button class="btn btn-sm" data-exp="matriz">Copiar matriz de riscos</button>' +
       '<button class="btn btn-sm btn-primary" data-exp="resumo">Copiar resumo completo (ASE)</button>' +
       '<button class="btn btn-sm" data-aris="bpmn">ARIS: BPMN (.bpmn)</button>' +
-      '<button class="btn btn-sm" data-aris="aml">ARIS: AML (.aml)</button>' +
+      '<button class="btn btn-sm" data-aris="aml">ARIS: AML (.aml) - experimental</button>' +
       '<button class="btn btn-sm" data-aris="smart">ARIS: Smart Design (.csv)</button>' +
       '<button class="btn btn-sm" id="btnImprimir"><svg class="ico"><use href="#i-print"/></svg>Imprimir / PDF</button>' +
       "</div>" +
@@ -646,6 +646,10 @@
     return { cota: 0, mes: "", itens: [] };
   }
   function salvarCbo() { try { localStorage.setItem(CBO_KEY, JSON.stringify(cbo)); } catch (e) { } }
+  function novoId() {
+    try { if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID(); } catch (e) { }
+    return "id-" + Date.now() + "-" + Math.random().toString(36).slice(2, 10);
+  }
   function hojeISO() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
   function mesAtual() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"); }
 
@@ -700,7 +704,7 @@
       return x.viatura.toLowerCase() === viatura.toLowerCase() && x.data === data && Math.abs(x.litros - litros) < 0.01 && (x.km || 0) === km;
     });
     if (dup) { toast("Registro duplicado (mesma viatura, data, litros e hodômetro)."); return; }
-    cbo.itens.push({ id: Date.now(), data: data, viatura: viatura, tipo: $("cboTipo").value, litros: litros, km: km, resp: $("cboResp").value.trim() });
+    cbo.itens.push({ id: novoId(), data: data, viatura: viatura, tipo: $("cboTipo").value, litros: litros, km: km, resp: $("cboResp").value.trim() });
     salvarCbo();
     $("cboViatura").value = ""; $("cboLitros").value = ""; $("cboKm").value = "";
     renderCombustivel();
@@ -1102,7 +1106,7 @@
       "2) GERE O ARQUIVO",
       "   Em cada processo, logo abaixo do fluxograma, use a barra 'Exportar fluxograma para o ARIS'.",
       "   - BPMN 2.0 (.bpmn): formato aberto; importar no ARIS Cloud/ARIS Platform, bpmn.io ou Camunda.",
-      "   - AML (.aml): ARIS Markup Language (modelo EPC); melhor esforço; importar no ARIS Cloud/Platform.",
+      "   - AML (.aml): EXPERIMENTAL - o formato pode não ser aceito pelo ARIS; gerar a partir de um AML de exemplo exportado do ARIS antes de usar (ver pendências no README).",
       "   - Smart Design (.csv): arquivo de planilha para o ARIS Express.",
       "   - Copiar planilha (ARIS Express): copia a planilha em colunas; cole com Ctrl+V no Smart Design.",
       "   - Copiar Mermaid: copia o fluxo em texto (Mermaid/EPC) para outra ferramenta.",
@@ -1368,6 +1372,7 @@
         " - " + DB.processos.length + " processos / " + DB.todosRiscos().length + " riscos";
     }
     var aviso = $("revisaoAviso");
+    document.querySelectorAll("[data-qtd-processos]").forEach(function (e) { e.textContent = DB.processos.length; });
     if (aviso && DB.meta.atualizado) {
       var dias = Math.floor((Date.now() - new Date(DB.meta.atualizado + "T00:00:00").getTime()) / 86400000);
       var limite = DB.meta.revisaoValidadeDias || 90;
@@ -1398,8 +1403,9 @@
       try { localStorage.setItem("gpex_tema", t); } catch (e) { }
       if (btn) btn.setAttribute("aria-pressed", t === "escuro" ? "true" : "false");
     }
-    var salvo = "claro";
-    try { salvo = localStorage.getItem("gpex_tema") || "claro"; } catch (e) { }
+    var salvo = null;
+    try { salvo = localStorage.getItem("gpex_tema"); } catch (e) { }
+    if (!salvo) salvo = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "escuro" : "claro";
     aplicar(salvo);
     if (btn) btn.addEventListener("click", function () {
       aplicar(document.documentElement.getAttribute("data-tema") === "escuro" ? "claro" : "escuro");
@@ -1515,7 +1521,7 @@
       if (campos.length < 4) { erros++; return; }
       var data = campos[0], viatura = campos[1], tipo = campos[2] || "Outros", litros = Number(String(campos[3]).replace(",", ".")), km = Number(campos[4]) || 0, resp = campos[5] || "";
       if (!viatura || !(litros > 0)) { erros++; return; }
-      cbo.itens.push({ id: Date.now() + idx, data: data, viatura: viatura, tipo: tipo, litros: litros, km: km, resp: resp });
+      cbo.itens.push({ id: novoId(), data: data, viatura: viatura, tipo: tipo, litros: litros, km: km, resp: resp });
       importados++;
     });
     salvarCbo(); renderCombustivel();
