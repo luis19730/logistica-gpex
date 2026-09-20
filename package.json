@@ -1,0 +1,24 @@
+{
+  "name": "logistica-gpex",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Sistema estático de apoio ao mapeamento de processos e gestão de riscos da 4ª Seção (E/4) - Cmdo Bda Inf Amv",
+  "scripts": {
+    "dados": "node scripts/exportar-dados.js",
+    "validar": "node scripts/validar-dados.js",
+    "test": "node --test tests",
+    "ci": "npm run dados && npm run validar && npm test",
+    "backup": "node firebase-backup.js",
+    "backup:scheduler": "node backup-scheduler.js",
+    "backup:status": "node backup-status.js"
+  },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "@neon/config": "^1.3.1",
+    "@neon/env": "^1.2.2",
+    "dotenv": "^16.6.1",
+    "exceljs": "^4.4.0",
+    "firebase-admin": "^14.2.0",
+    "node-cron": "^4.6.0"
+  }
+}

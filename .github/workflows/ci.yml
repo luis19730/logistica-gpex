@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [main, melhorias-v2]
+  pull_request:
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Gerar JSON derivado
+        run: node scripts/exportar-dados.js
+      - name: Validar dados
+        run: node scripts/validar-dados.js
+      - name: Testes
+        run: node --test tests

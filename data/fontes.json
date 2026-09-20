@@ -1,0 +1,104 @@
+[
+  {
+    "item": 1,
+    "nome": "PGE Bda Inf Amv 2024-2027",
+    "descricao": "Plano de Gestão Estratégica da Brigada.",
+    "acesso": "Intranet Bda Inf Amv - Portais da Gestão"
+  },
+  {
+    "item": 2,
+    "nome": "Plano de Gestão OMDS",
+    "descricao": "Plano de gestão da organização militar.",
+    "acesso": "Intranet Bda Inf Amv - Portais da Gestão"
+  },
+  {
+    "item": 3,
+    "nome": "PGC Bda Amv",
+    "descricao": "Plano de Gestão de Contratacoes.",
+    "acesso": "Intranet Bda Inf Amv - Portais da Gestão"
+  },
+  {
+    "item": 4,
+    "nome": "Plano de Gestão de Riscos - Integridade e Controle OMDS",
+    "descricao": "Riscos de integridade e controle da OM.",
+    "acesso": "Intranet Bda Inf Amv - Portais da Gestão"
+  },
+  {
+    "item": 5,
+    "nome": "Capacitação GPEX",
+    "descricao": "Treinamento na metodologia GPEX.",
+    "acesso": "Intranet Bda Inf Amv"
+  },
+  {
+    "item": 6,
+    "nome": "Capacitação Processos Organizacionais",
+    "descricao": "Mapeamento de processos.",
+    "acesso": "Intranet Bda Inf Amv"
+  },
+  {
+    "item": 7,
+    "nome": "Capacitação Gestão de Riscos",
+    "descricao": "Metodologia de gestão de riscos.",
+    "acesso": "Intranet Bda Inf Amv"
+  },
+  {
+    "item": 8,
+    "nome": "Capacitação ARIS Express",
+    "descricao": "Modelagem de processos (EPC).",
+    "acesso": "Intranet Bda Inf Amv"
+  },
+  {
+    "item": 9,
+    "nome": "Memento ARIS Express",
+    "descricao": "Guia rapido da ferramenta ARIS.",
+    "acesso": "Intranet Bda Inf Amv"
+  },
+  {
+    "item": 10,
+    "nome": "Legislação de Governança",
+    "descricao": "Normas de governança aplicaveis.",
+    "acesso": "Intranet Bda Inf Amv"
+  },
+  {
+    "item": 11,
+    "nome": "Legislação de Gestão de Riscos",
+    "descricao": "Normas de gestão de riscos.",
+    "acesso": "Intranet Bda Inf Amv"
+  },
+  {
+    "item": 12,
+    "nome": "Ordens de Serviço / Instrução / Notas de coordenação",
+    "descricao": "Atos internos da OM.",
+    "acesso": "Intranet Bda Inf Amv"
+  },
+  {
+    "item": 13,
+    "nome": "Acesso ao GPEX",
+    "descricao": "Portal da Governança e Gestão do EME.",
+    "url": "https://gpex.eb.mil.br/#init"
+  },
+  {
+    "item": 14,
+    "nome": "Acesso Projeto Piloto de Mapeamento de Processo CMSE",
+    "descricao": "Sistema ASE (login manual).",
+    "url": "http://ase.cmse.eb.mil.br/ase/processos-2.0-OM/login.php?return=true"
+  },
+  {
+    "item": 15,
+    "nome": "Modelos de Documentos",
+    "descricao": "Modelos oficiais de documentos.",
+    "acesso": "Intranet Bda Inf Amv"
+  },
+  {
+    "item": 16,
+    "nome": "Processos Prioritários das Seções Mapeados",
+    "descricao": "Processos ja mapeados pelas seções.",
+    "acesso": "Intranet Bda Inf Amv"
+  },
+  {
+    "item": 17,
+    "nome": "Portais da Gestão",
+    "descricao": "Pagina 17 da intranet - índice dos portais.",
+    "acesso": "Intranet Bda Inf Amv"
+  }
+]

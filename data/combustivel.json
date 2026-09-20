@@ -1,0 +1,16 @@
+{
+  "tipos": [
+    "Diesel S10",
+    "Diesel S500",
+    "Gasolina",
+    "Etanol",
+    "ARLA 32",
+    "Óleo lubrificante",
+    "Outros"
+  ],
+  "descricao": "Controle da Classe III. Registre cada abastecimento com viatura, hodômetro e litros. O sistema calcula o consumo (km/L) e compara o total abastecido com a cota do período.",
+  "unidades": [
+    "km/L",
+    "L"
+  ]
+}

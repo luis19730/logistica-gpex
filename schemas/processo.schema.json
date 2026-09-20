@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://luis19730.github.io/logistica-gpex/schemas/processo.schema.json",
+  "title": "Processo do E/4",
+  "type": "object",
+  "required": ["id", "codigo", "titulo", "area", "objetivo", "etapas", "responsaveis", "riscos", "fontes"],
+  "additionalProperties": true,
+  "properties": {
+    "id": { "type": "string", "pattern": "^p[0-9]{2}$" },
+    "codigo": { "type": "string", "pattern": "^E4-[0-9]{2}$" },
+    "titulo": { "type": "string", "minLength": 5 },
+    "area": { "type": "string", "minLength": 3 },
+    "classes": { "type": "array", "items": { "type": "string" } },
+    "objetivo": { "type": "string", "minLength": 20 },
+    "etapas": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 3 } },
+    "responsaveis": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 2 } },
+    "fontes": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 3 } },
+    "riscos": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["descricao", "causa", "consequencia", "probabilidade", "impacto", "controle"],
+        "properties": {
+          "descricao": { "type": "string", "minLength": 5 },
+          "causa": { "type": "string", "minLength": 5 },
+          "consequencia": { "type": "string", "minLength": 5 },
+          "probabilidade": { "type": "integer", "minimum": 1, "maximum": 5 },
+          "impacto": { "type": "integer", "minimum": 1, "maximum": 5 },
+          "controle": { "type": "string", "minLength": 5 },
+          "resposta": { "type": "string" },
+          "responsavel": { "type": "string" },
+          "prazo": { "type": "string" },
+          "kri": { "type": "string" },
+          "proximaRevisao": { "type": "string" }
+        }
+      }
+    }
+  }
+}

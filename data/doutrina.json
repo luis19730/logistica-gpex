@@ -1,0 +1,51 @@
+[
+  {
+    "sigla": "Regimento Interno",
+    "titulo": "Regimento Interno da 4ª Seção / E/4",
+    "aplicacao": "Finalidade e subordinação (Art. 1º), missão (Art. 2º), competências (Art. 3º, I a VI) e atribuições dos integrantes (Arts. 4º a 6º)."
+  },
+  {
+    "sigla": "R-1 (RISG)",
+    "titulo": "Regulamento Interno e dos Serviços Gerais",
+    "aplicacao": "Atribuições da E/4 (art. 34-35): suprimento, manutenção, transporte, engenharia, serviços gerais e apoio as demais funções logísticas."
+  },
+  {
+    "sigla": "MC 4.0 Log Mil Ter",
+    "titulo": "Doutrina de Logística Militar Terrestre",
+    "aplicacao": "Funções logísticas: Suprimento, Manutenção, Transporte, Engenharia, Salvamento, Recursos Humanos e Saúde."
+  },
+  {
+    "sigla": "EB70-MC-10.317",
+    "titulo": "Manual de Campanha do Batalhão Logístico",
+    "aplicacao": "Organização e emprego do B Log de apoio às OMDS da Brigada."
+  },
+  {
+    "sigla": "GPEX / EME",
+    "titulo": "Portal da Governança e Gestão do EME",
+    "aplicacao": "Metodologia de mapeamento de processos e Política de Gestão de Riscos.",
+    "url": "https://portalgovernanca.eme.eb.mil.br/"
+  },
+  {
+    "sigla": "Port. 1.582-EME",
+    "titulo": "Política de Governança do Exército (EB20-N-11.002)",
+    "aplicacao": "Diretrizes de governança pública aplicaveis a gestão de riscos e controles internos.",
+    "url": "https://portalgovernanca.eme.eb.mil.br/images/documentos/GESTAO%20ORGANIZACIONAL/NORMAS/port_1582-eme_imptc_politica_gov_eb20-n-11.002.pdf"
+  },
+  {
+    "sigla": "Port. 2.508-C Ex",
+    "titulo": "Plano de Longo Prazo de Governança (EB10-P-01.007)",
+    "aplicacao": "Norma de governança e gestão que orienta o mapeamento de processos organizacionais.",
+    "url": "https://portalgovernanca.eme.eb.mil.br/images/documentos/GESTAO%20ORGANIZACIONAL/NORMAS/port_2508-c%20ex_pltc_governanca_eb10-p-01.007.pdf"
+  },
+  {
+    "sigla": "Port. 2.430-C Ex",
+    "titulo": "Programa de Integridade do Exército",
+    "aplicacao": "Base para os riscos de integridade e controle (Plano de Gestão de Riscos OMDS).",
+    "url": "https://portalgovernanca.eme.eb.mil.br/images/documentos/RISCOS/NORMAS/port_2430_c_ex_prg_integridade_2025%201.pdf"
+  },
+  {
+    "sigla": "ASE / CMSE",
+    "titulo": "Projeto Piloto 2.0 de Mapeamento de Processos",
+    "aplicacao": "Fluxo de preenchimento e públicação dos processos organizacionais no ASE."
+  }
+]

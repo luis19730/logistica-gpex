@@ -1,0 +1,128 @@
+{
+  "meta": {
+    "titulo": "Mapeamento de Processos e Gestão de Riscos",
+    "subtitulo": "4ª Seção / E/4 (Seção de Logística) - Cmdo Bda Inf Amv",
+    "metodologia": "GPEX / Projeto Piloto 2.0 de Mapeamento de Processos (CMSE)",
+    "versao": "1.1.0",
+    "atualizado": "2026-09-18",
+    "org": "E/4 (4ª Seção)",
+    "orgCurto": "E/4",
+    "subordinacao": "Chefe do Estado-Maior da Brigada (Ch EM Bda)",
+    "aviso": "Aviso: o domínio ase.cmse.eb.mil.br e as intranets citadas são de acesso restrito. O preenchimento no ASE é manual, por usuário autorizado. Este sistema apenas prepara o conteúdo (dados do processo, etapas, fluxo, matriz de riscos e resumo) para colagem."
+  },
+  "escala": [
+    {
+      "min": 1,
+      "max": 4,
+      "nome": "Baixo",
+      "cor": "verde",
+      "acao": "Aceitar e monitorar periódicamente."
+    },
+    {
+      "min": 5,
+      "max": 9,
+      "nome": "Médio",
+      "cor": "amarelo",
+      "acao": "Reduzir com controles e monitorar."
+    },
+    {
+      "min": 10,
+      "max": 14,
+      "nome": "Alto",
+      "cor": "laranja",
+      "acao": "Tratamento prioritário, com responsável e prazo."
+    },
+    {
+      "min": 15,
+      "max": 25,
+      "nome": "Extremo",
+      "cor": "vermelho",
+      "acao": "Tratamento imediato e decisão do Cmt."
+    }
+  ],
+  "riscoEB10": {
+    "base": "EB10-P-01.004 (Política de Riscos do Exército, 2ª ed., 2018) e EB20-D-02.010 (Diretriz Reguladora da Política de Gestão de Riscos, 2019)",
+    "probabilidade": [
+      {
+        "n": 1,
+        "rotulo": "Raro",
+        "descricao": "Pode ocorrer somente em circunstâncias excepcionais."
+      },
+      {
+        "n": 2,
+        "rotulo": "Improvável",
+        "descricao": "Pode ocorrer em algum momento, com baixa frequência."
+      },
+      {
+        "n": 3,
+        "rotulo": "Possível",
+        "descricao": "Pode ocorrer em algum momento."
+      },
+      {
+        "n": 4,
+        "rotulo": "Provável",
+        "descricao": "Provavelmente ocorrerá na maioria das circunstâncias."
+      },
+      {
+        "n": 5,
+        "rotulo": "Quase certo",
+        "descricao": "Espera-se que ocorra na maioria das circunstâncias."
+      }
+    ],
+    "impacto": [
+      {
+        "n": 1,
+        "rotulo": "Insignificante",
+        "descricao": "Consequência irrelevante ao processo."
+      },
+      {
+        "n": 2,
+        "rotulo": "Menor",
+        "descricao": "Consequência pequena, absorvida pela rotina."
+      },
+      {
+        "n": 3,
+        "rotulo": "Moderado",
+        "descricao": "Compromete parcialmente o resultado do processo."
+      },
+      {
+        "n": 4,
+        "rotulo": "Maior",
+        "descricao": "Compromete o resultado e exige decisão do escalão superior."
+      },
+      {
+        "n": 5,
+        "rotulo": "Extremo",
+        "descricao": "Inviabiliza o processo, gera responsabilização ou risco à vida."
+      }
+    ],
+    "respostas": [
+      {
+        "codigo": "Evitar",
+        "descricao": "Eliminar a causa ou não executar a atividade de risco."
+      },
+      {
+        "codigo": "Reduzir",
+        "descricao": "Adotar controles que diminuam probabilidade e/ou impacto."
+      },
+      {
+        "codigo": "Compartilhar",
+        "descricao": "Transferir/partilhar o risco com outro órgão ou escalão."
+      },
+      {
+        "codigo": "Aceitar",
+        "descricao": "Conviver com o risco, mantendo monitoramento."
+      }
+    ],
+    "categorias": [
+      "Estratégico",
+      "Operacional",
+      "Logístico",
+      "Financeiro/Orçamentário",
+      "Integridade/Conformidade",
+      "Pessoas",
+      "Imagem/Reputação",
+      "Segurança/Ambiental"
+    ]
+  }
+}

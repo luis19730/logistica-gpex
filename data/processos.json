@@ -1,0 +1,538 @@
+[
+  {
+    "id": "p01",
+    "codigo": "E4-01",
+    "titulo": "Suprimento (Classes I, III e V) às OMDS da Bda",
+    "area": "Suprimento",
+    "classes": [
+      "I",
+      "III",
+      "V"
+    ],
+    "objetivo": "Garantir o abastecimento contínuo das OMDS da Bda nas Classes I (víveres), III (combustível/lubrificantes) e V (munição), conforme os níveis de suprimento estabelecidos.",
+    "etapas": [
+      "Levantar as necessidades de suprimento junto às OMDS",
+      "Consolidar o pedido de suprimento da Bda",
+      "Encaminhar o pedido ao Batalhão Logístico (B Log)",
+      "Receber e conferir o material entregue pelo B Log",
+      "Distribuir o material às OMDS solicitantes",
+      "Atualizar a escrituração e os níveis de estoque"
+    ],
+    "responsaveis": [
+      "E/4 (gestão)",
+      "OMDS da Bda (levantamento)",
+      "B Log (provedor)"
+    ],
+    "riscos": [
+      {
+        "descricao": "Ruptura de estoque de uma classe de suprimento",
+        "causa": "Levantamento de necessidades feito com atraso/incompleto",
+        "consequencia": "OMDS sem suprimento na data prevista",
+        "probabilidade": 3,
+        "impacto": 4,
+        "controle": "Padronizar prazo/formulário de levantamento; acompanhar níveis de estoque semanalmente"
+      },
+      {
+        "descricao": "Recebimento de material fora de especificação ou danificado",
+        "causa": "Falha na conferência no recebimento",
+        "consequencia": "Material inutilizável chega às OMDS",
+        "probabilidade": 2,
+        "impacto": 3,
+        "controle": "Checklist de conferência obrigatório no recebimento"
+      }
+    ],
+    "fontes": [
+      "R-1 (RISG) art. 34-35",
+      "MC 4.0 Log Mil Ter",
+      "EB70-MC-10.317"
+    ]
+  },
+  {
+    "id": "p02",
+    "codigo": "E4-02",
+    "titulo": "Manutenção de viaturas e armamento (2º escalão)",
+    "area": "Manutenção",
+    "classes": [
+      "IX"
+    ],
+    "objetivo": "Assegurar que viaturas e armamento estejam em condições de emprego, por meio da manutenção preventiva e corretiva de 2º escalão.",
+    "etapas": [
+      "Programar inspeções técnicas periódicas do material",
+      "Executar a manutenção de 1º escalão nas OMDS",
+      "Encaminhar material que exige manutenção de 2º escalão a oficina",
+      "Realizar a manutenção de 2º escalão",
+      "Registrar os trabalhos executados e atualizar a escrituração",
+      "Devolver o material à OMDS de origem"
+    ],
+    "responsaveis": [
+      "E/4 (gestão)",
+      "Oficina de manutenção",
+      "OMDS da Bda"
+    ],
+    "riscos": [
+      {
+        "descricao": "Viatura/armamento fora de uso por atraso na manutenção",
+        "causa": "Falta de peças de reposicao ou ferramental na oficina",
+        "consequencia": "Reducao da capacidade operacional da OMDS",
+        "probabilidade": 3,
+        "impacto": 4,
+        "controle": "Antecipar pedido de peças criticas; manter estoque mínimo"
+      },
+      {
+        "descricao": "Acidente durante a manutenção",
+        "causa": "Uso incorreto de EPI/dispositivos de segurança na oficina",
+        "consequencia": "Lesão a militar ou dano a equipamento",
+        "probabilidade": 2,
+        "impacto": 4,
+        "controle": "Fiscalização do uso de EPI; instrução periódica"
+      }
+    ],
+    "fontes": [
+      "R-1 (RISG) art. 34-35",
+      "MC 4.0 Log Mil Ter",
+      "EB70-MC-10.317"
+    ]
+  },
+  {
+    "id": "p07",
+    "codigo": "E4-03",
+    "titulo": "Transporte - planejamento e execução de comboio logístico",
+    "area": "Transporte",
+    "classes": [
+      "III"
+    ],
+    "objetivo": "Planejar e executar o transporte de suprimento, material e pessoal entre a Bda, o B Log e às OMDS, com segurança e no prazo previsto.",
+    "etapas": [
+      "Levantar a necessidade de transporte (carga, volume, prazo)",
+      "Planejar o itinerário e escalar viaturas e motoristas",
+      "Verificar as condições de segurança das viaturas antes da saída",
+      "Executar o deslocamento/comboio",
+      "Conferir a carga na chegada ao destino",
+      "Registrar consumo de combustível e ocorrências da viagem"
+    ],
+    "responsaveis": [
+      "E/4",
+      "Chefe do comboio",
+      "Motoristas escalados"
+    ],
+    "riscos": [
+      {
+        "descricao": "Atraso ou acidente no deslocamento do comboio",
+        "causa": "Planejamento de itinerário sem levantamento previo",
+        "consequencia": "Atraso na entrega ou dano a viatura/carga/pessoal",
+        "probabilidade": 2,
+        "impacto": 4,
+        "controle": "Reconhecimento previo de itinerário; briefing de segurança"
+      },
+      {
+        "descricao": "Extravio ou avaria de carga durante o transporte",
+        "causa": "Fixação inadequada da carga na viatura",
+        "consequencia": "Perda de material e necessidade de reposicao",
+        "probabilidade": 2,
+        "impacto": 3,
+        "controle": "Checklist de carregamento e amarração da carga"
+      }
+    ],
+    "fontes": [
+      "MC 4.0 Log Mil Ter",
+      "EB70-MC-10.317",
+      "R-1 (RISG) art. 34-35"
+    ]
+  },
+  {
+    "id": "p09",
+    "codigo": "E4-04",
+    "titulo": "Saúde (função logística) - suprimento e evacuação",
+    "area": "Saúde",
+    "classes": [
+      "VIII"
+    ],
+    "objetivo": "Garantir o suprimento de material de saúde (Classe VIII) e a capacidade de evacuação de militares doentes/feridos.",
+    "etapas": [
+      "Levantar a necessidade de material de saúde junto a FS",
+      "Solicitar reposicao do material de Classe VIII",
+      "Verificar disponibilidade de viatura/meio de evacuação",
+      "Planejar o fluxo de evacuação em atividades de campo/instrução",
+      "Registrar consumo e validade dos medicamentos controlados"
+    ],
+    "responsaveis": [
+      "E/4",
+      "Farmácia / Formação Sanitária (FS)"
+    ],
+    "riscos": [
+      {
+        "descricao": "Indisponibilidade de meio de evacuação em atividade de campo",
+        "causa": "Ausencia de viatura/ambulância escalada para a atividade",
+        "consequencia": "Atraso no atendimento a militar acidentado",
+        "probabilidade": 2,
+        "impacto": 5,
+        "controle": "Escalar meio de evacuação dedicado em exercícios de risco"
+      },
+      {
+        "descricao": "Medicamento vencido ou fora de especificação em uso",
+        "causa": "Falha no controle de validade do estoque",
+        "consequencia": "Risco a saúde do militar atendido",
+        "probabilidade": 2,
+        "impacto": 4,
+        "controle": "Controle periódico de validade (FEFO) e registro de descarte"
+      }
+    ],
+    "fontes": [
+      "MC 4.0 Log Mil Ter (função Saúde)",
+      "Legislação sanitária"
+    ]
+  },
+  {
+    "id": "p11",
+    "codigo": "E4-05",
+    "titulo": "Salvamento - recuperacao de material danificado",
+    "area": "Salvamento",
+    "classes": [
+      "IX"
+    ],
+    "objetivo": "Recuperar o máximo de material danificado (viaturas, armamento, equipamento) e dar a destinação correta ao que não for recuperável.",
+    "etapas": [
+      "Identificar e classificar o material danificado",
+      "Encaminhar o material recuperável a oficina de manutenção",
+      "Providenciar a baixa/descarte do material irrecuperável",
+      "Registrar o resultado do salvamento e atualizar a escrituração"
+    ],
+    "responsaveis": [
+      "E/4",
+      "Equipe de salvamento",
+      "Oficina"
+    ],
+    "riscos": [
+      {
+        "descricao": "Material recuperável descartado indevidamente",
+        "causa": "Classificação incorreta na triagem inicial",
+        "consequencia": "Prejuízo patrimonial e reposicao desnecessaria",
+        "probabilidade": 2,
+        "impacto": 3,
+        "controle": "Dupla avaliação técnica antes da decisão de baixa"
+      }
+    ],
+    "fontes": [
+      "MC 4.0 Log Mil Ter (função Salvamento)",
+      "Legislação patrimonial"
+    ]
+  },
+  {
+    "id": "p13",
+    "codigo": "E4-06",
+    "titulo": "Classe III - controle de combustíveis e lubrificantes",
+    "area": "Suprimento / Combustível",
+    "classes": [
+      "III"
+    ],
+    "objetivo": "Garantir o suprimento e o controle rigoroso do consumo de combustíveis e lubrificantes (Classe III) das viaturas e geradores da Bda.",
+    "etapas": [
+      "Levantar o consumo mensal previsto por OMDS/viatura",
+      "Solicitar a cota de combustível ao órgão provedor",
+      "Controlar o abastecimento no posto de abastecimento da OM",
+      "Registrar o consumo por viatura (km rodado x litros)",
+      "Conferir mensalmente o saldo de cota x consumo real",
+      "Reportar desvios de consumo ao Cmt"
+    ],
+    "responsaveis": [
+      "E/4",
+      "Fiscal do posto de abastecimento",
+      "OMDS da Bda"
+    ],
+    "riscos": [
+      {
+        "descricao": "Consumo de combustível acima da cota sem justificativa",
+        "causa": "Ausencia de registro sistematico de abastecimento por viatura",
+        "consequencia": "Estouro de cota e falta de combustível no fim do período",
+        "probabilidade": 3,
+        "impacto": 3,
+        "controle": "Controle diário de abastecimento por viatura; conferência semanal do saldo de cota"
+      },
+      {
+        "descricao": "Desvio ou uso indevido de combustível",
+        "causa": "Fragilidade no controle de saída do posto de abastecimento",
+        "consequencia": "Prejuízo patrimonial e responsabilização",
+        "probabilidade": 2,
+        "impacto": 4,
+        "controle": "Registro assinado de cada abastecimento; auditoria periódica"
+      }
+    ],
+    "fontes": [
+      "MC 4.0 Log Mil Ter",
+      "Plano de Gestão de Riscos - Integridade e Controle OMDS"
+    ]
+  },
+  {
+    "id": "p14",
+    "codigo": "E4-07",
+    "titulo": "Controle do calendário de obrigações da Seção de Logística",
+    "area": "Gestão / Controle interno",
+    "classes": [],
+    "objetivo": "Assegurar o cumprimento, dentro do prazo, de todas as obrigações periódicas da 4ª Seção (relatórios, prestações de contas, inventários, mapas, inspeções).",
+    "etapas": [
+      "Levantar todas as obrigações periódicas do E/4 e suas periodicidades",
+      "Consolidar o calendário anual de obrigações",
+      "Definir responsável e prazo de antecedência para cada item",
+      "Acompanhar mensalmente o cumprimento do calendário",
+      "Registrar e justificar eventuais atrasos",
+      "Atualizar o calendário conforme novas exigencias do escalão superior"
+    ],
+    "responsaveis": [
+      "E/4",
+      "Encarregado do controle interno"
+    ],
+    "riscos": [
+      {
+        "descricao": "Não cumprimento de prazo de obrigação periódica",
+        "causa": "Ausencia de calendário consolidado e de responsável por item",
+        "consequencia": "Cobranca do escalão superior e responsabilização",
+        "probabilidade": 3,
+        "impacto": 3,
+        "controle": "Calendário unico acompanhado mensalmente, com aviso de antecedência (ex.: 10 dias antes do vencimento)"
+      },
+      {
+        "descricao": "Duplicidade ou lacuna entre obrigações de diferentes classes",
+        "causa": "Falta de consolidação unica do calendário do E/4",
+        "consequencia": "Retrabalho ou item esquecido",
+        "probabilidade": 2,
+        "impacto": 2,
+        "controle": "Centralizar o calendário em um unico responsável, com revisão trimestral"
+      }
+    ],
+    "fontes": [
+      "Plano de Gestão OMDS",
+      "Legislação de Governança",
+      "Ordens de Serviço / Instrução / Notas de coordenação"
+    ]
+  },
+  {
+    "id": "p15",
+    "codigo": "E4-08",
+    "titulo": "Classe V - requisição e distribuição de munição",
+    "area": "Suprimento",
+    "classes": [
+      "V"
+    ],
+    "objetivo": "Garantir a requisição, o recebimento e a distribuição da munição necessaria a instrução e ao emprego das OMDS da Bda (complementa o processo de custodia/segurança no paiol).",
+    "etapas": [
+      "Levantar a necessidade de munição por atividade/OMDS",
+      "Elaborar e encaminhar a requisição de Classe V ao órgão provedor",
+      "Receber e conferir o lote de munição recebido",
+      "Distribuir a munição às OMDS conforme autorização",
+      "Recolher e registrar as sobras/estojos após a atividade",
+      "Atualizar o controle de consumo por lote"
+    ],
+    "responsaveis": [
+      "E/4",
+      "Órgão provedor (B Log)",
+      "OMDS da Bda"
+    ],
+    "riscos": [
+      {
+        "descricao": "Divergência entre munição requisitada, distribuida e devolvida",
+        "causa": "Falha no registro de distribuição/recolhimento por atividade",
+        "consequencia": "Responsabilização e dificuldade de auditoria",
+        "probabilidade": 2,
+        "impacto": 5,
+        "controle": "Ficha de controle de distribuição/devolução assinada"
+      },
+      {
+        "descricao": "Atraso na chegada da munição para atividade programada",
+        "causa": "Requisição feita fora do prazo do órgão provedor",
+        "consequencia": "Cancelamento ou remarcacao da atividade de instrução",
+        "probabilidade": 2,
+        "impacto": 3,
+        "controle": "Prazo mínimo padronizado de antecedência para requisição"
+      }
+    ],
+    "fontes": [
+      "EB70-MC-10.317",
+      "Normas técnicas de munição",
+      "MC 4.0 Log Mil Ter"
+    ]
+  },
+  {
+    "id": "p16",
+    "codigo": "E4-09",
+    "titulo": "Classe IX - motomecanização (peças de reposicao de viaturas)",
+    "area": "Suprimento / Manutenção",
+    "classes": [
+      "IX"
+    ],
+    "objetivo": "Garantir a disponibilidade de peças de reposicao (Classe IX) necessarias a manutenção das viaturas da Bda, evitando indisponibilidade prolongada de material.",
+    "etapas": [
+      "Identificar a peça necessaria a partir da ordem de manutenção",
+      "Verificar disponibilidade em estoque local",
+      "Requisitar a peça ao órgão provedor, quando não houver em estoque",
+      "Receber e conferir a peça recebida",
+      "Aplicar a peça na viatura e encerrar a ordem de manutenção",
+      "Atualizar o controle de estoque de peças criticas"
+    ],
+    "responsaveis": [
+      "E/4",
+      "Oficina de manutenção",
+      "Órgão provedor"
+    ],
+    "riscos": [
+      {
+        "descricao": "Viatura parada por falta de peça de reposicao",
+        "causa": "Ausencia de estoque mínimo de peças criticas/recorrentes",
+        "consequencia": "Reducao prolongada da frota disponível",
+        "probabilidade": 3,
+        "impacto": 4,
+        "controle": "Definir e manter estoque mínimo das peças de maior recorrencia de troca"
+      },
+      {
+        "descricao": "Peça recebida incompativel com a viatura",
+        "causa": "Erro na identificação/código da peça na requisição",
+        "consequencia": "Atraso adicional na manutenção e retrabalho",
+        "probabilidade": 2,
+        "impacto": 2,
+        "controle": "Dupla checagem do código/especificação antes da requisição"
+      }
+    ],
+    "fontes": [
+      "MC 4.0 Log Mil Ter",
+      "EB70-MC-10.317",
+      "R-1 (RISG) art. 34-35"
+    ]
+  },
+  {
+    "id": "p17",
+    "codigo": "E4-10",
+    "titulo": "Desfazimento de material (baixa patrimonial)",
+    "area": "Patrimônio",
+    "classes": [],
+    "objetivo": "Realizar o desfazimento (baixa, alienação, doação ou destruição) de material inservível, obsoleto ou irrecuperável, conforme a legislação patrimonial vigente.",
+    "etapas": [
+      "Identificar e relacionar o material candidato a desfazimento",
+      "Solicitar parecer técnico sobre a condição do material",
+      "Instruir o processo de desfazimento conforme normas patrimoniais",
+      "Submeter o processo a autoridade competente para decisão",
+      "Executar a destinação definida (alienação, doação, destruição)",
+      "Baixar o material da escrituração patrimonial"
+    ],
+    "responsaveis": [
+      "E/4",
+      "Comissão de desfazimento",
+      "Autoridade competente"
+    ],
+    "riscos": [
+      {
+        "descricao": "Desfazimento sem a instrução processual completa",
+        "causa": "Falta de parecer técnico ou de documentacao exigida",
+        "consequencia": "Nulidade do processo e responsabilização do agente",
+        "probabilidade": 2,
+        "impacto": 4,
+        "controle": "Checklist de documentos obrigatórios antes de submeter o processo"
+      },
+      {
+        "descricao": "Material irrecuperável mantido indevidamente na carga",
+        "causa": "Ausencia de rotina periódica de identificação de itens",
+        "consequencia": "Ocupação de espaço e distorção do inventário",
+        "probabilidade": 2,
+        "impacto": 2,
+        "controle": "Levantamento periódico (semestral/anual) de itens candidatos a desfazimento"
+      }
+    ],
+    "fontes": [
+      "Legislação patrimonial",
+      "Plano de Gestão de Riscos - Integridade e Controle OMDS"
+    ]
+  },
+  {
+    "id": "p18",
+    "codigo": "E4-11",
+    "titulo": "Classe II - fardamento e equipamento individual",
+    "area": "Suprimento",
+    "classes": [
+      "II"
+    ],
+    "objetivo": "Garantir o suprimento, a distribuição e o controle de fardamento e equipamento individual (Classe II) ao efetivo da Bda.",
+    "etapas": [
+      "Levantar a necessidade de fardamento por incorporação/reposicao",
+      "Consolidar e encaminhar o pedido de Classe II",
+      "Receber e conferir o material recebido",
+      "Distribuir o fardamento/equipamento às OMDS e praças",
+      "Registrar a distribuição na ficha individual",
+      "Controlar a reposicao por desgaste/troca de tamanho"
+    ],
+    "responsaveis": [
+      "E/4",
+      "Almoxarife",
+      "SU"
+    ],
+    "riscos": [
+      {
+        "descricao": "Praça sem fardamento completo para formatura/instrução",
+        "causa": "Atraso no levantamento de necessidades após incorporação",
+        "consequencia": "Apresentação inadequada e prejuízo a instrução",
+        "probabilidade": 3,
+        "impacto": 2,
+        "controle": "Levantamento de tamanhos/necessidades ja na incorporação"
+      },
+      {
+        "descricao": "Divergência entre fardamento distribuido e registrado",
+        "causa": "Falha no registro individual de distribuição",
+        "consequencia": "Dificuldade de responsabilização em caso de extravio",
+        "probabilidade": 2,
+        "impacto": 2,
+        "controle": "Ficha individual assinada a cada distribuição"
+      }
+    ],
+    "fontes": [
+      "R-1 (RISG) art. 34-35",
+      "MC 4.0 Log Mil Ter"
+    ]
+  },
+  {
+    "id": "p19",
+    "codigo": "E4-12",
+    "titulo": "Outras classes de suprimento (IV, VI, VII, VIII e X)",
+    "area": "Suprimento",
+    "classes": [
+      "IV",
+      "VI",
+      "VII",
+      "VIII",
+      "X"
+    ],
+    "objetivo": "Acompanhar de forma consolidada o suprimento das demais classes não tratadas em modelos específicos: Classe IV (material de construcao), VI (diversos - geradores, embarcacoes etc.), VII (material principal/comunicacoes), VIII (saúde, quando não tratado pela FS) e X (outras classes).",
+    "etapas": [
+      "Identificar, para cada classe, o material sob responsabilidade do E/4",
+      "Levantar as necessidades específicas de cada classe junto às OMDS",
+      "Consolidar e priorizar os pedidos por classe e criticidade",
+      "Encaminhar as requisições aos órgãos provedores correspondentes",
+      "Receber, conferir e distribuir o material recebido",
+      "Manter escrituração separada por classe de suprimento"
+    ],
+    "responsaveis": [
+      "E/4",
+      "SU",
+      "Órgãos provedores"
+    ],
+    "riscos": [
+      {
+        "descricao": "Classe de suprimento sem acompanhamento sistematico",
+        "causa": "Ausencia de responsável/rotina para classes de menor volume",
+        "consequencia": "Necessidades não identificadas a tempo, gerando ruptura pontual",
+        "probabilidade": 2,
+        "impacto": 3,
+        "controle": "Definir responsável e rotina mínima por classe"
+      },
+      {
+        "descricao": "Mistura de escrituração entre classes distintas",
+        "causa": "Falta de padronizacao no registro por classe",
+        "consequencia": "Dificuldade de auditoria e de prestação de contas",
+        "probabilidade": 2,
+        "impacto": 2,
+        "controle": "Padronizar planilha/registro por classe de suprimento"
+      }
+    ],
+    "fontes": [
+      "MC 4.0 Log Mil Ter",
+      "EB70-MC-10.317",
+      "R-1 (RISG) art. 34-35"
+    ]
+  }
+]

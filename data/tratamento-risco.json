@@ -1,0 +1,22 @@
+[
+  {
+    "etapa": "1. Identificação",
+    "descricao": "Identificar os riscos do processo e suas fontes (interno/externo)."
+  },
+  {
+    "etapa": "2. Análise",
+    "descricao": "Analisar causa, consequência, probabilidade e impacto de cada risco."
+  },
+  {
+    "etapa": "3. Avaliação",
+    "descricao": "Comparar o nível de risco (P x I) com os critérios da OM e priorizar."
+  },
+  {
+    "etapa": "4. Tratamento",
+    "descricao": "Definir controle/mitigação, responsável e prazo; decidir tratar, transferir, evitar ou aceitar."
+  },
+  {
+    "etapa": "5. Monitoramento",
+    "descricao": "Acompanhar indicadores, reavaliar periódicamente e reportar ao Cmt."
+  }
+]

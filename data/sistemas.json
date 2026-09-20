@@ -1,0 +1,20 @@
+[
+  {
+    "sigla": "SISLOGMNT",
+    "nome": "Sistema Logístico de Manutenção (SisLogMnt)",
+    "orgao": "Diretoria de Material (D Mat)",
+    "finalidade": "Controle da operação e da manutenção dos Materiais de Emprego Militar (MEM), com enfase na Classe IX (motomecanizados e blindados): cadastro de viaturas, emissao de ordens de serviço, controle de estoque de peças e manutenção preventiva/corretiva.",
+    "uso": "Manutenção e motomecanização (Classe IX).",
+    "acesso": "Ambiente restrito do Exército",
+    "url": "https://bdex.eb.mil.br/jspui/bitstream/123456789/9581/1/majkothe2021_3t.artigo.pdf"
+  },
+  {
+    "sigla": "SIGELOG (WEB)",
+    "nome": "Sistema Integrado de Gestão Logística",
+    "orgao": "Comando Logístico (COLOG)",
+    "finalidade": "Sistema corporativo de gestão do ciclo logístico do MEM e das classes de suprimento, da aquisição ao desfazimento; sucede o SISCOFIS, o SICATEx e o SISDOT e apoia o cadastramento de necessidades logísticas.",
+    "uso": "Suprimento, catalogação, dotação, gestão patrimonial e desfazimento.",
+    "acesso": "Ambiente restrito do Exército",
+    "url": "https://www.colog.eb.mil.br/images/documentos/menus/2025/Folder_SIGELOG3.pdf"
+  }
+]

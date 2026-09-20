@@ -1,0 +1,172 @@
+{
+  "governanca": {
+    "portfolio": "Portfólio de Apoio Logístico - Cmdo Bda Inf Amv",
+    "programa": "Programa de Apoio Logístico da Brigada",
+    "cadeiaValor": "Macroprocesso de Apoio Logístico (Cadeia de Valor Agregado do EB)",
+    "macroprocesso": "Gestão Logística",
+    "orgao": "E/4 (4ª Seção)",
+    "subordinacao": "Ch EM Bda",
+    "comite": "Estado-Maior da Brigada"
+  },
+  "governancaProcessos": {
+    "p01": {
+      "tarefa": "Garantir o suprimento das classes I, III e V às OMDS",
+      "indicadores": [
+        "Prazo médio de atendimento do pedido (dias)",
+        "Percentual de itens entregues na data prevista"
+      ]
+    },
+    "p02": {
+      "tarefa": "Executar a manutenção de 2º escalão de viaturas e armamento",
+      "indicadores": [
+        "Índice de disponibilidade da frota (%)",
+        "Tempo médio de reparo (dias)"
+      ]
+    },
+    "p03": {
+      "tarefa": "Controlar o armamento e a munição sob custódia",
+      "indicadores": [
+        "Divergências na revista diária (nº)",
+        "Conformidade de temperatura/umidade do paiol (%)"
+      ]
+    },
+    "p04": {
+      "tarefa": "Prevenir acidentes nas atividades de risco",
+      "indicadores": [
+        "Acidentes de trabalho registrados (nº)",
+        "Inspeções de segurança realizadas no mês (nº)"
+      ]
+    },
+    "p05": {
+      "tarefa": "Controlar os aspectos ambientais do aquartelamento",
+      "indicadores": [
+        "Não conformidades ambientais registradas (nº)",
+        "Ações corretivas concluídas (%)"
+      ]
+    },
+    "p06": {
+      "tarefa": "Prestar apoio material à instrução",
+      "indicadores": [
+        "Atividades de instrução apoiadas sem falta de meio (%)",
+        "Antecedência média do planejamento E3-E4 (dias)"
+      ]
+    },
+    "p07": {
+      "tarefa": "Planejar e executar comboios logísticos",
+      "indicadores": [
+        "Comboios realizados no prazo (%)",
+        "Ocorrências de avaria/extravio de carga (nº)"
+      ]
+    },
+    "p08": {
+      "tarefa": "Assegurar o bem-estar e o apoio material ao efetivo",
+      "indicadores": [
+        "Efetivo com fardamento completo (%)",
+        "Não conformidades de alojamento/rancho (nº)"
+      ]
+    },
+    "p09": {
+      "tarefa": "Garantir o suprimento de saúde e a evacuação",
+      "indicadores": [
+        "Itens de Classe VIII dentro da validade (%)",
+        "Tempo médio de evacuação (min)"
+      ]
+    },
+    "p10": {
+      "tarefa": "Manter a infraestrutura do aquartelamento",
+      "indicadores": [
+        "Demandas de manutenção concluídas (%)",
+        "Intervenções em itens críticos no prazo (%)"
+      ]
+    },
+    "p11": {
+      "tarefa": "Recuperar material danificado (salvamento)",
+      "indicadores": [
+        "Índice de recuperação de material (%)",
+        "Processos de baixa instruídos corretamente (%)"
+      ]
+    },
+    "p12": {
+      "tarefa": "Controlar o almoxarifado (classes II e IV)",
+      "indicadores": [
+        "Acurácia do inventário (%)",
+        "Divergências físico x escriturado (nº)"
+      ]
+    },
+    "p13": {
+      "tarefa": "Controlar combustíveis e lubrificantes (Classe III)",
+      "indicadores": [
+        "Consumo real x cota (%)",
+        "Média de consumo da frota (km/L)"
+      ]
+    },
+    "p14": {
+      "tarefa": "Controlar o calendário de obrigações da seção",
+      "indicadores": [
+        "Obrigações cumpridas no prazo (%)",
+        "Atrasos justificados (nº)"
+      ]
+    },
+    "p15": {
+      "tarefa": "Requisitar e distribuir munição (Classe V)",
+      "indicadores": [
+        "Divergência de munição requisitada x devolvida (nº)",
+        "Requisições no prazo do órgão provedor (%)"
+      ]
+    },
+    "p16": {
+      "tarefa": "Prover peças de reposição de viaturas (Classe IX)",
+      "indicadores": [
+        "Viaturas paradas por falta de peça (nº)",
+        "Tempo médio de reposição de peça (dias)"
+      ]
+    },
+    "p17": {
+      "tarefa": "Executar o desfazimento de material",
+      "indicadores": [
+        "Processos de desfazimento sem nulidade (%)",
+        "Itens inservíveis identificados no semestre (nº)"
+      ]
+    },
+    "p18": {
+      "tarefa": "Suprir fardamento e equipamento individual (Classe II)",
+      "indicadores": [
+        "Praças com Classe II completa (%)",
+        "Divergências de registro por ficha individual (nº)"
+      ]
+    },
+    "p19": {
+      "tarefa": "Acompanhar as demais classes de suprimento",
+      "indicadores": [
+        "Classes com responsável e rotina definidos (%)",
+        "Rupturas pontuais por classe (nº)"
+      ]
+    }
+  },
+  "marcosModelo": [
+    {
+      "ordem": 1,
+      "marco": "Mapeamento do processo elaborado",
+      "produto": "Processo + matriz de riscos",
+      "prazo": "T0"
+    },
+    {
+      "ordem": 2,
+      "marco": "Validação pelo chefe da seção",
+      "produto": "Processo validado",
+      "prazo": "T0 + 15 dias"
+    },
+    {
+      "ordem": 3,
+      "marco": "Publicação no ASE/GPEx",
+      "produto": "Processo públicado",
+      "prazo": "T0 + 30 dias"
+    },
+    {
+      "ordem": 4,
+      "marco": "Monitoramento e revisão",
+      "produto": "Relatório de acompanhamento",
+      "prazo": "Semestral"
+    }
+  ]
+}

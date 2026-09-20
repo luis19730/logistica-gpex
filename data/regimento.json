@@ -1,0 +1,73 @@
+{
+  "titulo": "Regimento Interno - 4ª Seção / E/4 (Seção de Logística)",
+  "unidade": "Comando da Brigada de Infantaria Aeromóvel",
+  "subordinacao": "Chefe do Estado-Maior da Brigada (Ch EM Bda)",
+  "finalidade": "A 4ª Seção / E/4 e o órgão de apoio de Estado-Maior encarregado do planejamento, da coordenação, da direção e do controle das atividades logísticas da Brigada, subordinando-se diretamente ao Chefe do Estado-Maior da Brigada (Ch EM Bda).",
+  "missao": "Assegurar o planejamento e a execução do apoio logístico as Organizações Militares (OM) subordinadas e diretamente apoiadas, garantindo os suprimentos, os serviços e as manutenções necessarios as operações e a rotina administrativa.",
+  "competencias": [
+    {
+      "inciso": "I",
+      "texto": "Planejar e coordenar as funções logísticas de suprimento, transporte, manutenção, saúde, engenharia e serviços gerais."
+    },
+    {
+      "inciso": "II",
+      "texto": "Acompanhar e controlar a execução orçamentária e financeira afeta a área logística."
+    },
+    {
+      "inciso": "III",
+      "texto": "Orientar e supervisionar os órgãos executivos e as OM subordinadas no tocante a gestão patrimonial, carga, descarga e controle de material."
+    },
+    {
+      "inciso": "IV",
+      "texto": "Manter atualizada a apreciação de situação logística e elaborar os anexos logísticos dos planos e ordens de operações."
+    },
+    {
+      "inciso": "V",
+      "texto": "Coordenar o apoio de saúde, evacuação medica e o funcionamento do sistema logístico em campanha e em tempo de paz."
+    },
+    {
+      "inciso": "VI",
+      "texto": "Manter intercâmbio contínuo com o Escalão Superior (Divisão de Exército / Comando Militar de Área) e com às OMDS apoiadas."
+    }
+  ],
+  "atribuicoes": [
+    {
+      "cargo": "Chefe da E/4",
+      "artigo": "Art. 4º",
+      "itens": [
+        "Dirigir, orientar e fiscalizar os trabalhos de toda a Seção.",
+        "Assessorar o Comandante e o Chefe do Estado-Maior da Brigada em todos os assuntos atinentes a logística.",
+        "Distribuir as tarefas entre os adjuntos e auxiliares, acompanhando o cumprimento dos prazos.",
+        "Estabelecer diretrizes para a elaboracao de planos logísticos e controle de estoques e dotações.",
+        "Representar a Brigada em reuniões e comissões de carater logístico, quando determinado."
+      ]
+    },
+    {
+      "cargo": "Adjunto da E/4",
+      "artigo": "Art. 5º",
+      "itens": [
+        "Substituir o Chefe da Seção em seus impedimentos legais e eventuais.",
+        "Coordenar a elaboracao de documentos, relatórios e expedientes diários da Seção.",
+        "Controlar o fluxo de correspondências, boletins e processos administrativos.",
+        "Acompanhar a execução das diretrizes logísticas junto as OM subordinadas."
+      ]
+    },
+    {
+      "cargo": "Auxiliares (Sargentos/Subtenentes)",
+      "artigo": "Art. 6º",
+      "itens": [
+        "Executar o expediente, o arquivamento e a guarda de documentos sigilosos e ostensivos da Seção.",
+        "Manter atualizados os quadros de controle de suprimentos, manutenções, movimentação de viaturas e cargas.",
+        "Confeccionar minutas de boletins, partes, ofícios e notas relativas a sua área específica de atuação."
+      ]
+    }
+  ],
+  "funcoesLogisticas": [
+    "Suprimento",
+    "Transporte",
+    "Manutenção",
+    "Saúde",
+    "Engenharia",
+    "Serviços Gerais"
+  ]
+}
