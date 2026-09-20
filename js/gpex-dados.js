@@ -25,8 +25,8 @@ window.GPEX_E4 = (function () {
     orgCurto: ORG_CURTO,
     subordinacao: "Chefe do Estado-Maior da Brigada (Ch EM Bda)",
     aviso:
-      "Aviso: o dominio ase.cmse.eb.mil.br e as intranets citadas são de acesso restrito. " +
-      "O preenchimento no ASE e manual, por usuário autorizado. Este sistema apenas prepara o " +
+      "Aviso: o domínio ase.cmse.eb.mil.br e as intranets citadas são de acesso restrito. " +
+      "O preenchimento no ASE é manual, por usuário autorizado. Este sistema apenas prepara o " +
       "conteúdo (dados do processo, etapas, fluxo, matriz de riscos e resumo) para colagem."
   };
 
@@ -268,7 +268,7 @@ window.GPEX_E4 = (function () {
     return r;
   }
 
-  /* Valida consistencia logica de cronograma (inicio <= fim; marcos dentro do intervalo). */
+  /* Valida consistência logica de cronograma (inicio <= fim; marcos dentro do intervalo). */
   function validarCronograma(inicio, fim, marco) {
     var r = { ok: true, avisos: [] };
     if (!inicio || !fim) { r.ok = false; r.avisos.push("Informe as datas de início e término."); return r; }
