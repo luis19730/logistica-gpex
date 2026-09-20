@@ -4,76 +4,76 @@
     "periodicidade": "Semanal",
     "responsavel": "Fiscal do posto",
     "antecedencia": 2,
-    "processo": "p13"
+    "processo": "E4-06"
   },
   {
     "obrigacao": "Registro/consolidação de abastecimento por viatura",
     "periodicidade": "Semanal",
     "responsavel": "Fiscal do posto",
     "antecedencia": 2,
-    "processo": "p13"
+    "processo": "E4-06"
   },
   {
     "obrigacao": "Saldo de cota x consumo real de combustível",
     "periodicidade": "Mensal",
     "responsavel": "E4",
     "antecedencia": 5,
-    "processo": "p13"
+    "processo": "E4-06"
   },
   {
     "obrigacao": "Acompanhamento do calendário de obrigações do E4",
     "periodicidade": "Mensal",
     "responsavel": "Encarregado de controle interno",
     "antecedencia": 10,
-    "processo": "p14"
+    "processo": "E4-07"
   },
   {
     "obrigacao": "Relatório mensal de manutenção (viaturas/armamento)",
     "periodicidade": "Mensal",
     "responsavel": "Oficina / E4",
     "antecedencia": 5,
-    "processo": "p02"
+    "processo": "E4-02"
   },
   {
     "obrigacao": "Reconciliação de munição distribuida/recolhida (Classe V)",
     "periodicidade": "Mensal",
     "responsavel": "E4",
     "antecedencia": 5,
-    "processo": "p15"
+    "processo": "E4-08"
   },
   {
     "obrigacao": "Controle de validade de medicamentos (Classe VIII / FEFO)",
     "periodicidade": "Mensal",
     "responsavel": "FS / E4",
     "antecedencia": 5,
-    "processo": "p09"
+    "processo": "E4-04"
   },
   {
     "obrigacao": "Revisão do calendário unico de obrigações do E4",
     "periodicidade": "Trimestral",
     "responsavel": "E4",
     "antecedencia": 10,
-    "processo": "p14"
+    "processo": "E4-07"
   },
   {
     "obrigacao": "Levantamento de material candidato a desfazimento",
     "periodicidade": "Semestral",
     "responsavel": "Comissão de desfazimento",
     "antecedencia": 15,
-    "processo": "p17"
+    "processo": "E4-10"
   },
   {
     "obrigacao": "Consolidação anual de necessidades (fardamento, víveres, combustível)",
     "periodicidade": "Anual",
     "responsavel": "E4",
     "antecedencia": 30,
-    "processo": "p18"
+    "processo": "E4-11"
   },
   {
     "obrigacao": "Revisão do mapeamento de processos/riscos no ASE (GPEX)",
     "periodicidade": "Anual",
     "responsavel": "E4",
     "antecedencia": 30,
-    "processo": "p14"
+    "processo": "E4-07"
   }
 ]

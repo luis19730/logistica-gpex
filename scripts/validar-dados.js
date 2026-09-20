@@ -59,7 +59,7 @@ const ids = new Set();
 });
 
 // 3) Calendário
-(DB['calendário'] || []).forEach(function (c, i) {
+(DB['calendario'] || []).forEach(function (c, i) {
   if (!c.obrigacao) erro('calendario[' + i + ']: sem obrigação');
   if (!c.periodicidade) erro('calendario[' + i + ']: sem periodicidade');
   if (c.processo && !ids.has(c.processo)) erro('calendario[' + i + ']: processo inexistente ' + c.processo);

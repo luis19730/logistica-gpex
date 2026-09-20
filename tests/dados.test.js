@@ -33,7 +33,7 @@ test('riscos têm campos obrigatórios e nível coerente com P x I', function ()
 
 test('calendário referencia processos existentes', function () {
   const ids = new Set(DB.processos.map(function (p) { return p.id; }));
-  DB['calendário'].forEach(function (c) {
+  DB['calendario'].forEach(function (c) {
     if (c.processo) assert.ok(ids.has(c.processo), 'processo inexistente: ' + c.processo);
   });
 });
@@ -42,6 +42,33 @@ test('regimento tem competências e atribuições', function () {
   assert.ok(DB.regimento.competencias.length >= 1);
   assert.ok(DB.regimento.atribuicoes.length >= 1);
   DB.regimento.competencias.forEach(function (c) { assert.ok(c.inciso && c.texto); });
+});
+
+test('escXml escapa corretamente & < > " e apóstrofo', function () {
+  const fs = require('fs');
+  const app = fs.readFileSync(path.join(__dirname, '..', 'js', 'gpex-app.js'), 'utf8');
+  const i = app.indexOf('function escXml(');
+  assert.ok(i >= 0, 'escXml não encontrada');
+  const start = app.indexOf('{', i);
+  let depth = 0, j = start;
+  for (; j < app.length; j++) {
+    if (app[j] === '{') depth++;
+    else if (app[j] === '}') { depth--; if (depth === 0) { j++; break; } }
+  }
+  const mod = { exports: {} };
+  new Function('module', 'exports', app.slice(i, j) + '\nmodule.exports = escXml;')(mod, mod.exports);
+  const escXml = mod.exports;
+  const saida = escXml('a & b < c > d "e" f\'g');
+  assert.strictEqual(saida, 'a &amp; b &lt; c &gt; d &quot;e&quot; f&apos;g');
+  assert.ok(saida.indexOf('&apos;') !== -1, 'apóstrofo deve virar &apos;');
+  assert.ok(saida.indexOf('&após;') === -1, 'não deve conter &após; (acentuado)');
+});
+
+test('datas usam fuso local (hojeISO/mesAtual)', function () {
+  const fs = require('fs');
+  const app = fs.readFileSync(path.join(__dirname, '..', 'js', 'gpex-app.js'), 'utf8');
+  const trecho = app.slice(app.indexOf('function hojeISO'), app.indexOf('function initCombustivel'));
+  assert.ok(trecho.indexOf('toISOString') === -1, 'hojeISO/mesAtual não devem usar toISOString (UTC)');
 });
 
 test('geradores ARIS produzem XML bem-formado', function () {

@@ -34,7 +34,7 @@ escrever('normas.json', DB.normas);
 escrever('fontes.json', DB.fontes);
 escrever('doutrina.json', DB.doutrina);
 escrever('sistemas.json', DB.sistemas);
-escrever('calendario.json', DB['calendário']);
+escrever('calendario.json', DB['calendario']);
 escrever('combustivel.json', DB.combustivel);
 escrever('tratamento-risco.json', DB.tratamentoRisco);
 

@@ -1,6 +1,6 @@
 [
   {
-    "id": "p01",
+    "id": "E4-01",
     "codigo": "E4-01",
     "titulo": "Suprimento (Classes I, III e V) às OMDS da Bda",
     "area": "Suprimento",
@@ -48,7 +48,7 @@
     ]
   },
   {
-    "id": "p02",
+    "id": "E4-02",
     "codigo": "E4-02",
     "titulo": "Manutenção de viaturas e armamento (2º escalão)",
     "area": "Manutenção",
@@ -94,7 +94,7 @@
     ]
   },
   {
-    "id": "p07",
+    "id": "E4-03",
     "codigo": "E4-03",
     "titulo": "Transporte - planejamento e execução de comboio logístico",
     "area": "Transporte",
@@ -140,7 +140,7 @@
     ]
   },
   {
-    "id": "p09",
+    "id": "E4-04",
     "codigo": "E4-04",
     "titulo": "Saúde (função logística) - suprimento e evacuação",
     "area": "Saúde",
@@ -183,7 +183,7 @@
     ]
   },
   {
-    "id": "p11",
+    "id": "E4-05",
     "codigo": "E4-05",
     "titulo": "Salvamento - recuperacao de material danificado",
     "area": "Salvamento",
@@ -218,7 +218,7 @@
     ]
   },
   {
-    "id": "p13",
+    "id": "E4-06",
     "codigo": "E4-06",
     "titulo": "Classe III - controle de combustíveis e lubrificantes",
     "area": "Suprimento / Combustível",
@@ -263,7 +263,7 @@
     ]
   },
   {
-    "id": "p14",
+    "id": "E4-07",
     "codigo": "E4-07",
     "titulo": "Controle do calendário de obrigações da Seção de Logística",
     "area": "Gestão / Controle interno",
@@ -306,7 +306,7 @@
     ]
   },
   {
-    "id": "p15",
+    "id": "E4-08",
     "codigo": "E4-08",
     "titulo": "Classe V - requisição e distribuição de munição",
     "area": "Suprimento",
@@ -352,7 +352,7 @@
     ]
   },
   {
-    "id": "p16",
+    "id": "E4-09",
     "codigo": "E4-09",
     "titulo": "Classe IX - motomecanização (peças de reposicao de viaturas)",
     "area": "Suprimento / Manutenção",
@@ -398,7 +398,7 @@
     ]
   },
   {
-    "id": "p17",
+    "id": "E4-10",
     "codigo": "E4-10",
     "titulo": "Desfazimento de material (baixa patrimonial)",
     "area": "Patrimônio",
@@ -441,7 +441,7 @@
     ]
   },
   {
-    "id": "p18",
+    "id": "E4-11",
     "codigo": "E4-11",
     "titulo": "Classe II - fardamento e equipamento individual",
     "area": "Suprimento",
@@ -486,7 +486,7 @@
     ]
   },
   {
-    "id": "p19",
+    "id": "E4-12",
     "codigo": "E4-12",
     "titulo": "Outras classes de suprimento (IV, VI, VII, VIII e X)",
     "area": "Suprimento",

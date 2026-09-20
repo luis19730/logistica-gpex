@@ -41,7 +41,7 @@
   }
 
   /* ---------------- UI: toasts, overlays, rotas e atalhos ---------------- */
-  var TABS = ["visao", "processos", "matriz", "governança", "regimento", "combustível", "calendário", "fontes"];
+  var TABS = ["visao", "processos", "matriz", "governanca", "regimento", "combustivel", "calendario", "fontes"];
 
   function toast(msg, tipo) {
     var box = $("toasts"); if (!box) return;
@@ -64,7 +64,7 @@
     $("confirmMsg").textContent = msg;
     abrirOverlay("overlayConfirm");
     var sim = $("overlayConfirm").querySelector("[data-confirm-sim]");
-    var não = $("overlayConfirm").querySelector("[data-confirm-não]");
+    var nao = $("overlayConfirm").querySelector("[data-confirm-nao]");
     function done(ok) { fecharOverlay("overlayConfirm"); sim.onclick = não.onclick = null; if (ok && onOk) onOk(); }
     sim.onclick = function () { done(true); };
     não.onclick = function () { done(false); };
@@ -135,11 +135,11 @@
         IDX_BUSCA.push({ tipo: "Risco", titulo: r.descricao, sub: p.codigo + " - " + p.titulo, acao: function () { irPara("processos", p.id); } });
       });
     });
-    DB.calendário.forEach(function (c) {
-      IDX_BUSCA.push({ tipo: "Obrigação", titulo: c.obrigacao, sub: c.periodicidade + " - " + c.responsavel, acao: function () { irPara("calendário"); } });
+    DB.calendario.forEach(function (c) {
+      IDX_BUSCA.push({ tipo: "Obrigação", titulo: c.obrigacao, sub: c.periodicidade + " - " + c.responsavel, acao: function () { irPara("calendario"); } });
     });
     DB.normas.forEach(function (n) {
-      IDX_BUSCA.push({ tipo: "Norma", titulo: n.codigo + " - " + n.titulo, sub: n.aplicacao, acao: function () { irPara("governança"); } });
+      IDX_BUSCA.push({ tipo: "Norma", titulo: n.codigo + " - " + n.titulo, sub: n.aplicacao, acao: function () { irPara("governanca"); } });
     });
     DB.fontes.forEach(function (f) {
       IDX_BUSCA.push({ tipo: "Fonte", titulo: f.nome, sub: f.descricao || f.acesso || "", acao: function () { irPara("fontes"); } });
@@ -275,7 +275,7 @@
       card("Riscos identificados", riscos.length, "Com causa, consequência e controle"),
       card("Riscos Alto/Extremo", altos.length, "Tratamento prioritário (EB10-P-01.004)", altos.length ? "var(--red)" : "var(--green)"),
       card("Classes de suprimento", DB.classes.length, "I a X"),
-      card("Obrigações periódicas", DB.calendário.length, "Calendário da E/4"),
+      card("Obrigações periódicas", DB.calendario.length, "Calendário da E/4"),
       card("Nível medio (P x I)", média.toFixed(1), "Escala de 1 a 25", "var(--yellow)")
     ].join("");
 
@@ -460,7 +460,7 @@
     var html = '<div class="card">' +
       '<div class="detalhe-topo"><div><div class="cod">' + esc(p.codigo) + " - " + esc(p.area) + '</div><h2>' + esc(p.titulo) + "</h2></div>" +
       '<div>' + (p.classes.length ? p.classes.map(function (c) { return '<span class="tag">Classe ' + esc(c) + "</span>"; }).join(" ") : "") + "</div></div>" +
-      '<div class="linha-ações">' +
+      '<div class="linha-acoes">' +
       '<button class="btn btn-sm" data-exp="dados">Copiar dados do processo</button>' +
       '<button class="btn btn-sm" data-exp="etapas">Copiar etapas</button>' +
       '<button class="btn btn-sm" data-exp="fluxo">Copiar fluxo (Mermaid)</button>' +
@@ -646,8 +646,8 @@
     return { cota: 0, mes: "", itens: [] };
   }
   function salvarCbo() { try { localStorage.setItem(CBO_KEY, JSON.stringify(cbo)); } catch (e) { } }
-  function hojeISO() { var d = new Date(); return d.toISOString().slice(0, 10); }
-  function mesAtual() { return new Date().toISOString().slice(0, 7); }
+  function hojeISO() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  function mesAtual() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"); }
 
   function initCombustivel() {
     $("descCombustivel").textContent = DB.combustivel.descricao;
@@ -786,7 +786,7 @@
   var PERIODOS = null;
   function initCalendario() {
     var per = [], resps = [];
-    DB.calendário.forEach(function (c) {
+    DB.calendario.forEach(function (c) {
       if (per.indexOf(c.periodicidade) === -1) per.push(c.periodicidade);
       if (resps.indexOf(c.responsavel) === -1) resps.push(c.responsavel);
     });
@@ -797,7 +797,7 @@
     $("calMes").value = mesAtual();
     ["calMes", "calPeriodicidade", "calResp"].forEach(function (id) { $(id).addEventListener("change", renderCalendario); });
 
-    $("tbodyCalCadastro").innerHTML = DB.calendário.map(function (c) {
+    $("tbodyCalCadastro").innerHTML = DB.calendario.map(function (c) {
       var p = DB.processos.filter(function (x) { return x.id === c.processo; })[0];
       return "<tr><td>" + esc(c.obrigacao) + "</td><td>" + esc(c.periodicidade) + "</td><td>" + esc(c.responsavel) +
         "</td><td>" + c.antecedencia + "</td><td>" + esc(p ? p.codigo + " - " + p.titulo : c.processo) + "</td></tr>";
@@ -811,7 +811,7 @@
     var ano = Number(partes[0]), mês = Number(partes[1]);
     var diasNoMes = new Date(ano, mês, 0).getDate();
     var out = [];
-    DB.calendário.forEach(function (c) {
+    DB.calendario.forEach(function (c) {
       function add(dia, extra) {
         dia = Math.min(Math.max(1, dia), diasNoMes);
         var d = new Date(ano, mês - 1, dia);
@@ -914,7 +914,7 @@
   }
   function escXml(s) {
     return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&após;");
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
   }
 
   /* BPMN 2.0 - importavel no ARIS Cloud/Plataforma ARIS e ferramentas BPMN. */
@@ -1119,7 +1119,7 @@
       "4) CONFERIR E PUBLICAR",
       "   - Revise eventos, funções, responsáveis e conexões.",
       "   - Registre a fonte (documento e item do Portal da Gestão) no modelo.",
-      "   - Submeta a revisão humana antes de públicar.",
+      "   - Submeta a revisão humana antes de publicar.",
       "",
       "OBSERVAÇÕES",
       "   - Nada é enviado automaticamente; o domínio ase.cmse.eb.mil.br não recebe automação.",

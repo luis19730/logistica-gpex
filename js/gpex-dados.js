@@ -7,7 +7,7 @@
  * MC 4.0 Log Mil Ter, EB70-MC-10.317.
  *
  * IMPORTANTE: modelos de referência. Ajustar ao processo real da OM e
- * submeter a revisão humana antes de públicar no ASE.
+ * submeter a revisão humana antes de publicar no ASE.
  */
 window.GPEX_E4 = (function () {
   "use strict";
@@ -53,10 +53,10 @@ window.GPEX_E4 = (function () {
     competencias: [
       { inciso: "I", texto: "Planejar e coordenar as funções logísticas de suprimento, transporte, manutenção, saúde, engenharia e serviços gerais." },
       { inciso: "II", texto: "Acompanhar e controlar a execução orçamentária e financeira afeta a área logística." },
-      { inciso: "III", texto: "Orientar e supervisionar os órgãos executivos e as OM subordinadas no tocante a gestão patrimonial, carga, descarga e controle de material." },
+      { inciso: "III", texto: "Orientar e supervisionar os órgãos executivos e às OM subordinadas no tocante a gestão patrimonial, carga, descarga e controle de material." },
       { inciso: "IV", texto: "Manter atualizada a apreciação de situação logística e elaborar os anexos logísticos dos planos e ordens de operações." },
       { inciso: "V", texto: "Coordenar o apoio de saúde, evacuação medica e o funcionamento do sistema logístico em campanha e em tempo de paz." },
-      { inciso: "VI", texto: "Manter intercâmbio contínuo com o Escalão Superior (Divisão de Exército / Comando Militar de Área) e com às OMDS apoiadas." }
+      { inciso: "VI", texto: "Manter intercâmbio contínuo com o Escalão Superior (Divisão de Exército / Comando Militar de Área) e com as OMDS apoiadas." }
     ],
     atribuicoes: [
       {
@@ -77,7 +77,7 @@ window.GPEX_E4 = (function () {
           "Substituir o Chefe da Seção em seus impedimentos legais e eventuais.",
           "Coordenar a elaboracao de documentos, relatórios e expedientes diários da Seção.",
           "Controlar o fluxo de correspondências, boletins e processos administrativos.",
-          "Acompanhar a execução das diretrizes logísticas junto as OM subordinadas."
+          "Acompanhar a execução das diretrizes logísticas junto às OM subordinadas."
         ]
       },
       {
@@ -95,25 +95,18 @@ window.GPEX_E4 = (function () {
 
   /* Vínculo de cada processo a competência (Art. 3º) e a função logística (Art. 3º, I). */
   var vinculoRegimento = {
-    p01: { competencia: "I", funcao: "Suprimento" },
-    p02: { competencia: "I", funcao: "Manutenção" },
-    p03: { competencia: "III", funcao: "Suprimento" },
-    p04: { competencia: "I", funcao: "Serviços Gerais" },
-    p05: { competencia: "I", funcao: "Engenharia" },
-    p06: { competencia: "IV", funcao: "Suprimento" },
-    p07: { competencia: "I", funcao: "Transporte" },
-    p08: { competencia: "I", funcao: "Serviços Gerais" },
-    p09: { competencia: "V", funcao: "Saúde" },
-    p10: { competencia: "I", funcao: "Engenharia" },
-    p11: { competencia: "III", funcao: "Serviços Gerais" },
-    p12: { competencia: "III", funcao: "Suprimento" },
-    p13: { competencia: "II", funcao: "Suprimento" },
-    p14: { competencia: "IV", funcao: "Serviços Gerais" },
-    p15: { competencia: "III", funcao: "Suprimento" },
-    p16: { competencia: "III", funcao: "Manutenção" },
-    p17: { competencia: "III", funcao: "Suprimento" },
-    p18: { competencia: "III", funcao: "Suprimento" },
-    p19: { competencia: "I", funcao: "Suprimento" }
+    "E4-01": { competencia: "I", funcao: "Suprimento" },
+    "E4-02": { competencia: "I", funcao: "Manutenção" },
+    "E4-03": { competencia: "I", funcao: "Transporte" },
+    "E4-04": { competencia: "V", funcao: "Saúde" },
+    "E4-05": { competencia: "III", funcao: "Serviços Gerais" },
+    "E4-06": { competencia: "II", funcao: "Suprimento" },
+    "E4-07": { competencia: "IV", funcao: "Serviços Gerais" },
+    "E4-08": { competencia: "III", funcao: "Suprimento" },
+    "E4-09": { competencia: "III", funcao: "Manutenção" },
+    "E4-10": { competencia: "III", funcao: "Suprimento" },
+    "E4-11": { competencia: "III", funcao: "Suprimento" },
+    "E4-12": { competencia: "I", funcao: "Suprimento" }
   };
 
   /* Sistemas corporativos de apoio logístico (TIC) utilizados pela E/4. */
@@ -139,18 +132,18 @@ window.GPEX_E4 = (function () {
   ];
 
   var sistemaPorProcesso = {
-    p01: "SIGELOG (WEB)",
-    p02: "SISLOGMNT",
-    p07: "-",
-    p09: "SIGELOG (WEB)",
-    p11: "SISLOGMNT + SIGELOG (WEB)",
-    p13: "SIGELOG (WEB)",
-    p14: "-",
-    p15: "SIGELOG (WEB)",
-    p16: "SISLOGMNT",
-    p17: "SIGELOG (WEB)",
-    p18: "SIGELOG (WEB)",
-    p19: "SIGELOG (WEB)"
+    "E4-01": "SIGELOG (WEB)",
+    "E4-02": "SISLOGMNT",
+    "E4-03": "-",
+    "E4-04": "SIGELOG (WEB)",
+    "E4-05": "SISLOGMNT + SIGELOG (WEB)",
+    "E4-06": "SIGELOG (WEB)",
+    "E4-07": "-",
+    "E4-08": "SIGELOG (WEB)",
+    "E4-09": "SISLOGMNT",
+    "E4-10": "SIGELOG (WEB)",
+    "E4-11": "SIGELOG (WEB)",
+    "E4-12": "SIGELOG (WEB)"
   };
 
   function sistemaDe(id) { return sistemaPorProcesso[id] || "-"; }
@@ -162,7 +155,7 @@ window.GPEX_E4 = (function () {
   function dataRevisao(nivel) {
     var base = new Date((meta.atualizado || "2026-01-01") + "T00:00:00");
     base.setDate(base.getDate() + diasRevisao(nivel));
-    return base.toISOString().slice(0, 10);
+    return base.getFullYear() + "-" + String(base.getMonth() + 1).padStart(2, "0") + "-" + String(base.getDate()).padStart(2, "0");
   }
   /* Risco residual estimado (após o controle pretendido). Valor de referência - a eficácia
      real do controle deve ser verificada pela S/4 (marcado "VERIFICAR NA FONTE"). */
@@ -180,7 +173,7 @@ window.GPEX_E4 = (function () {
   function vinculoDe(id) { return vinculoRegimento[id] || { competencia: "", funcao: "" }; }
 
   var escala = [
-    { min: 1, max: 4, nome: "Baixo", cor: "verde", acao: "Aceitar e monitorar periódicamente." },
+    { min: 1, max: 4, nome: "Baixo", cor: "verde", acao: "Aceitar e monitorar periodicamente." },
     { min: 5, max: 9, nome: "Médio", cor: "amarelo", acao: "Reduzir com controles e monitorar." },
     { min: 10, max: 14, nome: "Alto", cor: "laranja", acao: "Tratamento prioritário, com responsável e prazo." },
     { min: 15, max: 25, nome: "Extremo", cor: "vermelho", acao: "Tratamento imediato e decisão do Cmt." }
@@ -230,32 +223,25 @@ window.GPEX_E4 = (function () {
   };
 
   var governancaProcessos = {
-    p01: { tarefa: "Garantir o suprimento das classes I, III e V às OMDS", indicadores: ["Prazo médio de atendimento do pedido (dias)", "Percentual de itens entregues na data prevista"] },
-    p02: { tarefa: "Executar a manutenção de 2º escalão de viaturas e armamento", indicadores: ["Índice de disponibilidade da frota (%)", "Tempo médio de reparo (dias)"] },
-    p03: { tarefa: "Controlar o armamento e a munição sob custódia", indicadores: ["Divergências na revista diária (nº)", "Conformidade de temperatura/umidade do paiol (%)"] },
-    p04: { tarefa: "Prevenir acidentes nas atividades de risco", indicadores: ["Acidentes de trabalho registrados (nº)", "Inspeções de segurança realizadas no mês (nº)"] },
-    p05: { tarefa: "Controlar os aspectos ambientais do aquartelamento", indicadores: ["Não conformidades ambientais registradas (nº)", "Ações corretivas concluídas (%)"] },
-    p06: { tarefa: "Prestar apoio material à instrução", indicadores: ["Atividades de instrução apoiadas sem falta de meio (%)", "Antecedência média do planejamento E3-E4 (dias)"] },
-    p07: { tarefa: "Planejar e executar comboios logísticos", indicadores: ["Comboios realizados no prazo (%)", "Ocorrências de avaria/extravio de carga (nº)"] },
-    p08: { tarefa: "Assegurar o bem-estar e o apoio material ao efetivo", indicadores: ["Efetivo com fardamento completo (%)", "Não conformidades de alojamento/rancho (nº)"] },
-    p09: { tarefa: "Garantir o suprimento de saúde e a evacuação", indicadores: ["Itens de Classe VIII dentro da validade (%)", "Tempo médio de evacuação (min)"] },
-    p10: { tarefa: "Manter a infraestrutura do aquartelamento", indicadores: ["Demandas de manutenção concluídas (%)", "Intervenções em itens críticos no prazo (%)"] },
-    p11: { tarefa: "Recuperar material danificado (salvamento)", indicadores: ["Índice de recuperação de material (%)", "Processos de baixa instruídos corretamente (%)"] },
-    p12: { tarefa: "Controlar o almoxarifado (classes II e IV)", indicadores: ["Acurácia do inventário (%)", "Divergências físico x escriturado (nº)"] },
-    p13: { tarefa: "Controlar combustíveis e lubrificantes (Classe III)", indicadores: ["Consumo real x cota (%)", "Média de consumo da frota (km/L)"] },
-    p14: { tarefa: "Controlar o calendário de obrigações da seção", indicadores: ["Obrigações cumpridas no prazo (%)", "Atrasos justificados (nº)"] },
-    p15: { tarefa: "Requisitar e distribuir munição (Classe V)", indicadores: ["Divergência de munição requisitada x devolvida (nº)", "Requisições no prazo do órgão provedor (%)"] },
-    p16: { tarefa: "Prover peças de reposição de viaturas (Classe IX)", indicadores: ["Viaturas paradas por falta de peça (nº)", "Tempo médio de reposição de peça (dias)"] },
-    p17: { tarefa: "Executar o desfazimento de material", indicadores: ["Processos de desfazimento sem nulidade (%)", "Itens inservíveis identificados no semestre (nº)"] },
-    p18: { tarefa: "Suprir fardamento e equipamento individual (Classe II)", indicadores: ["Praças com Classe II completa (%)", "Divergências de registro por ficha individual (nº)"] },
-    p19: { tarefa: "Acompanhar as demais classes de suprimento", indicadores: ["Classes com responsável e rotina definidos (%)", "Rupturas pontuais por classe (nº)"] }
+    "E4-01": { tarefa: "Garantir o suprimento das classes I, III e V às OMDS", indicadores: ["Prazo médio de atendimento do pedido (dias)", "Percentual de itens entregues na data prevista"] },
+    "E4-02": { tarefa: "Executar a manutenção de 2º escalão de viaturas e armamento", indicadores: ["Índice de disponibilidade da frota (%)", "Tempo médio de reparo (dias)"] },
+    "E4-03": { tarefa: "Planejar e executar comboios logísticos", indicadores: ["Comboios realizados no prazo (%)", "Ocorrências de avaria/extravio de carga (nº)"] },
+    "E4-04": { tarefa: "Garantir o suprimento de saúde e a evacuação", indicadores: ["Itens de Classe VIII dentro da validade (%)", "Tempo médio de evacuação (min)"] },
+    "E4-05": { tarefa: "Recuperar material danificado (salvamento)", indicadores: ["Índice de recuperação de material (%)", "Processos de baixa instruídos corretamente (%)"] },
+    "E4-06": { tarefa: "Controlar combustíveis e lubrificantes (Classe III)", indicadores: ["Consumo real x cota (%)", "Média de consumo da frota (km/L)"] },
+    "E4-07": { tarefa: "Controlar o calendário de obrigações da seção", indicadores: ["Obrigações cumpridas no prazo (%)", "Atrasos justificados (nº)"] },
+    "E4-08": { tarefa: "Requisitar e distribuir munição (Classe V)", indicadores: ["Divergência de munição requisitada x devolvida (nº)", "Requisições no prazo do órgão provedor (%)"] },
+    "E4-09": { tarefa: "Prover peças de reposição de viaturas (Classe IX)", indicadores: ["Viaturas paradas por falta de peça (nº)", "Tempo médio de reposição de peça (dias)"] },
+    "E4-10": { tarefa: "Executar o desfazimento de material", indicadores: ["Processos de desfazimento sem nulidade (%)", "Itens inservíveis identificados no semestre (nº)"] },
+    "E4-11": { tarefa: "Suprir fardamento e equipamento individual (Classe II)", indicadores: ["Praças com Classe II completa (%)", "Divergências de registro por ficha individual (nº)"] },
+    "E4-12": { tarefa: "Acompanhar as demais classes de suprimento", indicadores: ["Classes com responsável e rotina definidos (%)", "Rupturas pontuais por classe (nº)"] }
   };
 
   /* Marcos (milestones) padrão do ciclo de gestão de um processo E/4. */
   var marcosModelo = [
     { ordem: 1, marco: "Mapeamento do processo elaborado", produto: "Processo + matriz de riscos", prazo: "T0" },
     { ordem: 2, marco: "Validação pelo chefe da seção", produto: "Processo validado", prazo: "T0 + 15 dias" },
-    { ordem: 3, marco: "Publicação no ASE/GPEx", produto: "Processo públicado", prazo: "T0 + 30 dias" },
+    { ordem: 3, marco: "Publicação no ASE/GPEx", produto: "Processo publicado", prazo: "T0 + 30 dias" },
     { ordem: 4, marco: "Monitoramento e revisão", produto: "Relatório de acompanhamento", prazo: "Semestral" }
   ];
 
@@ -440,26 +426,26 @@ window.GPEX_E4 = (function () {
     {
       sigla: "ASE / CMSE",
       titulo: "Projeto Piloto 2.0 de Mapeamento de Processos",
-      aplicacao: "Fluxo de preenchimento e públicação dos processos organizacionais no ASE."
+      aplicacao: "Fluxo de preenchimento e publicação dos processos organizacionais no ASE."
     }
   ];
 
   var classes = [
-    { classe: "I", nome: "Víveres", area: "Suprimento", processo: "p01" },
-    { classe: "II", nome: "Fardamento e equipamento individual", area: "Suprimento", processo: "p18" },
-    { classe: "III", nome: "Combustíveis e lubrificantes", area: "Suprimento", processo: "p13" },
-    { classe: "IV", nome: "Material de construcao", area: "Suprimento", processo: "p19" },
-    { classe: "V", nome: "Munição", area: "Suprimento", processo: "p15" },
-    { classe: "VI", nome: "Material diverso (geradores, embarcacoes)", area: "Suprimento", processo: "p19" },
-    { classe: "VII", nome: "Material principal / comunicacoes", area: "Suprimento", processo: "p19" },
-    { classe: "VIII", nome: "Material de saúde", area: "Suprimento / Saúde", processo: "p09" },
-    { classe: "IX", nome: "Peças de reposicao de viaturas", area: "Suprimento / Manutenção", processo: "p16" },
-    { classe: "X", nome: "Materiais de outras classes", area: "Suprimento", processo: "p19" }
+    { classe: "I", nome: "Víveres", area: "Suprimento", processo: "E4-01" },
+    { classe: "II", nome: "Fardamento e equipamento individual", area: "Suprimento", processo: "E4-11" },
+    { classe: "III", nome: "Combustíveis e lubrificantes", area: "Suprimento", processo: "E4-06" },
+    { classe: "IV", nome: "Material de construcao", area: "Suprimento", processo: "E4-12" },
+    { classe: "V", nome: "Munição", area: "Suprimento", processo: "E4-08" },
+    { classe: "VI", nome: "Material diverso (geradores, embarcacoes)", area: "Suprimento", processo: "E4-12" },
+    { classe: "VII", nome: "Material principal / comunicacoes", area: "Suprimento", processo: "E4-12" },
+    { classe: "VIII", nome: "Material de saúde", area: "Suprimento / Saúde", processo: "E4-04" },
+    { classe: "IX", nome: "Peças de reposicao de viaturas", area: "Suprimento / Manutenção", processo: "E4-09" },
+    { classe: "X", nome: "Materiais de outras classes", area: "Suprimento", processo: "E4-12" }
   ];
 
   var processos = [
     {
-      id: "p01",
+      id: "E4-01",
       codigo: "E4-01",
       titulo: "Suprimento (Classes I, III e V) às OMDS da Bda",
       area: "Suprimento",
@@ -497,7 +483,7 @@ window.GPEX_E4 = (function () {
       fontes: ["R-1 (RISG) art. 34-35", "MC 4.0 Log Mil Ter", "EB70-MC-10.317"]
     },
     {
-      id: "p02",
+      id: "E4-02",
       codigo: "E4-02",
       titulo: "Manutenção de viaturas e armamento (2º escalão)",
       area: "Manutenção",
@@ -535,7 +521,7 @@ window.GPEX_E4 = (function () {
       fontes: ["R-1 (RISG) art. 34-35", "MC 4.0 Log Mil Ter", "EB70-MC-10.317"]
     },
     {
-      id: "p07",
+      id: "E4-03",
       codigo: "E4-03",
       titulo: "Transporte - planejamento e execução de comboio logístico",
       area: "Transporte",
@@ -573,7 +559,7 @@ window.GPEX_E4 = (function () {
       fontes: ["MC 4.0 Log Mil Ter", "EB70-MC-10.317", "R-1 (RISG) art. 34-35"]
     },
     {
-      id: "p09",
+      id: "E4-04",
       codigo: "E4-04",
       titulo: "Saúde (função logística) - suprimento e evacuação",
       area: "Saúde",
@@ -610,7 +596,7 @@ window.GPEX_E4 = (function () {
       fontes: ["MC 4.0 Log Mil Ter (função Saúde)", "Legislação sanitária"]
     },
     {
-      id: "p11",
+      id: "E4-05",
       codigo: "E4-05",
       titulo: "Salvamento - recuperacao de material danificado",
       area: "Salvamento",
@@ -638,7 +624,7 @@ window.GPEX_E4 = (function () {
       fontes: ["MC 4.0 Log Mil Ter (função Salvamento)", "Legislação patrimonial"]
     },
     {
-      id: "p13",
+      id: "E4-06",
       codigo: "E4-06",
       titulo: "Classe III - controle de combustíveis e lubrificantes",
       area: "Suprimento / Combustível",
@@ -676,7 +662,7 @@ window.GPEX_E4 = (function () {
       fontes: ["MC 4.0 Log Mil Ter", "Plano de Gestão de Riscos - Integridade e Controle OMDS"]
     },
     {
-      id: "p14",
+      id: "E4-07",
       codigo: "E4-07",
       titulo: "Controle do calendário de obrigações da Seção de Logística",
       area: "Gestão / Controle interno",
@@ -714,7 +700,7 @@ window.GPEX_E4 = (function () {
       fontes: ["Plano de Gestão OMDS", "Legislação de Governança", "Ordens de Serviço / Instrução / Notas de coordenação"]
     },
     {
-      id: "p15",
+      id: "E4-08",
       codigo: "E4-08",
       titulo: "Classe V - requisição e distribuição de munição",
       area: "Suprimento",
@@ -752,7 +738,7 @@ window.GPEX_E4 = (function () {
       fontes: ["EB70-MC-10.317", "Normas técnicas de munição", "MC 4.0 Log Mil Ter"]
     },
     {
-      id: "p16",
+      id: "E4-09",
       codigo: "E4-09",
       titulo: "Classe IX - motomecanização (peças de reposicao de viaturas)",
       area: "Suprimento / Manutenção",
@@ -790,7 +776,7 @@ window.GPEX_E4 = (function () {
       fontes: ["MC 4.0 Log Mil Ter", "EB70-MC-10.317", "R-1 (RISG) art. 34-35"]
     },
     {
-      id: "p17",
+      id: "E4-10",
       codigo: "E4-10",
       titulo: "Desfazimento de material (baixa patrimonial)",
       area: "Patrimônio",
@@ -828,7 +814,7 @@ window.GPEX_E4 = (function () {
       fontes: ["Legislação patrimonial", "Plano de Gestão de Riscos - Integridade e Controle OMDS"]
     },
     {
-      id: "p18",
+      id: "E4-11",
       codigo: "E4-11",
       titulo: "Classe II - fardamento e equipamento individual",
       area: "Suprimento",
@@ -866,7 +852,7 @@ window.GPEX_E4 = (function () {
       fontes: ["R-1 (RISG) art. 34-35", "MC 4.0 Log Mil Ter"]
     },
     {
-      id: "p19",
+      id: "E4-12",
       codigo: "E4-12",
       titulo: "Outras classes de suprimento (IV, VI, VII, VIII e X)",
       area: "Suprimento",
@@ -911,21 +897,21 @@ window.GPEX_E4 = (function () {
     { etapa: "2. Análise", descricao: "Analisar causa, consequência, probabilidade e impacto de cada risco." },
     { etapa: "3. Avaliação", descricao: "Comparar o nível de risco (P x I) com os critérios da OM e priorizar." },
     { etapa: "4. Tratamento", descricao: "Definir controle/mitigação, responsável e prazo; decidir tratar, transferir, evitar ou aceitar." },
-    { etapa: "5. Monitoramento", descricao: "Acompanhar indicadores, reavaliar periódicamente e reportar ao Cmt." }
+    { etapa: "5. Monitoramento", descricao: "Acompanhar indicadores, reavaliar periodicamente e reportar ao Cmt." }
   ];
 
-  var calendário = [
-    { obrigacao: "Conferência do saldo de cota de combustível (Classe III)", periodicidade: "Semanal", responsavel: "Fiscal do posto", antecedencia: 2, processo: "p13" },
-    { obrigacao: "Registro/consolidação de abastecimento por viatura", periodicidade: "Semanal", responsavel: "Fiscal do posto", antecedencia: 2, processo: "p13" },
-    { obrigacao: "Saldo de cota x consumo real de combustível", periodicidade: "Mensal", responsavel: "E4", antecedencia: 5, processo: "p13" },
-    { obrigacao: "Acompanhamento do calendário de obrigações do E4", periodicidade: "Mensal", responsavel: "Encarregado de controle interno", antecedencia: 10, processo: "p14" },
-    { obrigacao: "Relatório mensal de manutenção (viaturas/armamento)", periodicidade: "Mensal", responsavel: "Oficina / E4", antecedencia: 5, processo: "p02" },
-    { obrigacao: "Reconciliação de munição distribuida/recolhida (Classe V)", periodicidade: "Mensal", responsavel: "E4", antecedencia: 5, processo: "p15" },
-    { obrigacao: "Controle de validade de medicamentos (Classe VIII / FEFO)", periodicidade: "Mensal", responsavel: "FS / E4", antecedencia: 5, processo: "p09" },
-    { obrigacao: "Revisão do calendário unico de obrigações do E4", periodicidade: "Trimestral", responsavel: "E4", antecedencia: 10, processo: "p14" },
-    { obrigacao: "Levantamento de material candidato a desfazimento", periodicidade: "Semestral", responsavel: "Comissão de desfazimento", antecedencia: 15, processo: "p17" },
-    { obrigacao: "Consolidação anual de necessidades (fardamento, víveres, combustível)", periodicidade: "Anual", responsavel: "E4", antecedencia: 30, processo: "p18" },
-    { obrigacao: "Revisão do mapeamento de processos/riscos no ASE (GPEX)", periodicidade: "Anual", responsavel: "E4", antecedencia: 30, processo: "p14" }
+  var calendario = [
+    { obrigacao: "Conferência do saldo de cota de combustível (Classe III)", periodicidade: "Semanal", responsavel: "Fiscal do posto", antecedencia: 2, processo: "E4-06" },
+    { obrigacao: "Registro/consolidação de abastecimento por viatura", periodicidade: "Semanal", responsavel: "Fiscal do posto", antecedencia: 2, processo: "E4-06" },
+    { obrigacao: "Saldo de cota x consumo real de combustível", periodicidade: "Mensal", responsavel: "E4", antecedencia: 5, processo: "E4-06" },
+    { obrigacao: "Acompanhamento do calendário de obrigações do E4", periodicidade: "Mensal", responsavel: "Encarregado de controle interno", antecedencia: 10, processo: "E4-07" },
+    { obrigacao: "Relatório mensal de manutenção (viaturas/armamento)", periodicidade: "Mensal", responsavel: "Oficina / E4", antecedencia: 5, processo: "E4-02" },
+    { obrigacao: "Reconciliação de munição distribuida/recolhida (Classe V)", periodicidade: "Mensal", responsavel: "E4", antecedencia: 5, processo: "E4-08" },
+    { obrigacao: "Controle de validade de medicamentos (Classe VIII / FEFO)", periodicidade: "Mensal", responsavel: "FS / E4", antecedencia: 5, processo: "E4-04" },
+    { obrigacao: "Revisão do calendário unico de obrigações do E4", periodicidade: "Trimestral", responsavel: "E4", antecedencia: 10, processo: "E4-07" },
+    { obrigacao: "Levantamento de material candidato a desfazimento", periodicidade: "Semestral", responsavel: "Comissão de desfazimento", antecedencia: 15, processo: "E4-10" },
+    { obrigacao: "Consolidação anual de necessidades (fardamento, víveres, combustível)", periodicidade: "Anual", responsavel: "E4", antecedencia: 30, processo: "E4-11" },
+    { obrigacao: "Revisão do mapeamento de processos/riscos no ASE (GPEX)", periodicidade: "Anual", responsavel: "E4", antecedencia: 30, processo: "E4-07" }
   ];
 
   var combustível = {
@@ -1054,7 +1040,7 @@ window.GPEX_E4 = (function () {
     classes: classes,
     processos: processos,
     tratamentoRisco: tratamentoRisco,
-    calendário: calendário,
+    calendario: calendario,
     combustivel: combustível,
     nivelRisco: nivelRisco,
     todosRiscos: todosRiscos,
