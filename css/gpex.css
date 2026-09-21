@@ -295,6 +295,13 @@ ul.lista-simples li { margin-bottom: 3px; }
 .atrib-card ol { margin: 0 0 0 20px; font-size: 13px; color: var(--text-2); line-height: 1.55; }
 .atrib-card ol li { margin-bottom: 6px; }
 .atrib-card ol li b { color: var(--brand-600); margin-right: 4px; }
+.atrib-grid.largo { grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); }
+.atrib-sec { margin: 12px 0 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); }
+.atrib-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.atrib-riscos { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.atrib-risco { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 13px; color: var(--text-2); line-height: 1.5; }
+.atrib-risco .pi { font-size: 11px; color: var(--text-muted); margin-right: 4px; }
+.atrib-risco .det { font-size: 12.5px; margin-top: 3px; }
 
 /* ---------------- Guia ARIS / toolbar ---------------- */
 .aris-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 0 4px; padding: 12px 14px; background: var(--brand-bg); border: 1px dashed var(--brand); border-radius: var(--r); }

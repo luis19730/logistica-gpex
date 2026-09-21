@@ -161,14 +161,6 @@
     ],
     "riscos": [
       {
-        "descricao": "Indisponibilidade de meio de evacuação em atividade de campo",
-        "causa": "Ausencia de viatura/ambulância escalada para a atividade",
-        "consequencia": "Atraso no atendimento a militar acidentado",
-        "probabilidade": 2,
-        "impacto": 5,
-        "controle": "Escalar meio de evacuação dedicado em exercícios de risco"
-      },
-      {
         "descricao": "Medicamento vencido ou fora de especificação em uso",
         "causa": "Falha no controle de validade do estoque",
         "consequencia": "Risco a saúde do militar atendido",
@@ -328,14 +320,6 @@
       "OMDS da Bda"
     ],
     "riscos": [
-      {
-        "descricao": "Divergência entre munição requisitada, distribuida e devolvida",
-        "causa": "Falha no registro de distribuição/recolhimento por atividade",
-        "consequencia": "Responsabilização e dificuldade de auditoria",
-        "probabilidade": 2,
-        "impacto": 5,
-        "controle": "Ficha de controle de distribuição/devolução assinada"
-      },
       {
         "descricao": "Atraso na chegada da munição para atividade programada",
         "causa": "Requisição feita fora do prazo do órgão provedor",

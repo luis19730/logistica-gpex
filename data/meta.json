@@ -3,11 +3,20 @@
     "titulo": "Mapeamento de Processos e Gestão de Riscos",
     "subtitulo": "4ª Seção / E/4 (Seção de Logística) - Cmdo Bda Inf Amv",
     "metodologia": "GPEX / Projeto Piloto 2.0 de Mapeamento de Processos (CMSE)",
-    "versao": "2.1.0",
-    "atualizado": "2026-09-18",
+    "versao": "2.2.0",
+    "atualizado": "2026-09-21",
     "revisaoValidadeDias": 90,
     "apetiteRisco": "Baixo",
     "changelog": [
+      {
+        "versao": "2.2.0",
+        "data": "2026-09-21",
+        "itens": [
+          "Quadro de integrantes da E/4 (Chefe, Adjunto, Aux 1 a 3) com missões, carteira de classes e sistemas, substituindo as atribuições-modelo",
+          "Riscos por integrante (INT-01 a INT-05) incluídos na matriz e no plano de riscos",
+          "Sistemas do quadro de funções adicionados (SPED, SISCANELO, SCA, SISGLOG, SISCOFIS WEB, SISBOL, SG7, SCDP) com pendência de confirmação na fonte"
+        ]
+      },
       {
         "versao": "2.1.0",
         "data": "2026-09-18",

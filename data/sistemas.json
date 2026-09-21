@@ -1,6 +1,7 @@
 [
   {
     "sigla": "SISLOGMNT",
+    "alias": "SISLOGMANUT",
     "nome": "Sistema Logístico de Manutenção (SisLogMnt)",
     "orgao": "Diretoria de Material (D Mat)",
     "finalidade": "Controle da operação e da manutenção dos Materiais de Emprego Militar (MEM), com enfase na Classe IX (motomecanizados e blindados): cadastro de viaturas, emissao de ordens de serviço, controle de estoque de peças e manutenção preventiva/corretiva.",
@@ -16,5 +17,77 @@
     "uso": "Suprimento, catalogação, dotação, gestão patrimonial e desfazimento.",
     "acesso": "Ambiente restrito do Exército",
     "url": "https://www.colog.eb.mil.br/images/documentos/menus/2025/Folder_SIGELOG3.pdf"
+  },
+  {
+    "sigla": "SPED",
+    "nome": "VERIFICAR NA FONTE",
+    "orgao": "VERIFICAR NA FONTE",
+    "finalidade": "Sistema citado no quadro de distribuição de funções da E/4. Descrição oficial a confirmar.",
+    "uso": "Conforme quadro de funções da Seção.",
+    "acesso": "Ambiente restrito do Exército",
+    "url": ""
+  },
+  {
+    "sigla": "SISCANELO",
+    "nome": "VERIFICAR NA FONTE",
+    "orgao": "VERIFICAR NA FONTE",
+    "finalidade": "Sistema citado no quadro de distribuição de funções da E/4. Descrição oficial a confirmar.",
+    "uso": "Conforme quadro de funções da Seção.",
+    "acesso": "Ambiente restrito do Exército",
+    "url": ""
+  },
+  {
+    "sigla": "SCA",
+    "nome": "VERIFICAR NA FONTE",
+    "orgao": "VERIFICAR NA FONTE",
+    "finalidade": "Sistema citado no quadro de distribuição de funções da E/4. Descrição oficial a confirmar.",
+    "uso": "Conforme quadro de funções da Seção.",
+    "acesso": "Ambiente restrito do Exército",
+    "url": ""
+  },
+  {
+    "sigla": "SISGLOG",
+    "nome": "VERIFICAR NA FONTE",
+    "orgao": "VERIFICAR NA FONTE",
+    "finalidade": "Sistema citado no quadro de funções da E/4. Confirmar se corresponde ao SIGELOG (WEB) já listado.",
+    "uso": "Conforme quadro de funções da Seção.",
+    "acesso": "Ambiente restrito do Exército",
+    "url": ""
+  },
+  {
+    "sigla": "SISCOFIS WEB",
+    "nome": "VERIFICAR NA FONTE",
+    "orgao": "VERIFICAR NA FONTE",
+    "finalidade": "Sistema citado no quadro de funções da E/4. O SIGELOG (WEB) é descrito como sucessor do SISCOFIS: confirmar se segue em uso.",
+    "uso": "Conforme quadro de funções da Seção.",
+    "acesso": "Ambiente restrito do Exército",
+    "url": ""
+  },
+  {
+    "sigla": "SISBOL",
+    "nome": "VERIFICAR NA FONTE",
+    "orgao": "VERIFICAR NA FONTE",
+    "finalidade": "Sistema citado no quadro de distribuição de funções da E/4. Descrição oficial a confirmar.",
+    "uso": "Conforme quadro de funções da Seção (leitura/consulta de boletins).",
+    "acesso": "Ambiente restrito do Exército",
+    "url": ""
+  },
+  {
+    "sigla": "SG7",
+    "nome": "VERIFICAR NA FONTE",
+    "orgao": "VERIFICAR NA FONTE",
+    "finalidade": "Sistema citado no quadro de distribuição de funções da E/4. Descrição oficial a confirmar.",
+    "uso": "Conforme quadro de funções da Seção.",
+    "acesso": "Ambiente restrito do Exército",
+    "url": ""
+  },
+  {
+    "sigla": "SCDP",
+    "nome": "VERIFICAR NA FONTE",
+    "orgao": "VERIFICAR NA FONTE",
+    "finalidade": "Sistema ligado à função de Gestor SCDP (Adjunto). Descrição oficial a confirmar.",
+    "uso": "Gestão de SCDP (Adjunto).",
+    "acesso": "Ambiente restrito do Exército",
+    "url": ""
   }
 ]

@@ -1305,9 +1305,24 @@
     l.push("COMPETENCIAS (Art. 3º)");
     r.competencias.forEach(function (c) { l.push("  " + c.inciso + " - " + c.texto); });
     l.push("");
+    l.push("QUADRO DE INTEGRANTES E MISSÕES");
+    l.push("");
     r.atribuicoes.forEach(function (a) {
-      l.push(a.cargo.toUpperCase() + " (" + a.artigo + ")");
-      a.itens.forEach(function (it, i) { l.push("  " + ROMANOS[i] + " - " + it); });
+      l.push(a.cargo.toUpperCase() + (a.posto ? " - " + a.posto : "") + (a.nome ? " - " + a.nome : ""));
+      l.push("  Missões:");
+      a.itens.forEach(function (it, i) { l.push("    " + (i + 1) + ". " + it); });
+      if (a.carteira && a.carteira.length) l.push("  Carteira: " + a.carteira.join("; "));
+      if (a.sistemas && a.sistemas.length) l.push("  Sistemas: " + a.sistemas.join(", "));
+      if (a.riscos && a.riscos.length) {
+        l.push("  Riscos:");
+        a.riscos.forEach(function (x, i) {
+          var n = DB.nivelRisco(x.probabilidade, x.impacto);
+          l.push("    " + (i + 1) + ". [" + n.nome + " " + (x.probabilidade * x.impacto) + "] " + x.descricao);
+          l.push("       Causa: " + x.causa);
+          l.push("       Consequência: " + x.consequencia);
+          l.push("       Controle: " + x.controle);
+        });
+      }
       l.push("");
     });
     return l.join("\n");
@@ -1336,8 +1351,22 @@
     }
     if ($("regimentoAtribuicoes")) {
       $("regimentoAtribuicoes").innerHTML = r.atribuicoes.map(function (a) {
-        return '<div class="atrib-card"><div class="atrib-top"><h3>' + esc(a.cargo) + '</h3><span class="tag">' + esc(a.artigo) + "</span></div>" +
-          "<ol>" + a.itens.map(function (it, i) { return "<li><b>" + ROMANOS[i] + "</b> " + esc(it) + "</li>"; }).join("") + "</ol></div>";
+        var tags = function (arr) { return (arr || []).map(function (t) { return '<span class="tag">' + esc(t) + "</span>"; }).join(" "); };
+        var riscos = (a.riscos || []).map(function (x) {
+          var n = DB.nivelRisco(x.probabilidade, x.impacto);
+          return '<li class="atrib-risco">' + nivelTag(n.nome) + ' <span class="pi">P' + x.probabilidade + " x I" + x.impacto + " = " + (x.probabilidade * x.impacto) + "</span> " +
+            "<strong>" + esc(x.descricao) + "</strong>" +
+            '<div class="det"><b>Causa:</b> ' + esc(x.causa) + "</div>" +
+            '<div class="det"><b>Consequência:</b> ' + esc(x.consequencia) + "</div>" +
+            '<div class="det"><b>Controle:</b> ' + esc(x.controle) + "</div>" +
+            '<div class="det"><b>Resposta:</b> ' + esc(DB.respostaPara(n.nome)) + " | <b>Prazo:</b> " + esc(DB.prazoPara(n.nome)) + "</div></li>";
+        }).join("");
+        return '<div class="atrib-card"><div class="atrib-top"><h3>' + esc(a.cargo) + (a.nome ? " - " + esc(a.nome) : "") + '</h3><span class="tag">' + esc(a.posto || a.artigo) + "</span></div>" +
+          '<div class="atrib-sec">Missões</div>' +
+          "<ol>" + a.itens.map(function (it, i) { return "<li><b>" + (i + 1) + "</b> " + esc(it) + "</li>"; }).join("") + "</ol>" +
+          ((a.carteira && a.carteira.length) ? '<div class="atrib-sec">Carteira</div><div class="atrib-tags">' + tags(a.carteira) + "</div>" : "") +
+          ((a.sistemas && a.sistemas.length) ? '<div class="atrib-sec">Sistemas</div><div class="atrib-tags">' + tags(a.sistemas) + "</div>" : "") +
+          ((a.riscos && a.riscos.length) ? '<div class="atrib-sec">Riscos (' + a.riscos.length + ")</div><ul class=\"atrib-riscos\">" + riscos + "</ul>" : "") + "</div>";
       }).join("");
     }
     if ($("tbodyRegimentoVinculos")) {
@@ -1350,7 +1379,10 @@
     if ($("regimentoSistemas")) {
       $("regimentoSistemas").innerHTML = DB.sistemas.map(function (s) {
         var procs = DB.processos.filter(function (p) { return DB.sistemaDe(p.id).indexOf(s.sigla.replace(" (WEB)", "")) !== -1; });
-        return '<div class="fonte"><div class="n">' + esc(s.sigla) + " - " + esc(s.orgao) + '</div><div class="nome">' + esc(s.nome) + "</div>" +
+        var usuarios = (DB.integrantes || []).filter(function (it) { return it.sistemas.indexOf(s.sigla) !== -1 || (s.alias && it.sistemas.indexOf(s.alias) !== -1); })
+          .map(function (it) { return it.cargo + " (" + it.posto + ")"; });
+        return '<div class="fonte"><div class="n">' + esc(s.sigla) + (s.alias ? " / " + esc(s.alias) : "") + " - " + esc(s.orgao) + '</div><div class="nome">' + esc(s.nome) + "</div>" +
+          (usuarios.length ? '<div style="font-size:11.5px;color:var(--text-muted);margin-top:6px;">Integrantes: ' + esc(usuarios.join(", ")) + "</div>" : "") +
           '<div class="desc">' + esc(s.finalidade) + "</div>" +
           '<div style="font-size:11.5px;color:var(--text-muted);margin-top:6px;">Uso: ' + esc(s.uso) + " | Acesso: " + esc(s.acesso) + "</div>" +
           '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">' +

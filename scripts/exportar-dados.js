@@ -29,6 +29,7 @@ escrever('meta.json', { meta: DB.meta, escala: DB.escala, riscoEB10: DB.riscoEB1
 escrever('processos.json', DB.processos);
 escrever('riscos.json', DB.todosRiscos());
 escrever('regimento.json', DB.regimento);
+escrever('integrantes.json', DB.integrantes);
 escrever('governanca.json', { governanca: DB.governanca, governancaProcessos: DB.governancaProcessos, marcosModelo: DB.marcosModelo });
 escrever('normas.json', DB.normas);
 escrever('fontes.json', DB.fontes);

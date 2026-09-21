@@ -19,11 +19,12 @@ window.GPEX_E4 = (function () {
     titulo: "Mapeamento de Processos e Gestão de Riscos",
     subtitulo: "4ª Seção / E/4 (Seção de Logística) - Cmdo Bda Inf Amv",
     metodologia: "GPEX / Projeto Piloto 2.0 de Mapeamento de Processos (CMSE)",
-    versao: "2.1.0",
-    atualizado: "2026-09-18",
+    versao: "2.2.0",
+    atualizado: "2026-09-21",
     revisaoValidadeDias: 90,
     apetiteRisco: "Baixo",
     changelog: [
+      { versao: "2.2.0", data: "2026-09-21", itens: ["Quadro de integrantes da E/4 (Chefe, Adjunto, Aux 1 a 3) com missões, carteira de classes e sistemas, substituindo as atribuições-modelo", "Riscos por integrante (INT-01 a INT-05) incluídos na matriz e no plano de riscos", "Sistemas do quadro de funções adicionados (SPED, SISCANELO, SCA, SISGLOG, SISCOFIS WEB, SISBOL, SG7, SCDP) com pendência de confirmação na fonte"] },
       { versao: "2.1.0", data: "2026-09-18", itens: ["P0: corrige &apos; no escXml, datas em fuso local, identificadores ASCII, remove órfãos e unifica id = código (E4-01 a E4-12)", "P1: normas com situação/verificadoEm; EB20-D-11.001 como provável revogada; Regimento marcado como MODELO", "P4: id único no combustível, prefers-color-scheme/reduced-motion, PWA; AML rotulado como experimental"] },
       { versao: "2.0.0", data: "2026-09-18", itens: ["Versionamento, PWA offline, JSON validado e testes", "Campos de risco (inerente/residual, KRI, próxima revisão)", "Exportações .ics, backup JSON e relatório de combustível"] },
       { versao: "1.1.0", data: "2026-09-18", itens: ["Ajuste ao Regimento Interno (Arts. 1º a 6º)", "Sistemas SisLogMnt e SIGELOG (WEB)"] },
@@ -37,6 +38,220 @@ window.GPEX_E4 = (function () {
       "O preenchimento no ASE é manual, por usuário autorizado. Este sistema apenas prepara o " +
       "conteúdo (dados do processo, etapas, fluxo, matriz de riscos e resumo) para colagem."
   };
+
+  /* Quadro de distribuição de funções da E/4 (integrantes, missões, carteira, sistemas e riscos).
+     Substitui as atribuições-modelo dos Arts. 4º a 6º. Por regra do projeto (CONTRIBUTING, item 3)
+     não se versionam nomes de militares: identificação por cargo/posto. Campo opcional "nome". */
+  var integrantes = [
+    {
+      id: "INT-01", cargo: "Chefe de Seção", posto: "Maj", artigo: "Distribuição de funções",
+      itens: [
+        "Log Operações Bda",
+        "Coord Log COBRA",
+        "Coord Esc Log/2ª RM",
+        "Ctl Mapa Log OM/Bda",
+        "Ctl Nec Log OM/Bda"
+      ],
+      carteira: [],
+      sistemas: ["SPED", "SISLOGMANUT", "SISCANELO", "SCA", "SISGLOG", "SISCOFIS WEB", "SISBOL"],
+      riscos: [
+        { descricao: "Planejamento logístico das operações da Bda desatualizado ou incompleto",
+          causa: "Necessidades logísticas das OM não consolidadas a tempo para o planejamento",
+          consequencia: "Apoio logístico inadequado à operação e decisões do Cmt sem base atualizada",
+          probabilidade: 3, impacto: 4, categoria: "Operacional",
+          controle: "Cronograma fixo de coleta de dados junto às OM; revisão do anexo logístico antes de cada operação",
+          kri: "Anexos logísticos entregues no prazo (%)" },
+        { descricao: "Falha na coordenação do apoio logístico do COBRA",
+          causa: "Ausência de rotina e de registro das solicitações e dos compromissos assumidos",
+          consequencia: "Apoio não prestado ou prestado fora do prazo, com retrabalho e desgaste institucional",
+          probabilidade: 2, impacto: 4, categoria: "Operacional",
+          controle: "Registro único das demandas e dos prazos; reunião de coordenação periódica",
+          kri: "Demandas do COBRA atendidas no prazo (%)" },
+        { descricao: "Pedidos e informações ao Escalão Superior (2ª RM) sem acompanhamento",
+          causa: "Falta de controle de prazos e de retorno das solicitações encaminhadas",
+          consequencia: "Necessidades da Bda não atendidas ou atendidas fora da janela de apoio",
+          probabilidade: 3, impacto: 3, categoria: "Logístico",
+          controle: "Planilha de controle de pedidos com data de retorno e responsável",
+          kri: "Pedidos à 2ª RM sem resposta há mais de 15 dias (nº)" },
+        { descricao: "Mapa logístico e necessidades das OM desatualizados",
+          causa: "Dados das OM enviados com atraso, incompletos ou sem padronização",
+          consequencia: "Priorização equivocada de recursos e ruptura de suprimento em OM subordinada",
+          probabilidade: 4, impacto: 3, categoria: "Logístico",
+          controle: "Modelo padrão de envio com prazo; conferência mensal do mapa com as OM",
+          kri: "OM com dados atualizados no mês (%)" }
+      ]
+    },
+    {
+      id: "INT-02", cargo: "Adjunto de Seção", posto: "Ten", artigo: "Distribuição de funções",
+      itens: [
+        "Log Operações Bda",
+        "Coord Log COBRA",
+        "Coord Esc Log/2ª RM",
+        "Ctl Mapa Log OM/Bda",
+        "Ctl Nec Log OM/Bda",
+        "Gestor SCDP",
+        "Gestor de Riscos"
+      ],
+      carteira: [],
+      sistemas: ["SPED", "SISLOGMANUT", "SISCANELO", "SCA", "SISGLOG", "SISCOFIS WEB", "SISBOL"],
+      riscos: [
+        { descricao: "Concessão ou prestação de contas de diárias/passagens fora do prazo ou fora da norma (SCDP)",
+          causa: "Acompanhamento insuficiente dos prazos e da instrução dos processos no SCDP",
+          consequencia: "Pendências, devolução de valores e responsabilização do gestor",
+          probabilidade: 3, impacto: 4, categoria: "Integridade/Conformidade",
+          controle: "Lista de verificação por processo; alerta de prazo de prestação de contas",
+          kri: "Prestações de contas pendentes além do prazo (nº)" },
+        { descricao: "Matriz de riscos da Seção desatualizada ou sem revisão nos prazos",
+          causa: "Ausência de rotina de revisão e de responsáveis pelos riscos identificados",
+          consequencia: "Riscos não tratados, controles ineficazes e não conformidade com a política de gestão de riscos",
+          probabilidade: 4, impacto: 3, categoria: "Integridade/Conformidade",
+          controle: "Calendário de revisão por nível de risco; revisão trimestral dos riscos Alto/Extremo",
+          kri: "Riscos com revisão em dia (%)" },
+        { descricao: "Descontinuidade das coordenações na substituição do Chefe",
+          causa: "Falta de passagem de informações sobre pendências do COBRA e da 2ª RM",
+          consequencia: "Perda de prazos e de compromissos durante o impedimento do Chefe",
+          probabilidade: 2, impacto: 4, categoria: "Operacional",
+          controle: "Pasta de passagem de função atualizada; registro das pendências em quadro único",
+          kri: "Pendências sem responsável definido (nº)" },
+        { descricao: "Sobrecarga por acúmulo de funções (coordenações, SCDP e gestão de riscos)",
+          causa: "Concentração de atribuições de natureza distinta em um único integrante",
+          consequencia: "Queda de qualidade e atraso nas entregas, com falha em controles",
+          probabilidade: 3, impacto: 3, categoria: "Pessoas",
+          controle: "Definir substituto para cada função; priorização semanal com o Chefe",
+          kri: "Funções sem substituto designado (nº)" }
+      ]
+    },
+    {
+      id: "INT-03", cargo: "Auxiliar 1", posto: "ST", artigo: "Distribuição de funções",
+      itens: [
+        "Função Log Transporte",
+        "Função Log Salvamento",
+        "Função Log Suprimento",
+        "Função Log Manutenção",
+        "Função Log Recursos Humanos"
+      ],
+      carteira: ["Cl II", "Cl IV", "Cl VI", "Cl IX", "Cl X"],
+      sistemas: ["SPED", "SISLOGMANUT", "SISGLOG", "SISCOFIS WEB", "SISBOL"],
+      riscos: [
+        { descricao: "Viatura parada por falta de peça ou por ordem de serviço sem registro (Classe IX)",
+          causa: "Pedido de peças e ordens de serviço não lançados ou não acompanhados no SISLOGMANUT",
+          consequencia: "Redução da disponibilidade da frota e prejuízo ao apoio de transporte",
+          probabilidade: 4, impacto: 3, categoria: "Logístico",
+          controle: "Conferência semanal das ordens de serviço abertas; lista de viaturas paradas com prazo",
+          kri: "Viaturas paradas por falta de peça (nº)" },
+        { descricao: "Movimento ou comboio de transporte sem planejamento e documentação adequados",
+          causa: "Solicitações recebidas em cima da hora e ausência de lista de verificação",
+          consequencia: "Atraso, avaria ou extravio de carga e risco de acidente",
+          probabilidade: 3, impacto: 4, categoria: "Segurança/Ambiental",
+          controle: "Prazo mínimo de solicitação; lista de verificação de comboio; vistoria prévia das viaturas",
+          kri: "Movimentos realizados sem lista de verificação (nº)" },
+        { descricao: "Material danificado sem processo de recuperação ou baixa instruído (salvamento)",
+          causa: "Falta de rotina para identificar e instruir o material inservível",
+          consequencia: "Material parado na carga, com risco de deterioração e de irregularidade patrimonial",
+          probabilidade: 3, impacto: 3, categoria: "Integridade/Conformidade",
+          controle: "Levantamento periódico do material danificado; checklist para instrução do processo",
+          kri: "Materiais danificados sem destinação há mais de 90 dias (nº)" },
+        { descricao: "Registro desatualizado das Classes II, IV, VI e X nos sistemas",
+          causa: "Lançamentos feitos com atraso ou sem conferência física",
+          consequencia: "Divergência entre a carga e o material existente; dificuldade de auditoria",
+          probabilidade: 3, impacto: 3, categoria: "Integridade/Conformidade",
+          controle: "Conferência física por amostragem; lançamento no sistema até 5 dias úteis do recebimento",
+          kri: "Divergências carga x físico encontradas (nº)" },
+        { descricao: "Concentração de cinco funções logísticas e cinco classes em um único auxiliar",
+          causa: "Distribuição de carga de trabalho sem substituto nem priorização",
+          consequencia: "Atraso em tarefas críticas e dependência de uma única pessoa",
+          probabilidade: 4, impacto: 3, categoria: "Pessoas",
+          controle: "Definir substituto por função e classe; revisar a distribuição de carteira",
+          kri: "Funções/classes sem substituto (nº)" }
+      ]
+    },
+    {
+      id: "INT-04", cargo: "Auxiliar 2", posto: "1º Sgt", artigo: "Distribuição de funções",
+      itens: [
+        "Função Log Saúde",
+        "Função Log Suprimento"
+      ],
+      carteira: ["Cl I", "Cl III", "Cl V", "Cl VII", "Cl VIII"],
+      sistemas: ["SPED", "SG7", "SISCOFIS WEB", "SCA"],
+      riscos: [
+        { descricao: "Ruptura ou perda de víveres por validade ou previsão inadequada (Classe I)",
+          causa: "Previsão de consumo imprecisa e controle de validade deficiente",
+          consequencia: "Falta de alimentação em atividade ou desperdício de recursos",
+          probabilidade: 3, impacto: 3, categoria: "Logístico",
+          controle: "Previsão baseada no efetivo e no calendário; controle de validade por lote",
+          kri: "Itens de Classe I vencidos ou perdidos (nº)" },
+        { descricao: "Consumo de combustível acima da cota ou sem lastro de registro (Classe III)",
+          causa: "Registros de abastecimento incompletos e cota sem acompanhamento",
+          consequencia: "Estouro de cota, suspeita de desvio e responsabilização",
+          probabilidade: 3, impacto: 4, categoria: "Integridade/Conformidade",
+          controle: "Conferência semanal do saldo; fechamento mensal de consumo x cota",
+          kri: "Consumo real x cota (%)" },
+        { descricao: "Divergência entre munição requisitada, utilizada e devolvida (Classe V)",
+          causa: "Falha no registro e na conferência na distribuição e no recolhimento",
+          consequencia: "Extravio de munição, risco à segurança e responsabilização grave",
+          probabilidade: 2, impacto: 5, categoria: "Segurança/Ambiental",
+          controle: "Conferência com duas assinaturas; reconciliação ao final de cada atividade",
+          kri: "Divergências de munição por atividade (nº)" },
+        { descricao: "Medicamentos e material de saúde vencidos ou em falta (Classe VIII / função Saúde)",
+          causa: "Controle de validade deficiente e ausência de estoque mínimo",
+          consequencia: "Prejuízo ao atendimento de saúde e perda de material",
+          probabilidade: 3, impacto: 4, categoria: "Logístico",
+          controle: "Controle de validade por lote (FEFO); estoque mínimo revisado mensalmente",
+          kri: "Itens de Classe VIII dentro da validade (%)" },
+        { descricao: "Material de comunicações (Classe VII) sem controle de carga atualizado",
+          causa: "Movimentação entre OM e seções sem atualização do registro",
+          consequencia: "Divergência de carga e extravio de material de alto valor",
+          probabilidade: 2, impacto: 3, categoria: "Integridade/Conformidade",
+          controle: "Conferência semestral e a cada movimentação",
+          kri: "Divergências de carga em Classe VII (nº)" }
+      ]
+    },
+    {
+      id: "INT-05", cargo: "Auxiliar 3", posto: "Sd Ev", artigo: "Distribuição de funções",
+      itens: [
+        "Protocolo",
+        "Controle de Material",
+        "Faxina"
+      ],
+      carteira: [
+        "Leitura semanal dos Boletins da 2ª RM",
+        "Verificação da manutenção de viaturas"
+      ],
+      sistemas: ["SISBOL", "SISCOFIS WEB", "SISLOGMANUT"],
+      riscos: [
+        { descricao: "Extravio ou tramitação fora do prazo de documentos no protocolo",
+          causa: "Registro incompleto de entrada e saída e falta de conferência",
+          consequencia: "Perda de prazos, retrabalho e possível quebra de sigilo",
+          probabilidade: 3, impacto: 3, categoria: "Integridade/Conformidade",
+          controle: "Livro/registro de protocolo com conferência diária; supervisão pelo adjunto",
+          kri: "Documentos com prazo vencido no protocolo (nº)" },
+        { descricao: "Alterações publicadas nos Boletins da 2ª RM não identificadas ou não repassadas",
+          causa: "Leitura semanal sem registro e sem destaque das ações necessárias",
+          consequencia: "Descumprimento de prazo ou de norma nova, com prejuízo à Seção",
+          probabilidade: 3, impacto: 3, categoria: "Operacional",
+          controle: "Resumo semanal dos itens de interesse entregue ao Chefe e ao Adjunto",
+          kri: "Semanas sem resumo do boletim (nº)" },
+        { descricao: "Divergência no controle de material da Seção",
+          causa: "Movimentação sem registro e falta de conferência periódica",
+          consequencia: "Extravio de material e dificuldade de responsabilização",
+          probabilidade: 2, impacto: 3, categoria: "Integridade/Conformidade",
+          controle: "Relação de carga da Seção conferida mensalmente",
+          kri: "Itens de carga não localizados (nº)" },
+        { descricao: "Viatura com manutenção vencida sem alerta à Seção",
+          causa: "Verificação de manutenção sem periodicidade nem registro",
+          consequencia: "Viatura em uso sem revisão, com risco de avaria e de acidente",
+          probabilidade: 3, impacto: 4, categoria: "Segurança/Ambiental",
+          controle: "Lista de viaturas com data da próxima revisão, verificada semanalmente",
+          kri: "Viaturas com revisão vencida (nº)" },
+        { descricao: "Perda de conhecimento das rotinas com o término do tempo de serviço do soldado",
+          causa: "Funções de protocolo e controle sem procedimento escrito nem substituto",
+          consequencia: "Descontinuidade do protocolo e do controle de material",
+          probabilidade: 3, impacto: 3, categoria: "Pessoas",
+          controle: "Procedimentos operacionais escritos; treinar substituto com antecedência",
+          kri: "Rotinas sem procedimento escrito (nº)" }
+      ]
+    }
+  ];
 
   /* Regimento Interno da 4ª Seção / E/4 - Arts. 1º a 6º. */
   var regimento = {
@@ -61,38 +276,7 @@ window.GPEX_E4 = (function () {
       { inciso: "V", texto: "Coordenar o apoio de saúde, evacuação medica e o funcionamento do sistema logístico em campanha e em tempo de paz." },
       { inciso: "VI", texto: "Manter intercâmbio contínuo com o Escalão Superior (Divisão de Exército / Comando Militar de Área) e com as OMDS apoiadas." }
     ],
-    atribuicoes: [
-      {
-        cargo: "Chefe da E/4",
-        artigo: "Art. 4º",
-        itens: [
-          "Dirigir, orientar e fiscalizar os trabalhos de toda a Seção.",
-          "Assessorar o Comandante e o Chefe do Estado-Maior da Brigada em todos os assuntos atinentes a logística.",
-          "Distribuir as tarefas entre os adjuntos e auxiliares, acompanhando o cumprimento dos prazos.",
-          "Estabelecer diretrizes para a elaboracao de planos logísticos e controle de estoques e dotações.",
-          "Representar a Brigada em reuniões e comissões de carater logístico, quando determinado."
-        ]
-      },
-      {
-        cargo: "Adjunto da E/4",
-        artigo: "Art. 5º",
-        itens: [
-          "Substituir o Chefe da Seção em seus impedimentos legais e eventuais.",
-          "Coordenar a elaboracao de documentos, relatórios e expedientes diários da Seção.",
-          "Controlar o fluxo de correspondências, boletins e processos administrativos.",
-          "Acompanhar a execução das diretrizes logísticas junto às OM subordinadas."
-        ]
-      },
-      {
-        cargo: "Auxiliares (Sargentos/Subtenentes)",
-        artigo: "Art. 6º",
-        itens: [
-          "Executar o expediente, o arquivamento e a guarda de documentos sigilosos e ostensivos da Seção.",
-          "Manter atualizados os quadros de controle de suprimentos, manutenções, movimentação de viaturas e cargas.",
-          "Confeccionar minutas de boletins, partes, ofícios e notas relativas a sua área específica de atuação."
-        ]
-      }
-    ],
+    atribuicoes: integrantes,
     funcoesLogisticas: ["Suprimento", "Transporte", "Manutenção", "Saúde", "Engenharia", "Serviços Gerais"]
   };
 
@@ -115,7 +299,7 @@ window.GPEX_E4 = (function () {
   /* Sistemas corporativos de apoio logístico (TIC) utilizados pela E/4. */
   var sistemas = [
     {
-      sigla: "SISLOGMNT",
+      sigla: "SISLOGMNT", alias: "SISLOGMANUT",
       nome: "Sistema Logístico de Manutenção (SisLogMnt)",
       orgao: "Diretoria de Material (D Mat)",
       finalidade: "Controle da operação e da manutenção dos Materiais de Emprego Militar (MEM), com enfase na Classe IX (motomecanizados e blindados): cadastro de viaturas, emissao de ordens de serviço, controle de estoque de peças e manutenção preventiva/corretiva.",
@@ -132,6 +316,15 @@ window.GPEX_E4 = (function () {
       acesso: "Ambiente restrito do Exército",
       url: "https://www.colog.eb.mil.br/images/documentos/menus/2025/Folder_SIGELOG3.pdf"
     }
+    ,
+    { sigla: "SPED", nome: "VERIFICAR NA FONTE", orgao: "VERIFICAR NA FONTE", finalidade: "Sistema citado no quadro de distribuição de funções da E/4. Descrição oficial a confirmar.", uso: "Conforme quadro de funções da Seção.", acesso: "Ambiente restrito do Exército", url: "" },
+    { sigla: "SISCANELO", nome: "VERIFICAR NA FONTE", orgao: "VERIFICAR NA FONTE", finalidade: "Sistema citado no quadro de distribuição de funções da E/4. Descrição oficial a confirmar.", uso: "Conforme quadro de funções da Seção.", acesso: "Ambiente restrito do Exército", url: "" },
+    { sigla: "SCA", nome: "VERIFICAR NA FONTE", orgao: "VERIFICAR NA FONTE", finalidade: "Sistema citado no quadro de distribuição de funções da E/4. Descrição oficial a confirmar.", uso: "Conforme quadro de funções da Seção.", acesso: "Ambiente restrito do Exército", url: "" },
+    { sigla: "SISGLOG", nome: "VERIFICAR NA FONTE", orgao: "VERIFICAR NA FONTE", finalidade: "Sistema citado no quadro de funções da E/4. Confirmar se corresponde ao SIGELOG (WEB) já listado.", uso: "Conforme quadro de funções da Seção.", acesso: "Ambiente restrito do Exército", url: "" },
+    { sigla: "SISCOFIS WEB", nome: "VERIFICAR NA FONTE", orgao: "VERIFICAR NA FONTE", finalidade: "Sistema citado no quadro de funções da E/4. O SIGELOG (WEB) é descrito como sucessor do SISCOFIS: confirmar se segue em uso.", uso: "Conforme quadro de funções da Seção.", acesso: "Ambiente restrito do Exército", url: "" },
+    { sigla: "SISBOL", nome: "VERIFICAR NA FONTE", orgao: "VERIFICAR NA FONTE", finalidade: "Sistema citado no quadro de distribuição de funções da E/4. Descrição oficial a confirmar.", uso: "Conforme quadro de funções da Seção (leitura/consulta de boletins).", acesso: "Ambiente restrito do Exército", url: "" },
+    { sigla: "SG7", nome: "VERIFICAR NA FONTE", orgao: "VERIFICAR NA FONTE", finalidade: "Sistema citado no quadro de distribuição de funções da E/4. Descrição oficial a confirmar.", uso: "Conforme quadro de funções da Seção.", acesso: "Ambiente restrito do Exército", url: "" },
+    { sigla: "SCDP", nome: "VERIFICAR NA FONTE", orgao: "VERIFICAR NA FONTE", finalidade: "Sistema ligado à função de Gestor SCDP (Adjunto). Descrição oficial a confirmar.", uso: "Gestão de SCDP (Adjunto).", acesso: "Ambiente restrito do Exército", url: "" }
   ];
 
   var sistemaPorProcesso = {
@@ -580,14 +773,6 @@ window.GPEX_E4 = (function () {
       responsaveis: ["E/4", "Farmácia / Formação Sanitária (FS)"],
       riscos: [
         {
-          descricao: "Indisponibilidade de meio de evacuação em atividade de campo",
-          causa: "Ausencia de viatura/ambulância escalada para a atividade",
-          consequencia: "Atraso no atendimento a militar acidentado",
-          probabilidade: 2,
-          impacto: 5,
-          controle: "Escalar meio de evacuação dedicado em exercícios de risco"
-        },
-        {
           descricao: "Medicamento vencido ou fora de especificação em uso",
           causa: "Falha no controle de validade do estoque",
           consequencia: "Risco a saúde do militar atendido",
@@ -721,14 +906,6 @@ window.GPEX_E4 = (function () {
       ],
       responsaveis: ["E/4", "Órgão provedor (B Log)", "OMDS da Bda"],
       riscos: [
-        {
-          descricao: "Divergência entre munição requisitada, distribuida e devolvida",
-          causa: "Falha no registro de distribuição/recolhimento por atividade",
-          consequencia: "Responsabilização e dificuldade de auditoria",
-          probabilidade: 2,
-          impacto: 5,
-          controle: "Ficha de controle de distribuição/devolução assinada"
-        },
         {
           descricao: "Atraso na chegada da munição para atividade programada",
           causa: "Requisição feita fora do prazo do órgão provedor",
@@ -1056,6 +1233,46 @@ window.GPEX_E4 = (function () {
         });
       });
     });
+    integrantes.forEach(function (it) {
+      var rotulo = it.id + " - " + it.cargo + " (" + it.posto + ")";
+      it.riscos.forEach(function (r, idx) {
+        var n = nivelRisco(r.probabilidade, r.impacto);
+        out.push({
+          id: it.id.toLowerCase() + "-r" + (idx + 1),
+          processoId: it.id,
+          processo: rotulo,
+          area: "Pessoas / Funções",
+          descricao: r.descricao,
+          causa: r.causa,
+          consequencia: r.consequencia,
+          probabilidade: r.probabilidade,
+          probabilidadeRotulo: probabilidadeRotulo(r.probabilidade),
+          impacto: r.impacto,
+          impactoRotulo: impactoRotulo(r.impacto),
+          valor: r.probabilidade * r.impacto,
+          nivel: n.nome,
+          cor: n.cor,
+          controle: r.controle,
+          resposta: respostaPara(n.nome),
+          responsavel: it.cargo + " (" + it.posto + ")",
+          prazo: prazoPara(n.nome),
+          categoria: r.categoria || "Operacional",
+          indicador: r.kri || "Definir KRI",
+          tarefa: it.itens.join("; "),
+          competencia: "",
+          funcaoLogistica: "",
+          sistema: it.sistemas.join(", "),
+          riscoInerente: r.probabilidade * r.impacto,
+          riscoResidual: riscoResidual(r.probabilidade, r.impacto, n.nome),
+          eficaciaControle: r.controle ? "Pretendida (verificar eficácia)" : "Inexistente",
+          statusTratamento: (n.nome === "Extremo" || n.nome === "Alto") ? "Em tratamento prioritário" : n.nome === "Médio" ? "Em tratamento" : "Aceito / monitorado",
+          apetite: meta.apetiteRisco,
+          kri: r.kri || "Definir KRI",
+          proximaRevisao: dataRevisao(n.nome),
+          diasRevisao: diasRevisao(n.nome)
+        });
+      });
+    });
     return out;
   }
 
@@ -1084,6 +1301,7 @@ window.GPEX_E4 = (function () {
     prazoPara: prazoPara,
     categoriaDe: categoriaDe,
     regimento: regimento,
+    integrantes: integrantes,
     vinculoRegimento: vinculoRegimento,
     vinculoDe: vinculoDe,
     competenciaTexto: competenciaTexto,

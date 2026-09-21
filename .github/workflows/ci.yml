@@ -18,4 +18,4 @@ jobs:
       - name: Validar dados
         run: node scripts/validar-dados.js
       - name: Testes
-        run: node --test tests
+        run: node --test tests/*.test.js

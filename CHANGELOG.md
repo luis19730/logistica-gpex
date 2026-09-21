@@ -2,6 +2,17 @@
 
 Todas as mudanças relevantes do sistema. Formato baseado em Keep a Changelog; versão em `js/gpex-dados.js` (`meta.versao`).
 
+## [2.2.0] - 2026-09-21
+
+### Adicionado
+- Quadro de Integrantes e Missões da 4ª Seção (E/4): Chefe de Seção (Maj), Adjunto (Ten), Auxiliar 1 (ST), Auxiliar 2 (1º Sgt) e Auxiliar 3 (Sd Ev).
+- Riscos por integrante (INT-01 a INT-05) e novos sistemas de apoio (SPED, SISLOGMANUT, SISCANELO, SCA, SISGLOG, SISCOFIS WEB, SISBOL, SG7 e SCDP).
+- Arquivo `data/integrantes.json` gerado pelo exportador de dados.
+
+### Alterado
+- Matriz de riscos e plano de tratamento atualizados, com remoção de riscos descontinuados em E4-04 (Saúde) e E4-08 (Classe V).
+- Atualizada a suíte de validação e testes automáticos para 44 riscos e 12 processos.
+
 ## [2.1.0] - 2026-09-18
 
 ### Corrigido (P0)

@@ -2,7 +2,7 @@
  * Estratégia: network-first para mesma origem, com fallback ao cache (uso offline).
  * Atualização segura: quando online, sempre busca a versão mais recente e atualiza o cache.
  */
-const CACHE = 'gpex-e4-v1';
+const CACHE = 'gpex-e4-v2';
 const APP_SHELL = [
   './',
   './index.html',
