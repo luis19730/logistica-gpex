@@ -10,9 +10,9 @@ Todas as mudanças relevantes do sistema. Formato baseado em Keep a Changelog; v
 - Arquivo `data/integrantes.json` gerado pelo exportador de dados.
 
 ### Alterado
-- Matriz de riscos e plano de tratamento atualizados, com remoção de riscos descontinuados em E4-01 (Suprimento), E4-02 (Manutenção), E4-04 (Saúde) e E4-08 (Classe V).
+- Matriz de riscos e plano de tratamento atualizados: removidos os riscos operacionais indicados pelo usuário nos processos E4-01, E4-03, E4-04, E4-05, E4-06, E4-07, E4-08, E4-10, E4-11 e E4-12.
 - Removido o processo E4-09 (Classe IX - Peças de reposição de viaturas), vinculando a Classe IX diretamente ao processo de Manutenção E4-02.
-- Atualizada a suíte de validação e testes automáticos para 40 riscos e 11 processos.
+- Atualizada a suíte de validação e testes automáticos para 26 riscos operacionais e 11 processos.
 
 ## [2.1.0] - 2026-09-18
 

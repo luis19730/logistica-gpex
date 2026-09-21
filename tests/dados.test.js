@@ -8,10 +8,10 @@ global.window = {};
 require(path.join(__dirname, '..', 'js', 'gpex-dados.js'));
 const DB = global.window.GPEX_E4;
 
-test('todo processo tem risco, indicador, responsável e fonte', function () {
+test('todo processo tem indicador, responsável e fonte cadastrados', function () {
   assert.ok(DB.processos.length >= 1, 'sem processos');
   DB.processos.forEach(function (p) {
-    assert.ok(p.riscos && p.riscos.length >= 1, p.id + ' sem risco');
+    assert.ok(Array.isArray(p.riscos), p.id + ' riscos deve ser array');
     const gp = DB.governancaProcessos[p.id];
     assert.ok(gp && gp.indicadores && gp.indicadores.length >= 1, p.id + ' sem indicador');
     assert.ok(p.responsaveis && p.responsaveis.length >= 1, p.id + ' sem responsável');

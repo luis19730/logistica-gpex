@@ -655,16 +655,7 @@ window.GPEX_E4 = (function () {
         "Atualizar a escrituração e os níveis de estoque"
       ],
       responsaveis: ["E/4 (gestão)", "OMDS da Bda (levantamento)", "B Log (provedor)"],
-      riscos: [
-        {
-          descricao: "Recebimento de material fora de especificação ou danificado",
-          causa: "Falha na conferência no recebimento",
-          consequencia: "Material inutilizável chega às OMDS",
-          probabilidade: 2,
-          impacto: 3,
-          controle: "Checklist de conferência obrigatório no recebimento"
-        }
-      ],
+      riscos: [],
       fontes: ["R-1 (RISG) art. 34-35", "MC 4.0 Log Mil Ter", "EB70-MC-10.317"]
     },
     {
@@ -715,24 +706,7 @@ window.GPEX_E4 = (function () {
         "Registrar consumo de combustível e ocorrências da viagem"
       ],
       responsaveis: ["E/4", "Chefe do comboio", "Motoristas escalados"],
-      riscos: [
-        {
-          descricao: "Atraso ou acidente no deslocamento do comboio",
-          causa: "Planejamento de itinerário sem levantamento previo",
-          consequencia: "Atraso na entrega ou dano a viatura/carga/pessoal",
-          probabilidade: 2,
-          impacto: 4,
-          controle: "Reconhecimento previo de itinerário; briefing de segurança"
-        },
-        {
-          descricao: "Extravio ou avaria de carga durante o transporte",
-          causa: "Fixação inadequada da carga na viatura",
-          consequencia: "Perda de material e necessidade de reposicao",
-          probabilidade: 2,
-          impacto: 3,
-          controle: "Checklist de carregamento e amarração da carga"
-        }
-      ],
+      riscos: [],
       fontes: ["MC 4.0 Log Mil Ter", "EB70-MC-10.317", "R-1 (RISG) art. 34-35"]
     },
     {
@@ -752,16 +726,7 @@ window.GPEX_E4 = (function () {
         "Registrar consumo e validade dos medicamentos controlados"
       ],
       responsaveis: ["E/4", "Farmácia / Formação Sanitária (FS)"],
-      riscos: [
-        {
-          descricao: "Medicamento vencido ou fora de especificação em uso",
-          causa: "Falha no controle de validade do estoque",
-          consequencia: "Risco a saúde do militar atendido",
-          probabilidade: 2,
-          impacto: 4,
-          controle: "Controle periódico de validade (FEFO) e registro de descarte"
-        }
-      ],
+      riscos: [],
       fontes: ["MC 4.0 Log Mil Ter (função Saúde)", "Legislação sanitária"]
     },
     {
@@ -780,16 +745,7 @@ window.GPEX_E4 = (function () {
         "Registrar o resultado do salvamento e atualizar a escrituração"
       ],
       responsaveis: ["E/4", "Equipe de salvamento", "Oficina"],
-      riscos: [
-        {
-          descricao: "Material recuperável descartado indevidamente",
-          causa: "Classificação incorreta na triagem inicial",
-          consequencia: "Prejuízo patrimonial e reposicao desnecessaria",
-          probabilidade: 2,
-          impacto: 3,
-          controle: "Dupla avaliação técnica antes da decisão de baixa"
-        }
-      ],
+      riscos: [],
       fontes: ["MC 4.0 Log Mil Ter (função Salvamento)", "Legislação patrimonial"]
     },
     {
@@ -818,14 +774,6 @@ window.GPEX_E4 = (function () {
           probabilidade: 3,
           impacto: 3,
           controle: "Controle diário de abastecimento por viatura; conferência semanal do saldo de cota"
-        },
-        {
-          descricao: "Desvio ou uso indevido de combustível",
-          causa: "Fragilidade no controle de saída do posto de abastecimento",
-          consequencia: "Prejuízo patrimonial e responsabilização",
-          probabilidade: 2,
-          impacto: 4,
-          controle: "Registro assinado de cada abastecimento; auditoria periódica"
         }
       ],
       fontes: ["MC 4.0 Log Mil Ter", "Plano de Gestão de Riscos - Integridade e Controle OMDS"]
@@ -856,14 +804,6 @@ window.GPEX_E4 = (function () {
           probabilidade: 3,
           impacto: 3,
           controle: "Calendário unico acompanhado mensalmente, com aviso de antecedência (ex.: 10 dias antes do vencimento)"
-        },
-        {
-          descricao: "Duplicidade ou lacuna entre obrigações de diferentes classes",
-          causa: "Falta de consolidação unica do calendário do E/4",
-          consequencia: "Retrabalho ou item esquecido",
-          probabilidade: 2,
-          impacto: 2,
-          controle: "Centralizar o calendário em um unico responsável, com revisão trimestral"
         }
       ],
       fontes: ["Plano de Gestão OMDS", "Legislação de Governança", "Ordens de Serviço / Instrução / Notas de coordenação"]
@@ -886,16 +826,7 @@ window.GPEX_E4 = (function () {
         "Atualizar o controle de consumo por lote"
       ],
       responsaveis: ["E/4", "Órgão provedor (B Log)", "OMDS da Bda"],
-      riscos: [
-        {
-          descricao: "Atraso na chegada da munição para atividade programada",
-          causa: "Requisição feita fora do prazo do órgão provedor",
-          consequencia: "Cancelamento ou remarcacao da atividade de instrução",
-          probabilidade: 2,
-          impacto: 3,
-          controle: "Prazo mínimo padronizado de antecedência para requisição"
-        }
-      ],
+      riscos: [],
       fontes: ["EB70-MC-10.317", "Normas técnicas de munição", "MC 4.0 Log Mil Ter"]
     },
     {
@@ -916,24 +847,7 @@ window.GPEX_E4 = (function () {
         "Baixar o material da escrituração patrimonial"
       ],
       responsaveis: ["E/4", "Comissão de desfazimento", "Autoridade competente"],
-      riscos: [
-        {
-          descricao: "Desfazimento sem a instrução processual completa",
-          causa: "Falta de parecer técnico ou de documentacao exigida",
-          consequencia: "Nulidade do processo e responsabilização do agente",
-          probabilidade: 2,
-          impacto: 4,
-          controle: "Checklist de documentos obrigatórios antes de submeter o processo"
-        },
-        {
-          descricao: "Material irrecuperável mantido indevidamente na carga",
-          causa: "Ausencia de rotina periódica de identificação de itens",
-          consequencia: "Ocupação de espaço e distorção do inventário",
-          probabilidade: 2,
-          impacto: 2,
-          controle: "Levantamento periódico (semestral/anual) de itens candidatos a desfazimento"
-        }
-      ],
+      riscos: [],
       fontes: ["Legislação patrimonial", "Plano de Gestão de Riscos - Integridade e Controle OMDS"]
     },
     {
@@ -954,24 +868,7 @@ window.GPEX_E4 = (function () {
         "Controlar a reposicao por desgaste/troca de tamanho"
       ],
       responsaveis: ["E/4", "Almoxarife", "SU"],
-      riscos: [
-        {
-          descricao: "Praça sem fardamento completo para formatura/instrução",
-          causa: "Atraso no levantamento de necessidades após incorporação",
-          consequencia: "Apresentação inadequada e prejuízo a instrução",
-          probabilidade: 3,
-          impacto: 2,
-          controle: "Levantamento de tamanhos/necessidades ja na incorporação"
-        },
-        {
-          descricao: "Divergência entre fardamento distribuido e registrado",
-          causa: "Falha no registro individual de distribuição",
-          consequencia: "Dificuldade de responsabilização em caso de extravio",
-          probabilidade: 2,
-          impacto: 2,
-          controle: "Ficha individual assinada a cada distribuição"
-        }
-      ],
+      riscos: [],
       fontes: ["R-1 (RISG) art. 34-35", "MC 4.0 Log Mil Ter"]
     },
     {
@@ -993,24 +890,7 @@ window.GPEX_E4 = (function () {
         "Manter escrituração separada por classe de suprimento"
       ],
       responsaveis: ["E/4", "SU", "Órgãos provedores"],
-      riscos: [
-        {
-          descricao: "Classe de suprimento sem acompanhamento sistematico",
-          causa: "Ausencia de responsável/rotina para classes de menor volume",
-          consequencia: "Necessidades não identificadas a tempo, gerando ruptura pontual",
-          probabilidade: 2,
-          impacto: 3,
-          controle: "Definir responsável e rotina mínima por classe"
-        },
-        {
-          descricao: "Mistura de escrituração entre classes distintas",
-          causa: "Falta de padronizacao no registro por classe",
-          consequencia: "Dificuldade de auditoria e de prestação de contas",
-          probabilidade: 2,
-          impacto: 2,
-          controle: "Padronizar planilha/registro por classe de suprimento"
-        }
-      ],
+      riscos: [],
       fontes: ["MC 4.0 Log Mil Ter", "EB70-MC-10.317", "R-1 (RISG) art. 34-35"]
     }
   ];
