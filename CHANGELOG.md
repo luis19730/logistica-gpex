@@ -10,8 +10,8 @@ Todas as mudanças relevantes do sistema. Formato baseado em Keep a Changelog; v
 - Arquivo `data/integrantes.json` gerado pelo exportador de dados.
 
 ### Alterado
-- Matriz de riscos e plano de tratamento atualizados, com remoção de riscos descontinuados em E4-04 (Saúde) e E4-08 (Classe V).
-- Atualizada a suíte de validação e testes automáticos para 44 riscos e 12 processos.
+- Matriz de riscos e plano de tratamento atualizados, com remoção de riscos descontinuados em E4-01 (Suprimento), E4-02 (Manutenção), E4-04 (Saúde) e E4-08 (Classe V).
+- Atualizada a suíte de validação e testes automáticos para 42 riscos e 12 processos.
 
 ## [2.1.0] - 2026-09-18
 

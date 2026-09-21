@@ -660,14 +660,6 @@ window.GPEX_E4 = (function () {
       responsaveis: ["E/4 (gestão)", "OMDS da Bda (levantamento)", "B Log (provedor)"],
       riscos: [
         {
-          descricao: "Ruptura de estoque de uma classe de suprimento",
-          causa: "Levantamento de necessidades feito com atraso/incompleto",
-          consequencia: "OMDS sem suprimento na data prevista",
-          probabilidade: 3,
-          impacto: 4,
-          controle: "Padronizar prazo/formulário de levantamento; acompanhar níveis de estoque semanalmente"
-        },
-        {
           descricao: "Recebimento de material fora de especificação ou danificado",
           causa: "Falha na conferência no recebimento",
           consequencia: "Material inutilizável chega às OMDS",
@@ -697,14 +689,6 @@ window.GPEX_E4 = (function () {
       ],
       responsaveis: ["E/4 (gestão)", "Oficina de manutenção", "OMDS da Bda"],
       riscos: [
-        {
-          descricao: "Viatura/armamento fora de uso por atraso na manutenção",
-          causa: "Falta de peças de reposicao ou ferramental na oficina",
-          consequencia: "Reducao da capacidade operacional da OMDS",
-          probabilidade: 3,
-          impacto: 4,
-          controle: "Antecipar pedido de peças criticas; manter estoque mínimo"
-        },
         {
           descricao: "Acidente durante a manutenção",
           causa: "Uso incorreto de EPI/dispositivos de segurança na oficina",
