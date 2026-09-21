@@ -290,7 +290,6 @@ window.GPEX_E4 = (function () {
     "E4-06": { competencia: "II", funcao: "Suprimento" },
     "E4-07": { competencia: "IV", funcao: "Serviços Gerais" },
     "E4-08": { competencia: "III", funcao: "Suprimento" },
-    "E4-09": { competencia: "III", funcao: "Manutenção" },
     "E4-10": { competencia: "III", funcao: "Suprimento" },
     "E4-11": { competencia: "III", funcao: "Suprimento" },
     "E4-12": { competencia: "I", funcao: "Suprimento" }
@@ -336,7 +335,6 @@ window.GPEX_E4 = (function () {
     "E4-06": "SIGELOG (WEB)",
     "E4-07": "-",
     "E4-08": "SIGELOG (WEB)",
-    "E4-09": "SISLOGMNT",
     "E4-10": "SIGELOG (WEB)",
     "E4-11": "SIGELOG (WEB)",
     "E4-12": "SIGELOG (WEB)"
@@ -427,7 +425,6 @@ window.GPEX_E4 = (function () {
     "E4-06": { tarefa: "Controlar combustíveis e lubrificantes (Classe III)", indicadores: ["Consumo real x cota (%)", "Média de consumo da frota (km/L)"] },
     "E4-07": { tarefa: "Controlar o calendário de obrigações da seção", indicadores: ["Obrigações cumpridas no prazo (%)", "Atrasos justificados (nº)"] },
     "E4-08": { tarefa: "Requisitar e distribuir munição (Classe V)", indicadores: ["Divergência de munição requisitada x devolvida (nº)", "Requisições no prazo do órgão provedor (%)"] },
-    "E4-09": { tarefa: "Prover peças de reposição de viaturas (Classe IX)", indicadores: ["Viaturas paradas por falta de peça (nº)", "Tempo médio de reposição de peça (dias)"] },
     "E4-10": { tarefa: "Executar o desfazimento de material", indicadores: ["Processos de desfazimento sem nulidade (%)", "Itens inservíveis identificados no semestre (nº)"] },
     "E4-11": { tarefa: "Suprir fardamento e equipamento individual (Classe II)", indicadores: ["Praças com Classe II completa (%)", "Divergências de registro por ficha individual (nº)"] },
     "E4-12": { tarefa: "Acompanhar as demais classes de suprimento", indicadores: ["Classes com responsável e rotina definidos (%)", "Rupturas pontuais por classe (nº)"] }
@@ -635,7 +632,7 @@ window.GPEX_E4 = (function () {
     { classe: "VI", nome: "Material diverso (geradores, embarcacoes)", area: "Suprimento", processo: "E4-12" },
     { classe: "VII", nome: "Material principal / comunicacoes", area: "Suprimento", processo: "E4-12" },
     { classe: "VIII", nome: "Material de saúde", area: "Suprimento / Saúde", processo: "E4-04" },
-    { classe: "IX", nome: "Peças de reposicao de viaturas", area: "Suprimento / Manutenção", processo: "E4-09" },
+    { classe: "IX", nome: "Peças de reposicao de viaturas", area: "Suprimento / Manutenção", processo: "E4-02" },
     { classe: "X", nome: "Materiais de outras classes", area: "Suprimento", processo: "E4-12" }
   ];
 
@@ -900,44 +897,6 @@ window.GPEX_E4 = (function () {
         }
       ],
       fontes: ["EB70-MC-10.317", "Normas técnicas de munição", "MC 4.0 Log Mil Ter"]
-    },
-    {
-      id: "E4-09",
-      codigo: "E4-09",
-      titulo: "Classe IX - motomecanização (peças de reposicao de viaturas)",
-      area: "Suprimento / Manutenção",
-      classes: ["IX"],
-      objetivo:
-        "Garantir a disponibilidade de peças de reposicao (Classe IX) necessarias a manutenção " +
-        "das viaturas da Bda, evitando indisponibilidade prolongada de material.",
-      etapas: [
-        "Identificar a peça necessaria a partir da ordem de manutenção",
-        "Verificar disponibilidade em estoque local",
-        "Requisitar a peça ao órgão provedor, quando não houver em estoque",
-        "Receber e conferir a peça recebida",
-        "Aplicar a peça na viatura e encerrar a ordem de manutenção",
-        "Atualizar o controle de estoque de peças criticas"
-      ],
-      responsaveis: ["E/4", "Oficina de manutenção", "Órgão provedor"],
-      riscos: [
-        {
-          descricao: "Viatura parada por falta de peça de reposicao",
-          causa: "Ausencia de estoque mínimo de peças criticas/recorrentes",
-          consequencia: "Reducao prolongada da frota disponível",
-          probabilidade: 3,
-          impacto: 4,
-          controle: "Definir e manter estoque mínimo das peças de maior recorrencia de troca"
-        },
-        {
-          descricao: "Peça recebida incompativel com a viatura",
-          causa: "Erro na identificação/código da peça na requisição",
-          consequencia: "Atraso adicional na manutenção e retrabalho",
-          probabilidade: 2,
-          impacto: 2,
-          controle: "Dupla checagem do código/especificação antes da requisição"
-        }
-      ],
-      fontes: ["MC 4.0 Log Mil Ter", "EB70-MC-10.317", "R-1 (RISG) art. 34-35"]
     },
     {
       id: "E4-10",

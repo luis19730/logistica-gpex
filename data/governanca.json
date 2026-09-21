@@ -65,13 +65,6 @@
         "Requisições no prazo do órgão provedor (%)"
       ]
     },
-    "E4-09": {
-      "tarefa": "Prover peças de reposição de viaturas (Classe IX)",
-      "indicadores": [
-        "Viaturas paradas por falta de peça (nº)",
-        "Tempo médio de reposição de peça (dias)"
-      ]
-    },
     "E4-10": {
       "tarefa": "Executar o desfazimento de material",
       "indicadores": [
