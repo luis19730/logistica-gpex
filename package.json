@@ -1,0 +1,25 @@
+{
+  "name": "logistica-gpex",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "GPEX E/4 - Mapeamento de Processos e Gestao de Riscos (Cmdo Bda Inf Amv). Site estatico React + Vite, sem backend.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node scripts/validate-bpmn.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "check": "npm test && npm run smoke && npm run build"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "fast-xml-parser": "^4.4.1",
+    "vite": "^5.4.8"
+  }
+}
