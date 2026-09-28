@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "node scripts/validate-bpmn.mjs",
     "smoke": "node scripts/smoke.mjs",
-    "check": "npm test && npm run smoke && npm run build"
+    "check": "npm test && npm run smoke && npm run build",
+    "deploy": "node scripts/deploy.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
