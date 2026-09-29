@@ -52,6 +52,18 @@ body.sem-scroll {
   min-height: 100%;
 }
 
+.app > *,
+.pagina > * {
+  min-width: 0;
+}
+
+img,
+svg,
+canvas,
+video {
+  max-width: 100%;
+}
+
 /* ---------------------------------------------------------------- cabeçalho */
 
 .topo {
@@ -492,6 +504,93 @@ tr:focus-visible {
   }
 }
 
+@media (max-width: 640px) {
+  .conteudo {
+    padding: 12px 12px 20px;
+  }
+  .topo {
+    padding: 12px 12px;
+    gap: 12px;
+  }
+  .topo-id {
+    gap: 10px;
+  }
+  .selo-om {
+    min-width: 44px;
+    height: 44px;
+    font-size: 0.95rem;
+  }
+  .topo p {
+    font-size: 0.76rem;
+  }
+  .ficha {
+    gap: 12px;
+  }
+  .bloco {
+    padding: 12px 12px;
+  }
+  .bloco h2 {
+    font-size: 0.86rem;
+    gap: 7px;
+  }
+  .selos {
+    padding: 10px 12px;
+  }
+  .selo-area {
+    white-space: normal;
+  }
+  .rodape {
+    padding: 12px;
+    gap: 8px;
+  }
+  .grade-campos {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .modal-fundo {
+    padding: 10px;
+  }
+  .modal {
+    max-height: 94vh;
+  }
+  .modal-corpo {
+    padding: 12px;
+  }
+  .modal-rodape {
+    padding: 10px 12px;
+  }
+  .modal-rodape .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+  .torresmo {
+    bottom: 12px;
+    max-width: calc(100vw - 24px);
+  }
+  .fluxo-svg {
+    max-height: 440px;
+  }
+  .filtros {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 380px) {
+  .conteudo {
+    padding: 10px 8px 18px;
+  }
+  .topo {
+    padding: 10px 8px;
+  }
+  .bloco,
+  .selos {
+    padding: 10px;
+  }
+  .contador {
+    padding: 5px 9px;
+    font-size: 0.76rem;
+  }
+}
+
 .cartao {
   border: 1px solid var(--linha);
   border-radius: var(--raio);
@@ -562,7 +661,12 @@ tr:focus-visible {
   margin: 0 auto;
   width: 100%;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
+}
+
+.ficha > * {
+  min-width: 0;
 }
 
 .selos {
@@ -650,12 +754,13 @@ tr:focus-visible {
 
 .grade-campos {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
   gap: 12px;
 }
 
 .texto-secao {
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
   font-size: 0.9rem;
   line-height: 1.55;
 }
@@ -678,13 +783,17 @@ tr:focus-visible {
 }
 
 .dica code,
-.alerta code {
+.alerta code,
+.ajuda-fluxo code {
   font-family: var(--mono);
   font-size: 0.95em;
   background: #fff;
   padding: 1px 4px;
   border-radius: 3px;
   border: 1px solid var(--linha);
+  max-width: 100%;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .alerta {
