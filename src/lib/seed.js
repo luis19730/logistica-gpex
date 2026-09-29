@@ -384,7 +384,7 @@ const processos = [
         'Manter a guarda e o transporte de material controlado.\n' +
         'Redigir termos de divergência e ofícios de devolução.\n' +
         'Organizar a expedição para múltiplos destinos.\n' +
-        'Conhecer o regulamento de suprimento e as regras de segurança para itens controlados.',
+        'Aplicar as NARSUP — Normas Administrativas Relativas ao Suprimento — e as regras de segurança para itens controlados.',
       registros:
         'Nota de remessa e DANFE arquivados por entrega.\n' +
         'Ordem de recebimento e entrada no SIGELOG.\n' +
