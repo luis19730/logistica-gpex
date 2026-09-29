@@ -36,7 +36,10 @@ const processos = [
         'Classe IX — Peças de reposição\n' +
         'NPS — Nível de suprimento\n' +
         'FEFO — First Expired, First Out (primeiro que vence, primeiro que sai)\n' +
-        'PRM — Plano de Resposta a Emergência',
+        'PRM — Plano de Resposta a Emergência\n' +
+        'EB20-MC-10.204 — Manual de Logística do Exército\n' +
+        'EB70-MC-10.238 — Manual de Campanha Logística Militar Terrestre\n' +
+        'EB70-MC-10.317 — Manual de Campanha Batalhão Logístico',
       campoAplicacao:
         'Aplica-se ao Cmdo Bda Inf Amv e a todas as OMDS, para as atividades de apoio logístico decorrentes da determinação do Cmt da Bda, da entrada em operação ou do início de cada ciclo de planejamento. Não se aplica ao suprimento de primeiro escalão dentro de cada OMDS, que é responsabilidade da própria OM.',
       responsabilidades:
@@ -55,8 +58,9 @@ const processos = [
         'Limite inferior: o mínimo operacional de cada OMDS para uma semana completa de operações.\n' +
         'Restrição: o processo não autoriza aquisição nem ampliação de recursos; apenas dimensiona e prioriza o que já está alocado.',
       documentos:
-        'EB20-MC-10.317 — Manual de Logística de Exército.\n' +
-        'EB70-MC-10.317 — Regulamento de Suprimento.\n' +
+        'EB20-MC-10.204 — Manual de Logística do Exército, 3ª ed. 2014 (Estado-Maior do Exército).\n' +
+        'EB70-MC-10.238 — Manual de Campanha Logística Militar Terrestre, 2ª ed. 2022 (COTER).\n' +
+        'EB70-MC-10.317 — Manual de Campanha Batalhão Logístico, 2ª ed. 2022 (COTER).\n' +
         'Portaria C Ex nº 1.822/2018 — Instrução Regulamentar das Organizações Militares.\n' +
         'Regimento Interno do Cmdo Bda Inf Amv, Art. 3º, incisos I a VI (competências da E/4).\n' +
         'Plano de emprego da força da Brigada (CICOP).\n' +
@@ -70,7 +74,7 @@ const processos = [
       competencias:
         'Planejar e consolidar necessidades logísticas de OMDS.\n' +
         'Redigir e manter documentação técnica de logística militar.\n' +
-        'Aplicar a doutrina de logística de Exército (EB20-MC-10.317).\n' +
+        'Aplicar a doutrina de logística do Exército (EB20-MC-10.204).\n' +
         'Gerenciar prazos e pontos de controle.\n' +
         'Fundamentar decisões de priorização de recursos escassos.\n' +
         'Articular-se com o Batalhão Logístico e com as OMDS.\n' +
@@ -103,8 +107,8 @@ const processos = [
       't|Emitir o Plano de Apoio Logístico (necessidades, organicidade, prazos e controles)',
       't|Submeter o plano à aprovação do Cmt da Bda',
       'g|O plano foi aprovado?|4',
-      't|Republicar a versão aprovada e distribuir às OMDS',
-      't|Registrar a versão aprovada, os responsáveis e os pontos de controle',
+      't|Lacrar e registrar a versão aprovada, com responsáveis e pontos de controle, no livro de registro da E/4',
+      't|Distribuir a versão aprovada às OMDS e orientá-las a usar aquela referência',
       'e|Fim do processo',
     ].join('\n'),
   },
@@ -137,7 +141,8 @@ const processos = [
         'MPE — Máscara de Proteção Especial\n' +
         'NPS — Nível de suprimento\n' +
         'FEFO — First Expired, First Out (primeiro que vence, primeiro que sai)\n' +
-        'EB70-MC-10.317 — Regulamento de Suprimento.',
+        'EB70-MC-10.238 — Manual de Campanha Logística Militar Terrestre\n' +
+        'EB70-MC-10.317 — Manual de Campanha Batalhão Logístico',
       campoAplicacao:
         'Aplica-se a todas as OMDS da Brigada, em todos os ciclos de planejamento e de reposição, para todas as classes sob responsabilidade da E/4. Não se aplica ao atendimento de urgência, tratado como pedido extraordinário pelo processo de recebimento e distribuição (E4-04).',
       responsabilidades:
@@ -154,8 +159,10 @@ const processos = [
         'Limite de escopo: itens fora do alcance de suprimento da E/4 são encaminhados à seção competente.\n' +
         'Limite de quantidade: nenhuma necessidade pode exceder a dotação vigente da OM sem justificativa escrita.',
       documentos:
-        'EB20-MC-10.317 — Manual de Logística de Exército.\n' +
-        'EB70-MC-10.317 — Regulamento de Suprimento, arts. 34 e 35.\n' +
+        'EB20-MC-10.204 — Manual de Logística do Exército, 3ª ed. 2014 (Estado-Maior do Exército).\n' +
+        'EB70-MC-10.238 — Manual de Campanha Logística Militar Terrestre, 2ª ed. 2022 (COTER).\n' +
+        'EB70-MC-10.317 — Manual de Campanha Batalhão Logístico, 2ª ed. 2022 (COTER).\n' +
+        'NARSUP — Normas Administrativas Relativas ao Suprimento.\n' +
         'Formulário de Levantamento de Necessidades (modelo da E/4).\n' +
         'Histórico de consumo médio das OMDS (consulta ao SIGELOG).\n' +
         'Quadro de Dotação Vigente (documento controlado do Chefe da E/4).\n' +
@@ -196,12 +203,13 @@ const processos = [
       's|Aberta a rodada de levantamento do ciclo',
       't|Enviar o formulário de necessidades às OMDS, com prazo de 48 horas',
       'g|Todas as OMDS responderam no prazo?|2',
-      't|Registrar as OMDS pendentes e escalonar ao Cmt da Bda',
+      't|Registrar as OMDS pendentes, se houver, e escalar ao Cmt da Bda',
+      'g|Todas as OMDS responderam após a reiteração do pedido?|2',
       't|Conferir cada resposta com o consumo médio, com a dotação vigente e com o saldo em estoque',
-      'g|Houve divergência entre a resposta e o consumo previsto?|5',
-      't|Devolver as divergências à OM para ajuste',
+      't|Corrigir na E/4 o que for sanável e devolver à OM o restante das divergências encontradas',
+      'g|Todas as respostas ficaram coerentes com o consumo previsto?|6',
       't|Consolidar o quadro único por classe e por OMDS',
-      't|Entregar o quadro ao Chefe da E/4, com as pendências registradas',
+      't|Entregar o quadro ao Chefe da E/4, com a relação das OMDS pendentes e das divergências',
       'e|Fim do processo',
     ].join('\n'),
   },
@@ -233,7 +241,7 @@ const processos = [
         'PM — Preventive Maintenance (manutenção preventiva)\n' +
         'MTTR — Mean Time To Repair (tempo médio de correção)\n' +
         'OS — Ordem de Serviço\n' +
-        'EB20-MC-10.317 — Manual de Logística de Exército.',
+        'EB20-MC-10.204 — Manual de Logística do Exército, 3ª ed. 2014.',
       campoAplicacao:
         'Aplica-se a todo o material e a todas as viaturas sob responsabilidade da E/4 e das OMDS, em tempo de paz e em operação. Cobre a manutenção de 1º e de 2º escalões. Não cobre a manutenção de 3º escalão, executada pelo Batalhão Logístico ou pelo CIPM quando a necessidade exceder a capacidade do 2º escalão.',
       responsabilidades:
@@ -251,12 +259,12 @@ const processos = [
         'Limite de tempo: prazos de recuperação por tipo de intervenção, acompanhados semanalmente.\n' +
         'Limite de recurso: o consumo de peças por viatura não pode ultrapassar a média histórica sem justificativa técnica.',
       documentos:
-        'EB20-MC-10.317 — Manual de Logística de Exército, parte de manutenção.\n' +
-        'EB20-MC-10.318 — Norma de manutenção de material.\n' +
+        'EB20-MC-10.204 — Manual de Logística do Exército, 3ª ed. 2014 (parte de manutenção).\n' +
+        'NARMNT — Normas Administrativas Relativas à Manutenção.\n' +
+        'EB70-MC-10.317 — Manual de Campanha Batalhão Logístico, 2ª ed. 2022 (COTER).\n' +
         'Manual do SISLOGMNT (sistema de gestão de manutenção).\n' +
         'Plano de Manutenção de 1º e de 2º escalões da Bda.\n' +
         'Catálogo de peças de reposição (Classe IX).\n' +
-        'EB20-MC-10.319 — Manual de Campanha.\n' +
         'Regimento Interno do Cmdo Bda Inf Amv, Art. 3º, inciso IV.',
       descricao:
         'Mensalmente o Auxiliar 1 da E/4 monta o Plano de Manutenção a partir do histórico de horas de uso registrado no SISLOGMNT, do calendário de inspeções e do programa de revisão do fabricante. O plano é publicado e as OMDS recebem as janelas de manutenção da semana.\n' +
@@ -299,11 +307,11 @@ const processos = [
       't|Extrair do SISLOGMNT o histórico de uso e montar o Plano de Manutenção',
       't|Publicar o plano e distribuir às OMDS as janelas de manutenção',
       't|Executar a manutenção preventiva e registrar no SISLOGMNT',
-      'g|A viatura voltou a prontidão após a manutenção?|4',
-      't|Abrir chamado de 2º escalão, substituir por viatura reserva e enviar à oficina',
+      'g|A viatura permaneceu indisponível após a manutenção preventiva?|4',
+      't|Abrir chamado de 2º escalão, substituir por viatura reserva e enviar à oficina designada',
       't|Registrar a ordem de serviço e baixar as peças de reposição aplicadas',
       'g|O material está apto ao retorno ao parque?|6',
-      't|Atualizar a disponibilidade do parque e reportar ao Chefe da E/4',
+      't|Atualizar a disponibilidade do parque e reportar ao Chefe da E/4, com a previsão de recuperação',
       'e|Fim do processo',
     ].join('\n'),
   },
@@ -337,7 +345,8 @@ const processos = [
         'NOTA — Nota de Remessa\n' +
         'DANFE — Documento Auxiliar da Nota Fiscal Eletrônica\n' +
         'NPS — Nível de suprimento\n' +
-        'EB70-MC-10.317 — Regulamento de Suprimento.',
+        'EB70-MC-10.238 — Manual de Campanha Logística Militar Terrestre\n' +
+        'EB70-MC-10.317 — Manual de Campanha Batalhão Logístico',
       campoAplicacao:
         'Aplica-se ao recebimento de toda entrega destinada à E/4 ou às OMDS da Brigada, no Depósito da Seção ou no ponto de entrega designado, em tempo de paz e em operação. Aplica-se igualmente à expedição de itens de uso restrito, como munição, material de saúde e material controlado.',
       responsabilidades:
@@ -354,8 +363,10 @@ const processos = [
         'Limite de guarda: prazo máximo de estocagem no Depósito da Seção, com regras de validade e de integridade da embalagem.\n' +
         'Limite de segurança: munição transportada em viatura adequada, com amarração específica e, quando determinada, escolta.',
       documentos:
-        'EB70-MC-10.317 — Regulamento de Suprimento, arts. 34 e 35.\n' +
-        'EB20-MC-10.317 — Manual de Logística de Exército.\n' +
+        'EB20-MC-10.204 — Manual de Logística do Exército, 3ª ed. 2014.\n' +
+        'EB70-MC-10.238 — Manual de Campanha Logística Militar Terrestre, 2ª ed. 2022 (COTER).\n' +
+        'EB70-MC-10.317 — Manual de Campanha Batalhão Logístico, 2ª ed. 2022 (COTER).\n' +
+        'NARSUP — Normas Administrativas Relativas ao Suprimento.\n' +
         'Nota de Remessa e DANFE da entrega.\n' +
         'Plano de Apoio Logístico da Brigada (versão aprovada).\n' +
         'Ficha de controle de entrega por OMDS (modelo da E/4).\n' +
@@ -400,13 +411,12 @@ const processos = [
       's|Recebida a comunicação de entrega do B Log ou do depósito fornecedor',
       't|Obter a nota de remessa e abrir a ordem de recebimento no SIGELOG',
       't|Executar a conferência física da carga conforme a regra da classe',
-      'g|A carga confere com a nota de remessa?|3',
-      't|Registrar termo de divergência, devolver o excedente e solicitar complementação',
-      'g|A complementação foi recebida e conferida?|3',
-      't|Dar entrada no estoque e conferir a validade do lote',
-      't|Separar e expedir a carga por OMDS conforme o Plano de Apoio Logístico',
-      'g|A OMDS retirou e assinou o recebimento?|8',
-      't|Registrar a não retirada e reprogramar a entrega',
+      'g|A carga está incompleta ou diverge da nota de remessa?|3',
+      't|Registrar termo de divergência, devolver o excedente e solicitar a complementação do que faltar',
+      'g|A carga ficou completa e conferida?|2',
+      't|Dar entrada no estoque e conferir a validade e a integridade do lote',
+      't|Separar e expedir a carga por OMDS conforme o Plano de Apoio Logístico, registrando as não retiradas e reprogramando a entrega das OMDS remanescentes',
+      'g|Todas as OMDS retiraram e assinaram o recebimento?|8',
       't|Conciliar o movimento físico com o lançamento no SIGELOG',
       'e|Fim do processo',
     ].join('\n'),
@@ -440,7 +450,8 @@ const processos = [
         'Classe III — Combustíveis e lubrificantes\n' +
         'Classe V — Munição\n' +
         'Classe IX — Peças de reposição\n' +
-        'EB70-MC-10.317 — Regulamento de Suprimento.',
+        'EB70-MC-10.238 — Manual de Campanha Logística Militar Terrestre\n' +
+        'EB70-MC-10.317 — Manual de Campanha Batalhão Logístico',
       campoAplicacao:
         'Aplica-se ao Depósito da E/4 e ao registro de todos os movimentos de material vinculados à Seção, em todas as classes. Aplica-se igualmente ao estoque de peças de reposição utilizado pela manutenção. Não substitui o controle físico do processo de recebimento e distribuição (E4-04), com o qual é complementar.',
       responsabilidades:
@@ -457,8 +468,10 @@ const processos = [
         'Limite de precisão: divergência máxima aceitável de 0,5% do valor total do estoque, com registro e tratativa.\n' +
         'Limite de periodicidade: contagem rotativa mensal por item de alto valor e inventário geral trimestral.',
       documentos:
-        'EB70-MC-10.317 — Regulamento de Suprimento.\n' +
-        'EB20-MC-10.317 — Manual de Logística de Exército.\n' +
+        'EB20-MC-10.204 — Manual de Logística do Exército, 3ª ed. 2014.\n' +
+        'EB70-MC-10.238 — Manual de Campanha Logística Militar Terrestre, 2ª ed. 2022 (COTER).\n' +
+        'EB70-MC-10.317 — Manual de Campanha Batalhão Logístico, 2ª ed. 2022 (COTER).\n' +
+        'NARSUP — Normas Administrativas Relativas ao Suprimento.\n' +
         'Manual do SIGELOG — regras de lançamento e de ajuste.\n' +
         'Livro de Registro do Depósito da E/4 (formulário próprio).\n' +
         'Termo de Inventário Geral (modelo da E/4).\n' +
@@ -503,12 +516,14 @@ const processos = [
       's|Recebida a comunicação de entrada, de saída ou de baixa de material',
       't|Lançar o movimento no SIGELOG e no Livro de Registro do Depósito no mesmo dia',
       't|Executar a contagem rotativa semanal dos itens sorteados, em contagem cega',
-      'g|A contagem conferiu com o saldo?|3',
+      'g|A contagem divergiu do saldo sistêmico?|3',
       't|Registrar termo de divergência e obter autorização do Chefe da E/4 para o ajuste',
-      't|Conferir validades e aplicar a regra FEFO na separação dos lotes',
+      't|Conferir validades, sinalizar os lotes a vencer e aplicar a regra FEFO na separação',
+      't|Monitorar o ponto de reposição mínimo e avisar o B Log antes de atingir o limite',
       't|Elaborar o relatório mensal de posição de estoque e de itens em vencimento',
-      'g|A posição foi aceita pela Chefia da E/4?|7',
-      't|Recalcular a posição de estoque com as correções apontadas',
+      'g|A posição foi aceita pela Chefia da E/4?|8',
+      't|Recalcular a posição de estoque com as correções apontadas e reenviar para conferência',
+      't|Trimestralmente, realizar o inventário geral em contagem cega e emitir o Termo de Inventário Geral',
       'e|Fim do processo',
     ].join('\n'),
   },
