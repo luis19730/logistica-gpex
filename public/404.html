@@ -75,7 +75,7 @@
     <script>
       // O GitHub Pages não tem rewrite de rotas. Este 404.html recebe qualquer
       // caminho profundo (/logistica-gpex/processo/3) e devolve o app para a raiz,
-      // preservando o caminho em sessionStorage para o main.jsx reaplicar a rota.
+      // guardando o endereço completo em sessionStorage para o main.jsx reaplicar.
       (function () {
         var base = '/logistica-gpex/'
         var atual = window.location.pathname
@@ -83,7 +83,10 @@
           var interno = atual.slice(base.length)
           if (interno && interno !== '404.html') {
             try {
-              sessionStorage.setItem('gpex:redirect', '/' + interno)
+              sessionStorage.setItem(
+                'gpex:redirect',
+                atual + window.location.search + window.location.hash
+              )
             } catch (e) {
               /* modo privado: seguimos sem preservar */
             }

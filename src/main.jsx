@@ -13,11 +13,19 @@ function recuperarRedirect() {
     const guardada = window.sessionStorage.getItem('gpex:redirect')
     if (!guardada) return
     window.sessionStorage.removeItem('gpex:redirect')
-    const url = new URL(guardada, window.location.origin)
-    if (url.origin !== window.location.origin) return
-    if (!url.pathname.startsWith(BASE)) return
-    if (url.pathname.replace(/\/$/, '') === BASE.replace(/\/$/, '')) return
-    window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`)
+
+    // Só aceitamos caminho interno: nada de "//site" (protocolo relativo) nem "..".
+    if (!guardada.startsWith('/') || guardada.startsWith('//')) return
+    const caminho = guardada.split(/[?#]/)[0]
+    if (!caminho || caminho.includes('..')) return
+
+    // Aceita "/logistica-gpex/processo/3" e também "/processo/3" (relativo à base).
+    let relativo = caminho.startsWith(BASE) ? caminho.slice(BASE.length) : caminho
+    if (!relativo.startsWith('/')) relativo = '/' + relativo
+    if (relativo === '/') return
+
+    const sufixo = guardada.slice(caminho.length)
+    window.history.replaceState(null, '', BASE.replace(/\/$/, '') + relativo + sufixo)
   } catch {
     /* sem redirect pendente */
   }
