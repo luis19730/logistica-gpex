@@ -6,9 +6,10 @@
 // <sequenceFlow> e a coerência da seção <bpmndi:BPMNDiagram> (formas,
 // waypoints e contenção no plano). É o mesmo arquivo que roda em `npm test`.
 import { XMLParser, XMLValidator } from 'fast-xml-parser'
+import { BpmnModdle } from 'bpmn-moddle'
 import { gerarBpmn } from '../src/lib/bpmn.js'
 import { gerarSvg } from '../src/lib/svg.js'
-import { montarFluxo, validarFluxo, parseFluxo } from '../src/lib/flow.js'
+import { montarFluxo, validarFluxo, parseFluxo, pontosDaAresta } from '../src/lib/flow.js'
 import { processosIniciais } from '../src/lib/seed.js'
 import { FLUXO_PADRAO } from '../src/lib/constants.js'
 
@@ -229,7 +230,7 @@ function validar(xml, rotulo, exigirTarefas = false) {
   }
 
   // Arestas com waypoints, todos contidos no plano.
-  const arestas = tag('bpmndi:BPMNEdge').map((n) => n.node)
+  const arestas = tag('bpmndi:BPMNEdge').map((n) => n.node).filter((e) => !String(e['@bpmnElement'] || '').startsWith('Risco_'))
   ok(arestas.length === fluxos.length, `há ${fluxos.length} sequenceFlow e ${arestas.length} BPMNEdge`, rotulo)
   const plano = planos[0] ? planos[0].node : null
   const pool = formas.find((f) => participantes.length === 1 && f['@bpmnElement'] === participantes[0].node['@id'])
@@ -311,9 +312,66 @@ for (const p of processosIniciais()) {
   ok(arv['@xmlns'] === 'http://www.w3.org/2000/svg', 'namespace SVG ausente', p.codigo)
   const xml = svg
   ok(xml.includes('<path d="M') || modelo.edges.length === 0, 'nenhuma aresta desenhada', p.codigo)
-  ok(/<rect[^>]+rx="10"/.test(xml) || modelo.nodes.every((n) => n.kind !== 'task'), 'nenhuma forma de tarefa desenhada', p.codigo)
+  ok(/<rect[^>]+rx="(10|8)"/.test(xml) || modelo.nodes.every((n) => n.kind !== 'task'), 'nenhuma forma de tarefa desenhada', p.codigo)
   ok(xml.includes('<polygon') || modelo.nodes.every((n) => n.kind !== 'gateway'), 'nenhum losango de decisão desenhado', p.codigo)
   console.log(`  ${p.codigo}: ${modelo.nodes.length} nós, ${modelo.edges.length} arestas, ${modelo.width}x${modelo.height}`)
+}
+
+// 4) Raias, bandeiras, ramos "Não" e importação com bpmn-moddle (mesmo parser
+//    usado pelo bpmn.io). Cada BPMN gerado precisa abrir sem nenhum aviso.
+console.log('\n— raias, bandeiras e importação (bpmn-moddle)')
+const moddle = new BpmnModdle()
+const bandeirasEsperadas = (fluxo) => parseFluxo(fluxo).reduce((s, e) => s + e.riscos.length, 0)
+const raiasDe = (fluxo) => [...new Set(parseFluxo(fluxo).map((e) => e.raia).filter(Boolean))]
+for (const p of processosIniciais()) {
+  const xml = gerarBpmn(p.fluxo, { codigo: p.codigo, assunto: p.assunto, responsavel: p.responsavel })
+  const { warnings, rootElement } = await moddle.fromXML(xml)
+  ok(warnings.length === 0, `bpmn-moddle emitiu ${warnings.length} aviso(s): ${warnings.map((w) => w.message).join(' / ')}`, p.codigo)
+  const proc = rootElement.rootElements.find((r) => r.$type === 'bpmn:Process')
+  const lanes = (proc.laneSets || []).flatMap((ls) => ls.lanes || [])
+  const esperadas = raiasDe(p.fluxo)
+  ok(lanes.length === esperadas.length, `raias: ${lanes.length} no BPMN, ${esperadas.length} esperadas`, p.codigo)
+  ok(lanes.every((l) => (l.flowNodeRef || []).length > 0), 'raia sem nós', p.codigo)
+  const anotacoes = (proc.artifacts || []).filter((a) => a.$type === 'bpmn:TextAnnotation')
+  ok(anotacoes.length === bandeirasEsperadas(p.fluxo), `bandeiras: ${anotacoes.length} anotações, ${bandeirasEsperadas(p.fluxo)} esperadas`, p.codigo)
+  const xmlRiscos = xml.match(/<bpmn:textAnnotation /g) || []
+  ok(xmlRiscos.length === anotacoes.length, 'anotação de risco fora do processo', p.codigo)
+  // Bandeira R### de cada etapa deve aparecer como texto de anotação.
+  for (const e of parseFluxo(p.fluxo)) {
+    for (const r of e.riscos) ok(xml.includes(`<bpmn:text>${r}</bpmn:text>`), `bandeira ${r} sem anotação`, p.codigo)
+  }
+  console.log(`  ${p.codigo}: ${lanes.length} raias, ${anotacoes.length} bandeiras, ${warnings.length} avisos no bpmn-moddle`)
+}
+
+const e403 = parseFluxo(processosIniciais().find((p) => p.codigo === 'E4-03').fluxo)
+const naoFrente = e403.some((e) => e.tipo === 'g' && e.voltar > e.indice)
+const naoTras = e403.some((e) => e.tipo === 'g' && e.voltar != null && e.voltar < e.indice)
+ok(naoFrente, 'E4-03 sem ramo "Não" para frente', 'E4-03')
+ok(naoTras, 'E4-03 sem ramo "Não" para trás', 'E4-03')
+const fluxoPadraoXml = gerarBpmn(FLUXO_PADRAO, { codigo: 'E4-99' })
+ok(!fluxoPadraoXml.includes('laneSet') && !fluxoPadraoXml.includes('bpmn:textAnnotation'), 'fluxo sem raias ganhou laneSet', 'sem raias')
+ok(!montarFluxo(FLUXO_PADRAO).raias, 'fluxo sem @Raia entrou no modo raias', 'sem raias')
+
+// Ramo "Não" não pode apontar para a própria decisão nem para o "Sim".
+const casoRaia = 's|A|@R1\ng|Ok?|3|@R2\nt|B|@R2\nt|C|@R1\ne|F'
+ok(validarFluxo(casoRaia).avisos.some((a) => a.nivel === 'erro' && a.msg.includes('mesma etapa')), 'Não igual ao Sim não foi barrado', 'validarFluxo')
+const casoSelf = 's|A|@R1\ng|Ok?|2|@R1\nt|B|@R1\ne|F'
+ok(validarFluxo(casoSelf).avisos.some((a) => a.nivel === 'erro' && a.msg.includes('própria decisão')), 'Não para si mesmo não foi barrado', 'validarFluxo')
+
+// Legendas "Sim"/"Não" não podem cobrir tarefas vizinhas (retângulo aproximado do texto).
+for (const p of processosIniciais()) {
+  const m = montarFluxo(p.fluxo)
+  const tarefas = m.nodes.filter((n) => n.kind === 'task')
+  for (const e of m.edges.filter((x) => x.rotulo)) {
+    const pts = pontosDaAresta(e)
+    const [p0] = pts
+    const baixo = pts.length > 1 && pts[1].y > pts[0].y + 1 && Math.abs(pts[1].x - pts[0].x) < 1
+    const bx = p0.x + 8
+    const by = baixo ? p0.y + 16 : p0.y - 8
+    const caixa = { x1: bx, x2: bx + 26, y1: by - 11, y2: by + 3 }
+    const cobre = tarefas.some((t) => caixa.x1 < t.x + t.w && caixa.x2 > t.x && caixa.y1 < t.y + t.h && caixa.y2 > t.y)
+    ok(!cobre, `legenda "${e.rotulo}" cobre uma tarefa`, p.codigo)
+  }
 }
 
 console.log(`\n=== ${verificacoes} verificações, ${falhas} falha(s) ===`)

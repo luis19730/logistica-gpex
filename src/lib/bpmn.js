@@ -71,9 +71,9 @@ function formaDi(n) {
         </bpmndi:BPMNShape>`
 }
 
-function arestaDi(e) {
+function arestaDi(e, ox = POOL_PAD_X, oy = POOL_PAD_Y) {
   const pts = pontosDaAresta(e)
-    .map((p) => `<di:waypoint x="${Math.round((p.x + POOL_PAD_X) * 100) / 100}" y="${Math.round((p.y + POOL_PAD_Y) * 100) / 100}" />`)
+    .map((p) => `<di:waypoint x="${Math.round((p.x + ox) * 100) / 100}" y="${Math.round((p.y + oy) * 100) / 100}" />`)
     .join('\n            ')
   return `        <bpmndi:BPMNEdge id="${e.id}_di" bpmnElement="${e.id}">
             ${pts}
@@ -86,6 +86,9 @@ function arestaDi(e) {
  */
 export function gerarBpmn(textoFluxo, processo = {}) {
   const modelo = montarFluxo(textoFluxo)
+  const raias = !!modelo.raias
+  const OX = raias ? 0 : POOL_PAD_X
+  const OY = raias ? 0 : POOL_PAD_Y
   const codigo = processo.codigo || 'E4-00'
   const titulo = processo.assunto || 'Fluxograma de processo'
   const sufixo = idSeguro(codigo) || 'fluxo'
@@ -117,8 +120,8 @@ export function gerarBpmn(textoFluxo, processo = {}) {
   }
 
   for (const n of modelo.nodes) {
-    n.bpmnX = Math.round((n.x + POOL_PAD_X) * 100) / 100
-    n.bpmnY = Math.round((n.y + POOL_PAD_Y) * 100) / 100
+    n.bpmnX = Math.round((n.x + OX) * 100) / 100
+    n.bpmnY = Math.round((n.y + OY) * 100) / 100
     n.bpmnW = n.w
     n.bpmnH = n.h
     const entradas = modelo.edges.filter((e) => e.to === n).map((e) => e.id)
@@ -129,8 +132,8 @@ export function gerarBpmn(textoFluxo, processo = {}) {
     n.bpmnDefault = padrao ? padrao.id : ''
   }
 
-  const poolW = modelo.width + POOL_PAD_X * 2
-  const poolH = modelo.height + POOL_PAD_Y + POOL_PAD_BOTTOM
+  const poolW = raias ? modelo.width : modelo.width + POOL_PAD_X * 2
+  const poolH = raias ? modelo.height : modelo.height + POOL_PAD_Y + POOL_PAD_BOTTOM
   const nomePool = `${SECAO} — ${OM}`
   // <bpmn:process> aceita no máximo um <bpmn:documentation> (tBaseElement),
   // então os metadados vão juntos num único elemento, separados por quebras.
@@ -160,15 +163,56 @@ export function gerarBpmn(textoFluxo, processo = {}) {
     })
     .join('\n')
 
+  let laneSet = ''
+  let lanesDi = ''
+  let riscosXml = ''
+  let riscosDi = ''
+  if (raias) {
+    const laneId = (i) => `Lane_${sufixo}_${i + 1}`
+    laneSet = `    <bpmn:laneSet id="LaneSet_${sufixo}">\n${modelo.raias
+      .map(
+        (r, i) =>
+          `      <bpmn:lane id="${laneId(i)}" name="${escaparXml(r.nome)}">\n${modelo.nodes
+            .filter((n) => n.raia === r.nome)
+            .map((n) => `        <bpmn:flowNodeRef>${n.bpmnId}</bpmn:flowNodeRef>`)
+            .join('\n')}\n      </bpmn:lane>`,
+      )
+      .join('\n')}\n    </bpmn:laneSet>\n`
+    lanesDi = modelo.raias
+      .map(
+        (r, i) =>
+          `      <bpmndi:BPMNShape id="${laneId(i)}_di" bpmnElement="${laneId(i)}" isHorizontal="true">\n        <dc:Bounds x="30" y="${r.y}" width="${poolW - 30}" height="${r.h}" />\n      </bpmndi:BPMNShape>`,
+      )
+      .join('\n')
+    const anot = []
+    const ass = []
+    const di = []
+    modelo.nodes.forEach((n) =>
+      (n.riscos || []).forEach((r, k) => {
+        const id = `Risco_${sufixo}_${n.indice}_${k + 1}`
+        const bx = n.bpmnX - 6 + k * 52
+        const by = n.bpmnY - 34
+        anot.push(`    <bpmn:textAnnotation id="${id}"><bpmn:text>${escaparXml(r)}</bpmn:text></bpmn:textAnnotation>`)
+        ass.push(`    <bpmn:association id="${id}_as" sourceRef="${n.bpmnId}" targetRef="${id}" />`)
+        di.push(
+          `      <bpmndi:BPMNShape id="${id}_di" bpmnElement="${id}"><dc:Bounds x="${bx}" y="${by}" width="46" height="22" /></bpmndi:BPMNShape>`,
+          `      <bpmndi:BPMNEdge id="${id}_as_di" bpmnElement="${id}_as"><di:waypoint x="${bx + 23}" y="${by + 22}" /><di:waypoint x="${n.bpmnX + n.bpmnW / 2}" y="${n.bpmnY}" /></bpmndi:BPMNEdge>`,
+        )
+      }),
+    )
+    riscosXml = [...anot, ...ass].join('\n')
+    riscosDi = di.join('\n')
+  }
   const formas = modelo.nodes.map(formaDi).join('\n')
-  const arestasDi = modelo.edges.map(arestaDi).join('\n')
+  const arestasDi = modelo.edges.map((e) => arestaDi(e, OX, OY)).join('\n')
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="${NS_BPMN_MODEL}" xmlns:bpmndi="${NS_BPMN_DI}" xmlns:dc="${NS_DC}" xmlns:di="${NS_DI}" xmlns:xsi="${NS_XSI}" xmlns:xsi:schemaLocation="${NS_BPMN_MODEL} http://www.omg.org/spec/BPMN/20100524/MODEL/BPMN20.xsd" id="Definitions_${sufixo}" targetNamespace="https://gpex.e4.exercito.br/logistica" exporter="GPEX E/4 - Mapeamento de Processos" exporterVersion="1.0.0" language="pt-BR">
+<bpmn:definitions xmlns:bpmn="${NS_BPMN_MODEL}" xmlns:bpmndi="${NS_BPMN_DI}" xmlns:dc="${NS_DC}" xmlns:di="${NS_DI}" xmlns:xsi="${NS_XSI}" xsi:schemaLocation="${NS_BPMN_MODEL} http://www.omg.org/spec/BPMN/20100524/MODEL/BPMN20.xsd" id="Definitions_${sufixo}" targetNamespace="https://gpex.e4.exercito.br/logistica" exporter="GPEX E/4 - Mapeamento de Processos" exporterVersion="1.0.0">
   <bpmn:process id="${processId}" name="${escaparXml(titulo)}" isExecutable="false">
     <bpmn:documentation>${metadados}</bpmn:documentation>
-${elementos}
+${laneSet}${elementos}
 ${fluxos}
+${riscosXml}
   </bpmn:process>
   <bpmn:collaboration id="${collabId}">
     <bpmn:participant id="Participant_${sufixo}" name="${escaparXml(nomePool)}" processRef="${processId}" />
@@ -177,12 +221,14 @@ ${fluxos}
     <bpmndi:BPMNPlane id="BPMNPlane_${sufixo}" bpmnElement="${collabId}">
       <bpmndi:BPMNShape id="Participant_${sufixo}_di" bpmnElement="Participant_${sufixo}" isHorizontal="true">
         <dc:Bounds x="0" y="0" width="${poolW}" height="${poolH}" />
-        <bpmndi:BPMNLabel>
+${raias ? '' : `        <bpmndi:BPMNLabel>
           <dc:Bounds x="8" y="4" width="${Math.max(120, poolW - 16)}" height="20" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
+`}      </bpmndi:BPMNShape>
+${lanesDi}
 ${formas}
 ${arestasDi}
+${riscosDi}
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

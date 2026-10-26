@@ -88,10 +88,10 @@ const processos = [
         'Lista de distribuição do plano às OMDS.\n' +
         'Relatório de revisão do ciclo, quando houver.',
       riscos:
-        'Dados incompletos ou defasados das OMDS: comprometem todo o dimensionamento. Controle: prazo fixo de resposta e conferência de coerência com o histórico de consumo.\n' +
-        'Mudança da situação de emprego após a aprovação: torna o plano obsoleto. Controle: cláusula de revisão e gatilho de atualização imediata.\n' +
-        'Desacordo entre o previsto e o fornecido: gera fila de espera. Controle: registro de pendências e replanejamento parcial.\n' +
-        'Perda da versão aprovada: gera discussão sobre qual documento é válido. Controle: numeração de versões e arquivo lacrado no SIGELOG.\n' +
+        'R001 — Dados incompletos ou defasados das OMDS: comprometem todo o dimensionamento. Controle: prazo fixo de resposta e conferência de coerência com o histórico de consumo.\n' +
+        'R002 — Mudança da situação de emprego após a aprovação: torna o plano obsoleto. Controle: cláusula de revisão e gatilho de atualização imediata.\n' +
+        'R003 — Desacordo entre o previsto e o fornecido: gera fila de espera. Controle: registro de pendências e replanejamento parcial.\n' +
+        'R004 — Perda da versão aprovada: gera discussão sobre qual documento é válido. Controle: numeração de versões e arquivo lacrado no SIGELOG.\n' +
         'Ponto de risco crítico: indisponibilidade de itens de Classe V em tempo de operação. Tratamento: reserva mínima permanente na OMDS.',
       controles:
         'Ambiental: a atividade de planejamento é administrativa e não gera resíduo; adota-se solução não física, com padronização de formulários e trabalho em planilha eletrônica.\n' +
@@ -101,14 +101,14 @@ const processos = [
         'Controle de integridade: conferência de valores nas consolidações (total por classe igual à soma por OMDS).',
     },
     fluxo: [
-      's|Recebida a determinação do Cmt da Bda para o ciclo de planejamento',
-      't|Requisitar dados de pessoal, de material, de viaturas e de consumo às OMDS',
+      's|Recebida a determinação do Cmt da Bda para o ciclo de planejamento|@Cmt da Bda',
+      't|Requisitar dados de pessoal, de material, de viaturas e de consumo às OMDS|@Chefe da E/4|!R001',
       'g|Todos os dados foram recebidos e conferidos?|2',
       't|Emitir o Plano de Apoio Logístico (necessidades, organicidade, prazos e controles)',
       't|Submeter o plano à aprovação do Cmt da Bda',
-      'g|O plano foi aprovado?|4',
-      't|Lacrar e registrar a versão aprovada, com responsáveis e pontos de controle, no livro de registro da E/4',
-      't|Distribuir a versão aprovada às OMDS e orientá-las a usar aquela referência',
+      'g|O plano foi aprovado?|4|@Cmt da Bda|!R002',
+      't|Lacrar e registrar a versão aprovada, com responsáveis e pontos de controle, no livro de registro da E/4|@Chefe da E/4|!R004',
+      't|Distribuir a versão aprovada às OMDS e orientá-las a usar aquela referência|@OMDS',
       'e|Fim do processo',
     ].join('\n'),
   },
@@ -187,10 +187,10 @@ const processos = [
         'Lista de OMDS pendentes de resposta.\n' +
         'Protocolo de entrega do quadro ao Chefe da E/4.',
       riscos:
-        'OMDS que não responde no prazo: compromete a completude do quadro. Controle: controle diário de pendências e escalonamento ao Cmt da Bda.\n' +
-        'Necessidade inflada por falta de conferência local: gera pedido acima do razoável. Controle: comparação com o consumo médio e com o saldo em estoque.\n' +
-        'Duplicidade entre OMDS: gera quantidade indevida. Controle: conferência item a item contra o cadastro de material.\n' +
-        'Erro de digitação nas quantidades: tem impacto direto no pedido. Controle: revisão por segundo militar e conferência de coerência com a série histórica.\n' +
+        'R001 — OMDS que não responde no prazo: compromete a completude do quadro. Controle: controle diário de pendências e escalonamento ao Cmt da Bda.\n' +
+        'R002 — Necessidade inflada por falta de conferência local: gera pedido acima do razoável. Controle: comparação com o consumo médio e com o saldo em estoque.\n' +
+        'R003 — Duplicidade entre OMDS: gera quantidade indevida. Controle: conferência item a item contra o cadastro de material.\n' +
+        'R004 — Erro de digitação nas quantidades: tem impacto direto no pedido. Controle: revisão por segundo militar e conferência de coerência com a série histórica.\n' +
         'Item informado na classe errada: atrasa o atendimento. Controle: tabela de conversão classe por item.',
       controles:
         'Ambiental: a consolidação é atividade administrativa; a opção por planilha eletrônica, em vez de impressões, reduz o consumo de papel.\n' +
@@ -200,16 +200,16 @@ const processos = [
         'Trilha de auditoria: registro de quem preencheu, quem conferiu e quem aprovou o quadro.',
     },
     fluxo: [
-      's|Aberta a rodada de levantamento do ciclo',
+      's|Aberta a rodada de levantamento do ciclo|@Adjunto da E/4',
       't|Enviar o formulário de necessidades às OMDS, com prazo de 48 horas',
-      'g|Todas as OMDS responderam no prazo?|2',
-      't|Registrar as OMDS pendentes, se houver, e escalar ao Cmt da Bda',
-      'g|Todas as OMDS responderam após a reiteração do pedido?|2',
-      't|Conferir cada resposta com o consumo médio, com a dotação vigente e com o saldo em estoque',
-      't|Corrigir na E/4 o que for sanável e devolver à OM o restante das divergências encontradas',
+      'g|Todas as OMDS responderam no prazo?|2|@OMDS|!R001',
+      't|Registrar as OMDS pendentes, se houver, e escalar ao Cmt da Bda|@Adjunto da E/4',
+      'g|Todas as OMDS responderam após a reiteração do pedido?|2|@OMDS',
+      't|Conferir cada resposta com o consumo médio, com a dotação vigente e com o saldo em estoque|@Adjunto da E/4|!R002',
+      't|Corrigir na E/4 o que for sanável e devolver à OM o restante das divergências encontradas|!R003',
       'g|Todas as respostas ficaram coerentes com o consumo previsto?|6',
-      't|Consolidar o quadro único por classe e por OMDS',
-      't|Entregar o quadro ao Chefe da E/4, com a relação das OMDS pendentes e das divergências',
+      't|Consolidar o quadro único por classe e por OMDS|!R004',
+      't|Entregar o quadro ao Chefe da E/4, com a relação das OMDS pendentes e das divergências|@Chefe da E/4',
       'e|Fim do processo',
     ].join('\n'),
   },
@@ -289,11 +289,11 @@ const processos = [
         'Boletim semanal de disponibilidade do parque.\n' +
         'Registro de manutenção corretiva de emergência.',
       riscos:
-        'Defeito em sistema crítico: perda de capacidade operacional. Controle: plano de manutenção com prazo estrito e viatura reserva.\n' +
-        'Falta de peça de reposição (Classe IX): manter o material fora de uso além do previsto. Controle: estoque mínimo por item e pedido antecipado ao B Log.\n' +
-        'Falha no registro no SISLOGMNT: perder o histórico e distorcer os indicadores. Controle: conferência mensal de lançamentos.\n' +
+        'R002 — Defeito em sistema crítico: perda de capacidade operacional. Controle: plano de manutenção com prazo estrito e viatura reserva.\n' +
+        'R004 — Falta de peça de reposição (Classe IX): manter o material fora de uso além do previsto. Controle: estoque mínimo por item e pedido antecipado ao B Log.\n' +
+        'R001 — Falha no registro no SISLOGMNT: perder o histórico e distorcer os indicadores. Controle: conferência mensal de lançamentos.\n' +
         'Divergência entre horas reais e horas lançadas: gerar custo incorreto. Controle: conferência do hodômetro no retorno da intervenção.\n' +
-        'Oficina indisponível: acúmulo de chamados. Controle: fila priorizada por criticidade e escalonamento ao B Log.\n' +
+        'R003 — Oficina indisponível: acúmulo de chamados. Controle: fila priorizada por criticidade e escalonamento ao B Log.\n' +
         'Ponto de risco crítico: munição com defeito no mecanismo de disparo. Tratamento: substituição pelo Auxiliar 2 e baixa imediata do lote.',
       controles:
         'Ambiental: descarte correto de óleo, graxa, filtros e baterias usados, conforme a legislação ambiental; separação e destinação de resíduos especiais.\n' +
@@ -303,15 +303,17 @@ const processos = [
         'Controle de rastreabilidade: número de série e placa de cada item ligados a todas as ordens de serviço.',
     },
     fluxo: [
-      's|Início do ciclo mensal de manutenção',
-      't|Extrair do SISLOGMNT o histórico de uso e montar o Plano de Manutenção',
+      's|Início do ciclo mensal de manutenção|@Auxiliar 1 da E/4',
+      't|Extrair do SISLOGMNT o histórico de uso e montar o Plano de Manutenção|!R001',
       't|Publicar o plano e distribuir às OMDS as janelas de manutenção',
-      't|Executar a manutenção preventiva e registrar no SISLOGMNT',
-      'g|A viatura permaneceu indisponível após a manutenção preventiva?|4',
-      't|Abrir chamado de 2º escalão, substituir por viatura reserva e enviar à oficina designada',
-      't|Registrar a ordem de serviço e baixar as peças de reposição aplicadas',
-      'g|O material está apto ao retorno ao parque?|6',
+      't|Executar a manutenção preventiva e registrar no SISLOGMNT|@OMDS|!R002',
+      'g|A viatura permaneceu indisponível após a manutenção preventiva?|10',
+      't|Abrir chamado de 2º escalão, substituir por viatura reserva e enviar à oficina designada|@Auxiliar 1 da E/4',
+      't|Executar a intervenção de 2º escalão e devolver o item com o laudo|@Oficina 2º escalão|!R003',
+      't|Registrar a ordem de serviço e baixar as peças de reposição aplicadas|@Auxiliar 1 da E/4|!R004',
+      'g|O material está apto ao retorno ao parque?|7',
       't|Atualizar a disponibilidade do parque e reportar ao Chefe da E/4, com a previsão de recuperação',
+      't|Tomar ciência e decidir a reprogramação em caso de indisponibilidade crítica|@Chefe da E/4',
       'e|Fim do processo',
     ].join('\n'),
   },
@@ -394,11 +396,11 @@ const processos = [
         'Conciliação diária entre movimento físico e lançamento no sistema.\n' +
         'Relatório mensal de entradas, de saídas e de saldos por classe.',
       riscos:
-        'Entrega com material danificado ou com validade curta: perda de valor e indisponibilidade. Controle: conferência na entrada e recusa formal quando necessário.\n' +
-        'Divergência de quantidade não detectada: torna o saldo não confiável. Controle: conferência cega e conciliação diária.\n' +
-        'Erro de destino na expedição: perda de rastreabilidade. Controle: dupla checagem do destino e assinatura no recebimento.\n' +
+        'R001 — Entrega com material danificado ou com validade curta: perda de valor e indisponibilidade. Controle: conferência na entrada e recusa formal quando necessário.\n' +
+        'R002 — Divergência de quantidade não detectada: torna o saldo não confiável. Controle: conferência cega e conciliação diária.\n' +
+        'R003 — Erro de destino na expedição: perda de rastreabilidade. Controle: dupla checagem do destino e assinatura no recebimento.\n' +
         'Falha de segurança no transporte de munição. Controle: veículo adequado, amarração das caixas, escolta e observância da norma de transporte.\n' +
-        'Atraso na entrega por parte do fornecedor: impacta a operação. Controle: controle de prazo na nota de remessa e solicitação de entrega complementar.\n' +
+        'R004 — Atraso na entrega por parte do fornecedor: impacta a operação. Controle: controle de prazo na nota de remessa e solicitação de entrega complementar.\n' +
         'Ponto de risco crítico: material de saúde vencido. Tratamento: baixa imediata e devolução ao fornecedor.',
       controles:
         'Ambiental: armazenamento de Classes I e III em local seco e arejado; descarte adequado de embalagens e de produtos vencidos; controle de vazamento de combustíveis.\n' +
@@ -408,16 +410,16 @@ const processos = [
         'Controle documental: toda entrada e toda saída têm documento-fonte identificável e numeração sequencial.',
     },
     fluxo: [
-      's|Recebida a comunicação de entrega do B Log ou do depósito fornecedor',
-      't|Obter a nota de remessa e abrir a ordem de recebimento no SIGELOG',
-      't|Executar a conferência física da carga conforme a regra da classe',
-      'g|A carga está incompleta ou diverge da nota de remessa?|3',
+      's|Recebida a comunicação de entrega do B Log ou do depósito fornecedor|@B Log / depósito fornecedor|!R004',
+      't|Obter a nota de remessa e abrir a ordem de recebimento no SIGELOG|@Auxiliar 2 da E/4',
+      't|Executar a conferência física da carga conforme a regra da classe|!R001',
+      'g|A carga está incompleta ou diverge da nota de remessa?|7|!R002',
       't|Registrar termo de divergência, devolver o excedente e solicitar a complementação do que faltar',
-      'g|A carga ficou completa e conferida?|2',
+      'g|A carga ficou completa e conferida?|3',
       't|Dar entrada no estoque e conferir a validade e a integridade do lote',
-      't|Separar e expedir a carga por OMDS conforme o Plano de Apoio Logístico, registrando as não retiradas e reprogramando a entrega das OMDS remanescentes',
-      'g|Todas as OMDS retiraram e assinaram o recebimento?|8',
-      't|Conciliar o movimento físico com o lançamento no SIGELOG',
+      't|Separar e expedir a carga por OMDS conforme o Plano de Apoio Logístico, registrando as não retiradas e reprogramando a entrega das OMDS remanescentes|!R003',
+      'g|Todas as OMDS retiraram e assinaram o recebimento?|8|@OMDS',
+      't|Conciliar o movimento físico com o lançamento no SIGELOG|@Auxiliar 2 da E/4',
       'e|Fim do processo',
     ].join('\n'),
   },
@@ -499,10 +501,10 @@ const processos = [
         'Registro de baixa de material controlado (munição e material de saúde).\n' +
         'Histórico de lançamentos no SIGELOG, com usuário e data.',
       riscos:
-        'Lançamento atrasado ou errado: distorce a posição de estoque e induz pedido indevido. Controle: lançamento no mesmo dia e conferência pelo Auxiliar 1.\n' +
-        'Divergência entre o saldo físico e o sistêmico: perda de rastreabilidade. Controle: contagem cega rotativa e inventário geral trimestral.\n' +
-        'Estoque de segurança não reposicionado: paralisa o atendimento. Controle: ponto de reposição mínimo monitorado e aviso antecipado ao B Log.\n' +
-        'Item vencido mantido em estoque: perda de valor e risco de uso impróprio. Controle: relatório mensal de vencimentos, com retirada programada.\n' +
+        'R001 — Lançamento atrasado ou errado: distorce a posição de estoque e induz pedido indevido. Controle: lançamento no mesmo dia e conferência pelo Auxiliar 1.\n' +
+        'R002 — Divergência entre o saldo físico e o sistêmico: perda de rastreabilidade. Controle: contagem cega rotativa e inventário geral trimestral.\n' +
+        'R003 — Estoque de segurança não reposicionado: paralisa o atendimento. Controle: ponto de reposição mínimo monitorado e aviso antecipado ao B Log.\n' +
+        'R004 — Item vencido mantido em estoque: perda de valor e risco de uso impróprio. Controle: relatório mensal de vencimentos, com retirada programada.\n' +
         'Acesso indevido ao Depósito: furto ou avaria. Controle: controle de acesso, registro de entrada e de saída, e inventário como detecção.\n' +
         'Ponto de risco crítico: erro de saldo de munição. Tratamento: conferência especial de Classe V a cada movimentação e dupla checagem mensal.',
       controles:
@@ -513,16 +515,16 @@ const processos = [
         'Controle de documentação: todo ajuste no saldo tem termo assinado; todo lançamento tem usuário, data e hora registrados no sistema.',
     },
     fluxo: [
-      's|Recebida a comunicação de entrada, de saída ou de baixa de material',
-      't|Lançar o movimento no SIGELOG e no Livro de Registro do Depósito no mesmo dia',
-      't|Executar a contagem rotativa semanal dos itens sorteados, em contagem cega',
-      'g|A contagem divergiu do saldo sistêmico?|3',
-      't|Registrar termo de divergência e obter autorização do Chefe da E/4 para o ajuste',
-      't|Conferir validades, sinalizar os lotes a vencer e aplicar a regra FEFO na separação',
-      't|Monitorar o ponto de reposição mínimo e avisar o B Log antes de atingir o limite',
+      's|Recebida a comunicação de entrada, de saída ou de baixa de material|@Auxiliar 3 da E/4',
+      't|Lançar o movimento no SIGELOG e no Livro de Registro do Depósito no mesmo dia|!R001',
+      't|Executar a contagem rotativa semanal dos itens sorteados, em contagem cega|!R002',
+      'g|A contagem divergiu do saldo sistêmico?|6',
+      't|Registrar termo de divergência e obter autorização do Chefe da E/4 para o ajuste|@Chefe da E/4',
+      't|Conferir validades, sinalizar os lotes a vencer e aplicar a regra FEFO na separação|@Auxiliar 3 da E/4|!R004',
+      't|Monitorar o ponto de reposição mínimo e avisar o B Log antes de atingir o limite|!R003',
       't|Elaborar o relatório mensal de posição de estoque e de itens em vencimento',
-      'g|A posição foi aceita pela Chefia da E/4?|8',
-      't|Recalcular a posição de estoque com as correções apontadas e reenviar para conferência',
+      'g|A Chefia da E/4 apontou correções na posição de estoque?|11|@Chefe da E/4',
+      't|Recalcular a posição de estoque com as correções apontadas e reenviar para conferência|@Auxiliar 3 da E/4',
       't|Trimestralmente, realizar o inventário geral em contagem cega e emitir o Termo de Inventário Geral',
       'e|Fim do processo',
     ].join('\n'),

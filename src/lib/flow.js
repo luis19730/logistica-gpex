@@ -29,7 +29,14 @@ export function prefixoBpmn(tipo) {
   return { s: 'Start', t: 'Task', g: 'Gw', e: 'End' }[tipo] || 'Task'
 }
 
-/** Converte o texto do editor em etapas indexadas (1-based, sem linhas vazias). */
+/**
+ * Converte o texto do editor em etapas indexadas (1-based, sem linhas vazias).
+ * Formato: tipo|texto|índice  (índice só nas decisões: destino do ramo "Não").
+ * Campos opcionais, em qualquer posição após o texto:
+ *   @Raia      responsável/raia da etapa (herda da etapa anterior se omitida)
+ *   !R001,R002 bandeiras de risco da etapa
+ * Se nenhuma etapa tiver @Raia, o desenho segue o layout vertical clássico.
+ */
 export function parseFluxo(texto) {
   const linhas = String(texto == null ? '' : texto).split(/\r?\n/)
   const etapas = []
@@ -41,11 +48,29 @@ export function parseFluxo(texto) {
     const conteudo = (partes[1] || '').trim()
     const textoEtapa = conteudo || (partes.length > 1 ? partes.slice(1).join(' | ') : bruto)
     let voltar = null
-    if (tipo === 'g' && partes.length > 2) {
-      const n = parseInt(partes[2].replace(/[^\d-]/g, ''), 10)
-      voltar = Number.isFinite(n) ? n : null
+    let raia = ''
+    const riscos = []
+    for (const extra of partes.slice(2)) {
+      if (extra.startsWith('@')) raia = extra.slice(1).trim()
+      else if (extra.startsWith('!')) {
+        extra
+          .slice(1)
+          .split(/[,\s]+/)
+          .filter(Boolean)
+          .forEach((r) => riscos.push(r.toUpperCase()))
+      } else if (tipo === 'g' && voltar == null) {
+        const n = parseInt(extra.replace(/[^\d-]/g, ''), 10)
+        voltar = Number.isFinite(n) ? n : null
+      }
     }
-    etapas.push({ indice: etapas.length + 1, tipo, texto: textoEtapa, voltar })
+    etapas.push({ indice: etapas.length + 1, tipo, texto: textoEtapa, voltar, raia, riscos })
+  }
+  if (etapas.some((e) => e.raia)) {
+    let atual = etapas.find((e) => e.raia).raia
+    for (const e of etapas) {
+      if (e.raia) atual = e.raia
+      else e.raia = atual
+    }
   }
   return etapas
 }
@@ -55,6 +80,7 @@ export function validarFluxo(texto) {
   const etapas = parseFluxo(texto)
   const avisos = []
   const ultimo = etapas[etapas.length - 1]
+  const modoRaias = etapas.some((e) => e.raia)
 
   if (!etapas.length) {
     avisos.push({ nivel: 'erro', msg: 'O fluxograma precisa de pelo menos uma etapa.' })
@@ -81,11 +107,15 @@ export function validarFluxo(texto) {
         nivel: 'erro',
         msg: `Etapa ${et.indice}: o índice ${et.voltar} do ramo "Não" não existe (válido de 1 a ${etapas.length}).`,
       })
-      } else if (et.voltar >= et.indice) {
+      } else if (et.voltar === et.indice) {
+        avisos.push({ nivel: 'erro', msg: `Etapa ${et.indice}: o ramo "Não" não pode apontar para a própria decisão.` })
+      } else if (!modoRaias && et.voltar > et.indice) {
         avisos.push({
           nivel: 'erro',
           msg: `Etapa ${et.indice}: o ramo "Não" precisa voltar para uma etapa anterior (índice menor que ${et.indice}).`,
         })
+      } else if (modoRaias && et.voltar === et.indice + 1) {
+        avisos.push({ nivel: 'erro', msg: `Etapa ${et.indice}: os ramos "Sim" e "Não" apontam para a mesma etapa.` })
       } else if (etapas[et.voltar - 1].tipo === 's') {
         avisos.push({
           nivel: 'erro',
@@ -102,6 +132,7 @@ export function validarFluxo(texto) {
  * faixa (lane) própria à direita para não se sobrepor aos demais.
  */
 export function layoutFluxo(etapas) {
+  if (etapas.some((e) => e.raia)) return layoutRaias(etapas)
   const lista = etapas.map((e) => ({ ...e }))
   let fimImplicito = false
   if (!lista.length || lista[lista.length - 1].tipo !== 'e') {
@@ -185,6 +216,7 @@ export function layoutFluxo(etapas) {
 
 /** Waypoints de uma aresta: os mesmos pontos usados no desenho e no BPMN. */
 export function pontosDaAresta(edge) {
+  if (edge.pontos) return edge.pontos
   if (edge.tipo === 'volta') {
     const x1 = edge.from.cx + edge.from.w / 2
     const y1 = edge.from.cy
@@ -221,4 +253,93 @@ export function montarFluxo(texto) {
   const { etapas, avisos } = validarFluxo(texto)
   const layout = layoutFluxo(etapas)
   return { ...layout, etapas, avisos }
+}
+
+// ---------------------------------------------------------------------------
+// Layout em raias (swimlanes): colunas da esquerda para a direita, uma linha
+// por responsável, no estilo dos mapeamentos ARIS/BPMN do Exército.
+// ---------------------------------------------------------------------------
+export const RAIAS = { LABEL: 60, COL_W: 200, LANE_H: 200, PAD: 16 }
+const FORMAS_RAIA = {
+  s: { w: 36, h: 36, kind: 'circle', fora: true },
+  e: { w: 36, h: 36, kind: 'circle-fim', fora: true },
+  t: { w: 168, h: 104, kind: 'task' },
+  g: { w: 50, h: 50, kind: 'gateway', fora: true },
+}
+
+function layoutRaias(etapas) {
+  const lista = etapas.map((e) => ({ ...e }))
+  let fimImplicito = false
+  if (lista[lista.length - 1].tipo !== 'e') {
+    lista.push({
+      indice: lista.length + 1,
+      tipo: 'e',
+      texto: 'Fim do processo',
+      voltar: null,
+      raia: lista[lista.length - 1].raia,
+      riscos: [],
+      implicito: true,
+    })
+    fimImplicito = true
+  }
+  const nomes = []
+  for (const e of lista) if (!nomes.includes(e.raia)) nomes.push(e.raia)
+  const { LABEL, COL_W, LANE_H, PAD } = RAIAS
+  const raias = nomes.map((nome, i) => ({ nome, y: i * LANE_H, h: LANE_H }))
+  const nodes = lista.map((et, i) => {
+    const f = FORMAS_RAIA[et.tipo]
+    const cx = LABEL + PAD + COL_W * i + COL_W / 2
+    const cy = nomes.indexOf(et.raia) * LANE_H + LANE_H / 2 + 4
+    return { ...et, w: f.w, h: f.h, kind: f.kind, rotuloFora: !!f.fora, cx, cy, x: cx - f.w / 2, y: cy - f.h / 2 }
+  })
+  const dir = (n) => ({ x: n.x + n.w, y: n.cy })
+  const esq = (n) => ({ x: n.x, y: n.cy })
+  const topo = (n) => ({ x: n.cx, y: n.y })
+  const base = (n) => ({ x: n.cx, y: n.y + n.h })
+  const seq = (a, b) => {
+    if (Math.abs(a.cy - b.cy) < 0.5) return [dir(a), esq(b)]
+    const mx = (a.x + a.w + b.x) / 2
+    return [dir(a), { x: mx, y: a.cy }, { x: mx, y: b.cy }, esq(b)]
+  }
+  const edges = []
+  for (let i = 0; i < nodes.length - 1; i += 1) {
+    const a = nodes[i]
+    const prox = nodes[i + 1]
+    const alvo = a.tipo === 'g' ? nodes.find((n) => n.indice === a.voltar) : null
+    const ramo = alvo && alvo !== a && alvo.tipo !== 's' && alvo !== prox
+    if (!ramo) {
+      edges.push({ id: `Fluxo_${a.indice}_${prox.indice}`, from: a, to: prox, tipo: 'principal', pontos: seq(a, prox) })
+      continue
+    }
+    // Sim: segue para a próxima etapa
+    let pSim
+    if (Math.abs(a.cy - prox.cy) < 0.5) pSim = [dir(a), esq(prox)]
+    else {
+      const ini = prox.cy < a.cy ? topo(a) : base(a)
+      if (prox.cy >= a.cy) a.saidaBase = true
+      pSim = [ini, { x: a.cx, y: prox.cy }, esq(prox)]
+    }
+    edges.push({ id: `Fluxo_${a.indice}_${prox.indice}`, from: a, to: prox, rotulo: 'Sim', tipo: 'principal', pontos: pSim })
+    // Não: salta para frente ou volta
+    let pNao
+    if (alvo.indice > a.indice) {
+      if (Math.abs(a.cy - alvo.cy) < 0.5) {
+        // mesma raia: contorna por cima para não atravessar as etapas do meio
+        const yt = a.cy - LANE_H / 2 + 8 + (nomes.indexOf(a.raia) === 0 ? 0 : 0)
+        pNao = [topo(a), { x: a.cx, y: yt }, { x: alvo.cx, y: yt }, topo(alvo)]
+      } else {
+        const fim = alvo.cy < a.cy ? base(alvo) : topo(alvo)
+        pNao = [dir(a), { x: alvo.cx, y: a.cy }, fim]
+      }
+    } else {
+      a.saidaBase = true
+      const extra = a.tipo === 'g' ? 64 : 22
+      const yb = Math.max(a.y + a.h, alvo.y + alvo.h) + extra
+      pNao = [base(a), { x: a.cx, y: yb }, { x: alvo.cx, y: yb }, base(alvo)]
+    }
+    edges.push({ id: `Fluxo_${a.indice}_${alvo.indice}`, from: a, to: alvo, rotulo: 'Não', tipo: 'volta', pontos: pNao })
+  }
+  const width = LABEL + PAD * 2 + COL_W * nodes.length
+  const height = LANE_H * raias.length
+  return { nodes, edges, raias, modoRaias: true, width, height, fimImplicito }
 }
